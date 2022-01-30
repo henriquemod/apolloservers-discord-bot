@@ -7,7 +7,6 @@ export const initializeWOK = (
 ): WOKCommands => {
   return new WOKCommands(client, {
     commandsDir: dir,
-    typeScript: true,
     testServers: ['891477811481677834']
   })
 }
