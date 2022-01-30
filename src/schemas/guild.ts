@@ -14,4 +14,6 @@ const GuildSchema = new Schema({
   ]
 })
 
-export default mongoose.model('guild', GuildSchema)
+const name = 'guild'
+
+export default mongoose.models[name] || mongoose.model(name, GuildSchema, name)
