@@ -12,7 +12,7 @@ export default {
   minArgs: 1,
   expectedArgs: '<key>',
   slash: true,
-  testOnly: __prod__,
+  testOnly: !__prod__,
 
   options: [
     {

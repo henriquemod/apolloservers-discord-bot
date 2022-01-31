@@ -11,7 +11,7 @@ export default {
   minArgs: 4,
   expectedArgs: '<name> <host> <port> <type>',
   slash: true,
-  testOnly: __prod__,
+  testOnly: !__prod__,
 
   options: [
     {

@@ -6,7 +6,7 @@ export default {
   category: 'testing',
   description: 'replies with pon',
   slash: 'both',
-  testOnly: __prod__,
+  testOnly: !__prod__,
 
   callback: async () => {
     return 'Pong'
