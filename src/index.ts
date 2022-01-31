@@ -29,7 +29,7 @@ const main = async (): Promise<void> => {
   })
 
   client.on('ready', () => {
-    initializeWOK(client, path.join(__dirname, 'commands'))
+    initializeWOK(client, path.join(__dirname, 'commands'), process.env.OWNER)
     console.log('Bot is ready')
   })
 
