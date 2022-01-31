@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import { __prod__, __pwencription__ } from '../utils/constants'
+import { __prod__, __pwencription__ } from '../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import EncryptorDecryptor from '../utils/encryption'
-import guildServersSchema from '../models/guild-servers'
-// import argon2 from 'argon2'
+import EncryptorDecryptor from '../../utils/encryption'
+import guildServersSchema from '../../models/guild-servers'
 
 export default {
   category: 'api key',

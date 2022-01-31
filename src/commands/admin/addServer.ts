@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import { __prod__ } from '../utils/constants'
+import { __prod__ } from '../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import guildServersSchema from '../models/guild-servers'
+import guildServersSchema from '../../models/guild-servers'
 
 export default {
   category: 'server',
