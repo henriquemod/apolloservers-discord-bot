@@ -5,7 +5,7 @@ import { ICommand } from 'wokcommands'
 import guildServersSchema from '../../models/guild-servers'
 
 export default {
-  category: 'server',
+  category: 'Admin Panel',
   description: 'Add a server to your servers list',
   permissions: ['ADMINISTRATOR'],
   minArgs: 4,
@@ -49,6 +49,11 @@ export default {
     const serverPort = interaction.options.getString('port')
     const serverType = interaction.options.getString('type')
 
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    if (!serverName || !serverHost || !serverPort || !serverType) {
+      return 'Please provide correct values'
+    }
+
     if (!serverName) {
       return 'Please inform the name you want to identify this server'
     }
@@ -72,18 +77,21 @@ export default {
       type: serverType
     }
 
-    await guildServersSchema.findByIdAndUpdate(
-      { _id: guild.id },
-      {
-        $push: {
-          servers: server
+    try {
+      await guildServersSchema.findByIdAndUpdate(
+        { _id: guild.id },
+        {
+          $push: {
+            servers: server
+          }
+        },
+        {
+          upsert: true
         }
-      },
-      {
-        upsert: true
-      }
-    )
-
-    return 'Pong'
+      )
+      return `Server ${server.name} was successfully added`
+    } catch (error) {
+      return 'An errour occoured, please verify if parametes were correct'
+    }
   }
 } as ICommand

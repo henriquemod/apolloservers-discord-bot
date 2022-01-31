@@ -6,7 +6,7 @@ import EncryptorDecryptor from '../../utils/encryption'
 import guildServersSchema from '../../models/guild-servers'
 
 export default {
-  category: 'api key',
+  category: 'Admin Panel',
   description: 'Set your API key',
   permissions: ['ADMINISTRATOR'],
   minArgs: 1,
