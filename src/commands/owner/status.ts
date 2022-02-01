@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { __prod__ } from '../../utils/constants'
 import { ICommand } from 'wokcommands'
 

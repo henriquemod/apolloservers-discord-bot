@@ -19,7 +19,8 @@
       "@typescript-eslint/method-signature-style": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/indent": ["off"],
-      "@typescript-eslint/space-before-function-paren": ["off"]
+      "@typescript-eslint/space-before-function-paren": ["off"],
+      "@typescript-eslint/consistent-type-assertions": ["off"]
     },
     "ignorePatterns": ["src/**/*.graphql"]
   }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { __prod__, __pwencription__ } from '../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
