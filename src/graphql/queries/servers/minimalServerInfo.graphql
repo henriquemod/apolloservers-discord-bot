@@ -1,0 +1,15 @@
+query getMinimalServerinfo(
+  $apikey: String!
+  $host: String!
+  $port: Int!
+  $type: String!
+) {
+  getServerInfo(
+    apikey: $apikey
+    server: { host: $host, port: $port, type: $type }
+  ) {
+    response {
+      ...MinimalServerInfo
+    }
+  }
+}

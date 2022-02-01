@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import { __prod__ } from '../utils/constants'
+import { __prod__, __pwencription__ } from '../utils/constants'
 import { ICommand } from 'wokcommands'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { EmbedFieldData, MessageEmbed } from 'discord.js'
+import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
+import EncryptorDecryptor from '../utils/encryption'
 
 export default {
   category: 'Servers',
@@ -19,14 +22,40 @@ export default {
     const find = await guildServersSchema.findById({ _id: guild.id })
     const servers = find.servers as ServerProps[]
 
+    const encryption = new EncryptorDecryptor()
+    let apiKey = ''
+    if (__pwencription__) {
+      apiKey = encryption.decryptString(find.apiKey, __pwencription__)
+    }
+
     const embendFields: EmbedFieldData[] = []
 
-    servers.forEach((server) => {
-      embendFields.push({
-        name: server.name,
-        value: `${server.host}:${server.port}`
-      })
+    const buildList = servers.map((server) => ({
+      host: `"${server.host}"`,
+      port: server.port,
+      type: `"${server.type}"`
+    }))
+
+    const request = await multiplesMinimalServerRequest({
+      apikey: apiKey,
+      servers: buildList
     })
+
+    const result = request.getMultiplesServerInfo
+
+    if (result) {
+      result.forEach((server) => {
+        const players = server.response?.raw?.numplayers
+          ? server.response?.raw?.numplayers
+          : 'Not Available'
+        if (server.response) {
+          embendFields.push({
+            name: server.response?.name,
+            value: `IP: ${server.response?.connect} | Players: ${players}/${server.response?.maxplayers}`
+          } as EmbedFieldData)
+        }
+      })
+    }
 
     const embed = new MessageEmbed()
       .setTitle('Servers List')

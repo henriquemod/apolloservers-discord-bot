@@ -1,0 +1,13 @@
+query getMultiplesMinimalServerInfo(
+  $apikey: String!
+  $servers: [ServerInput!]!
+) {
+  getMultiplesServerInfo(
+    apikey: $apikey
+    servers: $servers
+  ) {
+    response {
+      ...MinimalServerInfo
+    }
+  }
+}

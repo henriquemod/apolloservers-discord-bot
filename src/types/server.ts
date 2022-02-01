@@ -5,3 +5,9 @@ export interface ServerProps {
   type: string
   id: string
 }
+
+export interface SingleServer {
+  host: string
+  port: number
+  type: string
+}

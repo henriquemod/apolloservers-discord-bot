@@ -12,3 +12,7 @@
 /tests/fixtures/**
 /tests/performance/**
 /tmp/**
+/src/generated/**
+{
+  "ignorePatterns": ["**/generated/*.ts"],
+}

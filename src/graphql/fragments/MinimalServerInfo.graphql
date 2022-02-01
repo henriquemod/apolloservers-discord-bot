@@ -1,0 +1,9 @@
+fragment MinimalServerInfo on GamedigServerInfo {
+  name
+  map
+  maxplayers
+  raw {
+    numplayers
+  }
+  connect
+}

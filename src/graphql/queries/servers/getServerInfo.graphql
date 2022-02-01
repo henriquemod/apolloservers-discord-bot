@@ -1,0 +1,37 @@
+query getServerInfo(
+  $apikey: String!
+  $host: String!
+  $port: Int!
+  $type: String!
+) {
+  getServerInfo(
+    apikey: $apikey
+    server: { host: $host, port: $port, type: $type }
+  ) {
+    response {
+      name
+      map
+      raw {
+        numplayers
+        protocol
+        folder
+        game
+        appId
+        numbots
+        secure
+        version
+        tags
+      }
+      password
+      players {
+        name
+      }
+      connect
+      ping
+    }
+    errors {
+      errorType
+      message
+    }
+  }
+}
