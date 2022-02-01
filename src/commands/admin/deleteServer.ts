@@ -72,7 +72,10 @@ export default {
 
     const deleteServer = async (id: string): Promise<boolean> => {
       try {
-        await guildServersSchema.deleteOne({ id })
+        await guildServersSchema.findByIdAndUpdate(
+          { _id: guild.id },
+          { $pull: { servers: { _id: id } } }
+        )
         wasAServer = true
         return true
       } catch (error) {
