@@ -16,13 +16,13 @@ export default {
   slash: 'both',
   testOnly: !__prod__,
 
-  callback: async ({ interaction: msgInt, channel, guild }) => {
+  callback: async ({ interaction: msgInt, channel, guild, instance }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
     const find = await guildServersSchema.findById({ _id: guild.id })
     if (!find) {
-      return 'This discord servers is not configured'
+      return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     }
     const servers = find.servers as ServerProps[]
 
@@ -40,13 +40,13 @@ export default {
       new MessageActionRow().addComponents(
         new MessageButton()
           .setCustomId('btn_cancel')
-          .setLabel('Cancel')
+          .setLabel(instance.messageHandler.get(guild, 'BTN_CANCEL_LBL'))
           .setStyle('DANGER')
       )
     )
 
     await msgInt.reply({
-      content: 'Select a server to delete:',
+      content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
       components: serversRows,
       ephemeral: true
     })
@@ -63,7 +63,7 @@ export default {
 
     collector.on('collect', async (i: ButtonInteraction) => {
       await i.reply({
-        content: 'You did something nasty',
+        content: instance.messageHandler.get(guild, 'DEFAULT_EDITED'),
         ephemeral: true
       })
     })
@@ -88,8 +88,7 @@ export default {
           deleteServer(click.customId).catch(async (err) => {
             console.log(err)
             await msgInt.reply({
-              content:
-                'Some wild error appeared, please contact the developer 👨‍💻'
+              content: instance.messageHandler.get(guild, 'DEFAULT_ERROR')
             })
           })
         }
@@ -97,8 +96,8 @@ export default {
 
       await msgInt.editReply({
         content: wasAServer
-          ? 'A server was deleted 😥'
-          : "You've canceled the action",
+          ? instance.messageHandler.get(guild, 'SERVER_DELETED')
+          : instance.messageHandler.get(guild, 'CANCEL_ACTION'),
         components: []
       })
     })

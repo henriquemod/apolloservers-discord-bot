@@ -48,7 +48,7 @@ export default {
     }
   ],
 
-  callback: async ({ guild, interaction }) => {
+  callback: async ({ guild, interaction, instance }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
@@ -60,23 +60,23 @@ export default {
 
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (!serverName || !serverHost || !serverPort || !serverType) {
-      return 'Please provide correct values'
+      return instance.messageHandler.get(guild, 'INVALID_VALUES')
     }
 
     if (!serverName) {
-      return 'Please inform the name you want to identify this server'
+      return instance.messageHandler.get(guild, 'INVALID_SERVER_NAME')
     }
 
     if (!serverHost || !domainValidation(serverHost)) {
-      return 'Please inform your server host, that has to be an domain or a IP address'
+      return instance.messageHandler.get(guild, 'INVALID_SERVER_HOST')
     }
 
     if (!serverPort || !portValidation(serverPort)) {
-      return 'Please inform the port a correct value for server port'
+      return instance.messageHandler.get(guild, 'INVALID_SERVER_PORT')
     }
 
     if (!serverType || !isValveProtocol(serverType)) {
-      return 'Please inform your server type, get list of types in https://github.com/gamedig/node-gamedig#games-list, please keep in mind only valve protocols are available by ApolloServers at this moment'
+      return instance.messageHandler.get(guild, 'INVALID_SERVER_TYPE')
     }
 
     const server = {
@@ -99,9 +99,11 @@ export default {
           upsert: true
         }
       )
-      return `Server ${server.name} was successfully added`
+      return instance.messageHandler.get(guild, 'SERVER_ADD_SUCCESS', {
+        SERVER_NAME: server.name
+      })
     } catch (error) {
-      return 'An errour occoured, please verify if parametes were correct'
+      return instance.messageHandler.get(guild, 'ERROR_ADD_SERVER')
     }
   }
 } as ICommand
