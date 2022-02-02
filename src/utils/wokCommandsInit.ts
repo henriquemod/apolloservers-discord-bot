@@ -6,8 +6,6 @@ export const initializeWOK = (
   dir: string,
   owner?: string
 ): WOKCommands => {
-  console.log('owner: ', owner)
-
   return new WOKCommands(client, {
     commandsDir: dir,
     testServers: ['891477811481677834'],

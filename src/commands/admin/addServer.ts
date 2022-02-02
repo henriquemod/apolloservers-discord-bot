@@ -2,12 +2,14 @@ import { __prod__ } from '../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
 import guildServersSchema from '../../models/guild-servers'
+import { domainValidation, portValidation } from '../../utils/validations'
+import { isValveProtocol } from '../../utils/protocols'
 
 export default {
   category: 'Admin Panel',
   description: 'Add a server to your servers list',
   permissions: ['ADMINISTRATOR'],
-  minArgs: 5,
+  minArgs: 4,
   expectedArgs: '<name> <host> <port> <type> <description>',
   slash: true,
   testOnly: !__prod__,
@@ -65,16 +67,16 @@ export default {
       return 'Please inform the name you want to identify this server'
     }
 
-    if (!serverHost) {
+    if (!serverHost || !domainValidation(serverHost)) {
       return 'Please inform your server host, that has to be an domain or a IP address'
     }
 
-    if (!serverPort) {
-      return 'Please inform the port your server is running'
+    if (!serverPort || !portValidation(serverPort)) {
+      return 'Please inform the port a correct value for server port'
     }
 
-    if (!serverType) {
-      return 'Please inform your server type, get list of types in https://github.com/gamedig/node-gamedig#readme, please keep in mind only valve protocols are available my ApolloServers at this moment'
+    if (!serverType || !isValveProtocol(serverType)) {
+      return 'Please inform your server type, get list of types in https://github.com/gamedig/node-gamedig#games-list, please keep in mind only valve protocols are available by ApolloServers at this moment'
     }
 
     const server = {

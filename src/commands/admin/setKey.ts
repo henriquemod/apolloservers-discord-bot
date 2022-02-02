@@ -32,9 +32,8 @@ export default {
       return 'Please inform an API key'
     }
 
-    const enc = new EncryptorDecryptor()
-
-    if (__pwencription__) {
+    try {
+      const enc = new EncryptorDecryptor()
       const encryptedApiKey = enc.encryptString(apiKey, __pwencription__)
       await guildServersSchema.findByIdAndUpdate(
         { _id: guild.id },
@@ -46,8 +45,9 @@ export default {
         }
       )
       return 'Chave API adicionada com sucesso'
-    } else {
-      return 'Problens with application, please contact the support'
+    } catch (error) {
+      console.log(error)
+      return 'Error adding a API key, contact support'
     }
   }
 } as ICommand
