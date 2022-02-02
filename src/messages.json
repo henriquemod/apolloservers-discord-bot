@@ -1,0 +1,90 @@
+{
+  "NEW_LANGUAGE": {
+    "english": "Language set to {LANGUAGE}.",
+    "portuguese": "Idioma configurado para {LANGUAGE}."
+  },
+  "GUILD_ONLY": {
+    "english": "Please use this command within a server",
+    "portuguese": "Você precisa user este comando em um servidor"
+  },
+  "INVALID_VALUES": {
+    "english": "Please provide correct values",
+    "portuguese": "Favor fornecer valores corretos"
+  },
+  "INVALID_SERVER_NAME": {
+    "english": "Please inform the name you want to identify this server",
+    "portuguese": "Você precisa informar um nome para identificar esse servidor"
+  },
+  "INVALID_SERVER_HOST": {
+    "english": "Please inform a valid server host, it has to be an domain or a IP address",
+    "portuguese": "Informe um host valido, ele precisa ser um dominio ou um endereço IP"
+  },
+  "INVALID_SERVER_PORT": {
+    "english": "Please inform a correct value for server port",
+    "portuguese": "Informe uma porta valida para o servidor"
+  },
+  "INVALID_SERVER_TYPE": {
+    "english": "Please inform your server type, get list of types in https://github.com/gamedig/node-gamedig#games-list, please keep in mind only valve protocols are available by ApolloServers at this moment",
+    "portuguese": "Informe um tipo valido, veja todos os tipos disponiveis em https://github.com/gamedig/node-gamedig#games-list, tenha em mente que apenas os jogos com protocolo da valve estão disponivel pelo ApolloServer até o momento"
+  },
+  "SERVER_ADD_SUCCESS": {
+    "english": "Server {SERVER_NAME} was successfully added!",
+    "portuguese": "Servidor {SERVER_NAME} adicionado com sucesso!"
+  },
+  "ERROR_ADD_SERVER": {
+    "english": "An errour occoured, verify if parametes were correct, if problem persists please contact the developer",
+    "portuguese": "Um erro aconteceu, verifique se os parametros estão corretos, se o problema persistir favor contatar o desenvolvedor"
+  },
+  "ERROR_SERVER_NOT_CONFIGURED": {
+    "english": "This discord server is not configured",
+    "portuguese": "Este servidor discord não foi configurado"
+  },
+  "ERROR_NONE_GAMESERVER": {
+    "english": "There is no server added in this discord server 😥",
+    "portuguese": "Não tem nenhum servidor adicionado nesse discord 😥"
+  },
+  "BTN_CANCEL_LBL": {
+    "english": "Cancel",
+    "portuguese": "Cancelar"
+  },
+  "SELECT_SERVER": {
+    "english": "Select server:",
+    "portuguese": "Selecione servidor:"
+  },
+  "LIST_SERVERS": {
+    "english": "Servers List:",
+    "portuguese": "Lista de servidores:"
+  },
+  "DEFAULT_EDITED": {
+    "english": "You did something nasty",
+    "portuguese": "Você fez algo desagradável"
+  },
+  "DEFAULT_ERROR": {
+    "english": "Some wild error appeared, please contact the developer 👨‍💻",
+    "portuguese": "Um erro inesperado aconteceu, favor contatar o desenvolvedor 👨‍💻"
+  },
+  "SERVER_DELETED": {
+    "english": "Server deleted 😥",
+    "portuguese": "Servidor deletado 😥"
+  },
+  "CANCEL_ACTION": {
+    "english": "You've canceled this action",
+    "portuguese": "Você cancelou essa ação"
+  },
+  "API_NEEDED": {
+    "english": "Please add you API key",
+    "portuguese": "Favor adicionar sua chave de API"
+  },
+  "API_ADDED": {
+    "english": "You've canceled the action",
+    "portuguese": "Chave API adicionada com sucesso"
+  },
+  "API_ADD_ERROR": {
+    "english": "Error adding a API key, contact support",
+    "portuguese": "Erro ao adicionar chave de API, favor contatar o suporte"
+  },
+  "NOT_AVAILABLE": {
+    "english": "Not available",
+    "portuguese": "Não disponivel"
+  }
+}

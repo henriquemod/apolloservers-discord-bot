@@ -24,7 +24,7 @@ export default {
   slash: 'both',
   testOnly: !__prod__,
 
-  callback: async ({ interaction: statusInt, channel, guild }) => {
+  callback: async ({ interaction: statusInt, channel, guild, instance }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
@@ -32,11 +32,11 @@ export default {
     const find = await guildServersSchema.findById({ _id: guild.id })
 
     if (!find) {
-      return 'Server not configured'
+      return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     } else {
       const servers = find.servers as ServerProps[]
       if (!servers) {
-        return 'This discord have no servers added'
+        return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
       } else {
         const serversRows = servers.map((server) =>
           new MessageActionRow().addComponents(
@@ -52,13 +52,13 @@ export default {
           new MessageActionRow().addComponents(
             new MessageButton()
               .setCustomId('btn_cancel')
-              .setLabel('Cancel')
+              .setLabel(instance.messageHandler.get(guild, 'BTN_CANCEL_LBL'))
               .setStyle('DANGER')
           )
         )
 
         await statusInt.reply({
-          content: 'Select a server:',
+          content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
           components: serversRows,
           ephemeral: true
         })
@@ -182,7 +182,7 @@ export default {
             })
           } else {
             await statusInt.editReply({
-              content: 'You canceled me, how could you do this?  😥',
+              content: instance.messageHandler.get(guild, 'CANCEL_ACTION'),
               components: []
             })
           }

@@ -12,7 +12,7 @@ export default {
   slash: 'both',
   testOnly: !__prod__,
 
-  callback: async ({ guild }) => {
+  callback: async ({ guild, instance }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
@@ -24,13 +24,13 @@ export default {
      * TODO - Give better feedback
      */
     if (!find) {
-      return 'The administrator from this discord didnt configure me'
+      return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     } else {
       const servers = find.servers as ServerProps[]
 
       // Guild ID were fount but admin didnt added any server
       if (!servers || servers.length === 0) {
-        return 'There is no server added in this discord server 😥'
+        return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
       } else {
         const encryption = new EncryptorDecryptor()
         let apiKey = ''
@@ -60,7 +60,7 @@ export default {
           result.forEach((server) => {
             const players = server.response?.raw?.numplayers
               ? server.response?.raw?.numplayers
-              : 'Not Available'
+              : (instance.messageHandler.get(guild, 'NOT_AVAILABLE') as string)
             if (server.response) {
               embendFields.push({
                 name: server.response?.name,
@@ -71,7 +71,7 @@ export default {
         }
 
         const embed = new MessageEmbed()
-          .setTitle('Servers List')
+          .setTitle(instance.messageHandler.get(guild, 'LIST_SERVERS'))
           .setFields(embendFields)
 
         return embed

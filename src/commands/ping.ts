@@ -7,7 +7,7 @@ export default {
   slash: 'both',
   testOnly: !__prod__,
 
-  callback: async () => {
-    return 'Pong'
+  callback: async ({ guild, instance }) => {
+    return instance.messageHandler.get(guild, 'INVALID_SERVER_PORT')
   }
 } as ICommand

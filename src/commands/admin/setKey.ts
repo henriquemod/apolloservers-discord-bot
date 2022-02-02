@@ -22,14 +22,14 @@ export default {
     }
   ],
 
-  callback: async ({ guild, interaction }) => {
+  callback: async ({ guild, interaction, instance }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
     const apiKey = interaction.options.getString('key')
 
     if (!apiKey) {
-      return 'Please inform an API key'
+      return instance.messageHandler.get(guild, 'API_NEEDED')
     }
 
     try {
@@ -44,10 +44,10 @@ export default {
           upsert: true
         }
       )
-      return 'Chave API adicionada com sucesso'
+      return instance.messageHandler.get(guild, 'API_ADDED')
     } catch (error) {
       console.log(error)
-      return 'Error adding a API key, contact support'
+      return instance.messageHandler.get(guild, 'API_ADD_ERROR')
     }
   }
 } as ICommand
