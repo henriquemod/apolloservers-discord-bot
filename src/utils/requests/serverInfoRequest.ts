@@ -5,7 +5,8 @@ import {
   GetServerInfoQuery,
   GetMinimalServerinfoQuery,
   QueryGetMultiplesServerInfoArgs,
-  GetMultiplesMinimalServerInfoQuery
+  GetMultiplesMinimalServerInfoQuery,
+  GetServerInfoQueryVariables
 } from '../../generated/graphql'
 
 interface Props {
@@ -14,27 +15,31 @@ interface Props {
   apiKey: string
 }
 
-// interface MultiplesServers {
-//   apiKey: string
-//   servers: QueryGetMultiplesServerInfoArgs
-// }
-
+// ! Single Server - Complete
 export const serverInfoRequest = async (
-  props: QueryGetMultiplesServerInfoArgs
+  props: GetServerInfoQueryVariables
 ): Promise<GetServerInfoQuery> => {
   const restult = await axios({
     url: 'http://localhost:4000/graphql',
     method: 'post',
     data: {
       query: `
-        query test {
-          getServerInfo(apikey: "${props.apikey}", servers: ${props.servers}) {
+        query serverInfo {
+          getServerInfo(apikey: "${props.apikey}", server: {host: "${props.host}", port: ${props.port}, type: "${props.type}"}) {
             response {
               name
               connect
               map
+              maxplayers
               raw {
                 numplayers
+                tags
+              }
+              players {
+                name
+                raw {
+                  score
+                }
               }
             }
             errors {

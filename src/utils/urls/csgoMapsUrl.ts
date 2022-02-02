@@ -1,0 +1,30 @@
+export const csgoMap = new Map<string, string>([
+  [
+    'de_mirage',
+    'https://static1-es.millenium.gg/articles/5/13/05/@/14412-de-mirage-article_image_t-1.jpg'
+  ],
+  [
+    'de_dust2',
+    'https://www.tec.com.pe/wp-content/uploads/2017/02/dust2_retirado.png'
+  ],
+  [
+    'de_nuke',
+    'https://www.4gamez.de/wp-content/uploads/2016/02/de_nuke-Remake.jpg'
+  ],
+  [
+    'de_inferno',
+    'https://vignette3.wikia.nocookie.net/cswikia/images/f/f0/Inferno.jpg'
+  ],
+  [
+    'de_cache',
+    'https://www.breakflip.com/uploads/CS:GO/NimajE/Actus/cache/a-bombsite-remake-cache.jpg'
+  ],
+  [
+    'de_ancient',
+    'https://www.earlygame.com/uploads/images/_1200x630_crop_center-center_none/csgo_ancient.jpg'
+  ],
+  [
+    'de_train',
+    'https://lambdageneration.com/wp-content/uploads/2014/12/2014-12-11_00006.jpg'
+  ]
+])

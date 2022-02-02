@@ -20,6 +20,7 @@ const guildServersSchema = new Schema({
       host: reqString,
       port: reqNumber,
       type: reqString,
+      description: { type: String },
       required: false
     }
   ]

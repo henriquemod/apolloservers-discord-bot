@@ -22,7 +22,7 @@ export default {
     }
     const find = await guildServersSchema.findById({ _id: guild.id })
     if (!find) {
-      return 'Nenhum servidor salvo'
+      return 'This discord servers is not configured'
     }
     const servers = find.servers as ServerProps[]
 

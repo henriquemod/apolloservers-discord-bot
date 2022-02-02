@@ -3,6 +3,7 @@ export interface ServerProps {
   host: string
   port: number
   type: string
+  description?: string
   id: string
 }
 

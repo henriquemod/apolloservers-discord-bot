@@ -7,8 +7,8 @@ export default {
   category: 'Admin Panel',
   description: 'Add a server to your servers list',
   permissions: ['ADMINISTRATOR'],
-  minArgs: 4,
-  expectedArgs: '<name> <host> <port> <type>',
+  minArgs: 5,
+  expectedArgs: '<name> <host> <port> <type> <description>',
   slash: true,
   testOnly: !__prod__,
 
@@ -36,6 +36,13 @@ export default {
       description: 'server type',
       required: true,
       type: DJS.Constants.ApplicationCommandOptionTypes.STRING
+    },
+    {
+      name: 'description',
+      description:
+        'The info you want to display when people request the status',
+      required: false,
+      type: DJS.Constants.ApplicationCommandOptionTypes.STRING
     }
   ],
 
@@ -47,6 +54,7 @@ export default {
     const serverHost = interaction.options.getString('host')
     const serverPort = interaction.options.getString('port')
     const serverType = interaction.options.getString('type')
+    const description = interaction.options.getString('description')
 
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (!serverName || !serverHost || !serverPort || !serverType) {
@@ -73,7 +81,8 @@ export default {
       name: serverName,
       host: serverHost,
       port: parseInt(serverPort),
-      type: serverType
+      type: serverType,
+      description
     }
 
     try {

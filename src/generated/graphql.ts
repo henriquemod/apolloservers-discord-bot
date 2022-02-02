@@ -65,6 +65,7 @@ export type MutationRegisterArgs = {
 export type Player = {
   __typename?: 'Player';
   name: Scalars['String'];
+  raw: Score;
 };
 
 export type Query = {
@@ -123,6 +124,12 @@ export type Role = {
   role: Scalars['String'];
 };
 
+export type Score = {
+  __typename?: 'Score';
+  score?: Maybe<Scalars['String']>;
+  time?: Maybe<Scalars['String']>;
+};
+
 export type ServerInput = {
   host: Scalars['String'];
   port: Scalars['Int'];
@@ -175,7 +182,7 @@ export type GetServerInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetServerInfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, password: boolean, connect: string, ping: number, raw: { __typename?: 'RawInfo', numplayers?: number | null, protocol?: number | null, folder?: string | null, game?: string | null, appId?: number | null, numbots?: number | null, secure?: number | null, version?: string | null, tags?: Array<string> | null }, players: Array<{ __typename?: 'Player', name: string }> } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };
+export type GetServerInfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, password: boolean, connect: string, ping: number, raw: { __typename?: 'RawInfo', numplayers?: number | null, protocol?: number | null, folder?: string | null, game?: string | null, appId?: number | null, numbots?: number | null, secure?: number | null, version?: string | null, tags?: Array<string> | null }, players: Array<{ __typename?: 'Player', name: string, raw: { __typename?: 'Score', score?: string | null } }> } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };
 
 export type GetMinimalServerinfoQueryVariables = Exact<{
   apikey: Scalars['String'];

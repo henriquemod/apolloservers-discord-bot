@@ -22,5 +22,5 @@
       "@typescript-eslint/space-before-function-paren": ["off"],
       "@typescript-eslint/consistent-type-assertions": ["off"]
     },
-    "ignorePatterns": ["src/**/*.graphql"]
+    "ignorePatterns": ["src/**/*.graphql", "src/**/*.jpg"]
   }
