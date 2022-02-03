@@ -8,6 +8,7 @@ import {
   MessageComponentInteraction
 } from 'discord.js'
 import { ServerProps } from '../../types/server'
+import { createGroups } from '../../utils/splitGroups'
 
 export default {
   category: 'Admin Panel',
@@ -26,80 +27,74 @@ export default {
     }
     const servers = find.servers as ServerProps[]
 
-    const serversRows = servers.map((server) =>
-      new MessageActionRow().addComponents(
-        new MessageButton()
-          .setCustomId(server.id)
-          .setEmoji('🎮')
-          .setLabel(server.name)
-          .setStyle('SECONDARY')
-      )
-    )
+    if (!servers || servers.length === 0) {
+      return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
+    } else {
+      const serverGroups = createGroups(servers, 5)
+      const rows = serverGroups.map((group) => {
+        const row = new MessageActionRow()
+        group.forEach((server) => {
+          row.addComponents(
+            new MessageButton()
+              .setCustomId(server.id)
+              .setEmoji('🎮')
+              .setLabel(server.name)
+              .setStyle('SECONDARY')
+          )
+        })
+        return row
+      })
 
-    serversRows.push(
-      new MessageActionRow().addComponents(
-        new MessageButton()
-          .setCustomId('btn_cancel')
-          .setLabel(instance.messageHandler.get(guild, 'BTN_CANCEL_LBL'))
-          .setStyle('DANGER')
-      )
-    )
-
-    await msgInt.reply({
-      content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
-      components: serversRows,
-      ephemeral: true
-    })
-
-    const filter = (btnInt: MessageComponentInteraction): boolean => {
-      return btnInt.user.id === msgInt.user.id
-    }
-
-    const collector = channel.createMessageComponentCollector({
-      filter,
-      max: 1,
-      time: 1000 * 15
-    })
-
-    collector.on('collect', async (i: ButtonInteraction) => {
-      await i.reply({
-        content: instance.messageHandler.get(guild, 'DEFAULT_EDITED'),
+      await msgInt.reply({
+        content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
+        components: rows.map((row) => row),
         ephemeral: true
       })
-    })
 
-    let wasAServer = false
-
-    const deleteServer = async (id: string): Promise<boolean> => {
-      try {
-        await guildServersSchema.findByIdAndUpdate(
-          { _id: guild.id },
-          { $pull: { servers: { _id: id } } }
-        )
-        wasAServer = true
-        return true
-      } catch (error) {
-        return false
+      const filter = (btnInt: MessageComponentInteraction): boolean => {
+        return btnInt.user.id === msgInt.user.id
       }
-    }
-    collector.on('end', async (collection) => {
-      collection.forEach((click) => {
-        if (click.customId !== 'btn_cancel') {
-          deleteServer(click.customId).catch(async (err) => {
-            console.log(err)
-            await msgInt.reply({
-              content: instance.messageHandler.get(guild, 'DEFAULT_ERROR')
-            })
-          })
-        }
+
+      const collector = channel.createMessageComponentCollector({
+        filter,
+        max: 1,
+        time: 1000 * 5
       })
 
-      await msgInt.editReply({
-        content: wasAServer
-          ? instance.messageHandler.get(guild, 'SERVER_DELETED')
-          : instance.messageHandler.get(guild, 'CANCEL_ACTION'),
-        components: []
+      collector.on('collect', async (i: ButtonInteraction) => {
+        await i.reply({
+          content: instance.messageHandler.get(guild, 'DEFAULT_EDITED'),
+          ephemeral: true
+        })
       })
-    })
+
+      const deleteServer = async (id: string): Promise<void> => {
+        try {
+          await guildServersSchema.findByIdAndUpdate(
+            { _id: guild.id },
+            { $pull: { servers: { _id: id } } }
+          )
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      collector.on('end', async (collection) => {
+        collection.forEach((click) => {
+          deleteServer(click.customId).catch((err) => {
+            console.log(err)
+          })
+        })
+
+        console.log('COLECTION', collection.size)
+        await msgInt.editReply({
+          content: instance.messageHandler.get(
+            guild,
+            collection.size === 0 ? 'NO_SERVER_SELECTED' : 'SERVER_DELETED'
+          ),
+          components: []
+        })
+      })
+    }
   }
 } as ICommand
