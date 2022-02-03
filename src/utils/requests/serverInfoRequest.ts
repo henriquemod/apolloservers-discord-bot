@@ -34,6 +34,7 @@ export const serverInfoRequest = async (
               raw {
                 numplayers
                 tags
+                appId
               }
               players {
                 name

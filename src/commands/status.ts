@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-// ! no-non-null-assertion is disabled cause __pwencription__ if validate if exists on boot load se we know for sure that it exists
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  EmbedFieldData,
+  // EmbedFieldData,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
   MessageEmbed
 } from 'discord.js'
-import { csgoMap } from '../utils/urls/csgoMapsUrl'
+import { createGroups } from '../utils/splitGroups'
+// import { csgoMap } from '../utils/urls/csgoMapsUrl'
 import { ICommand } from 'wokcommands'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { __prod__, __pwencription__ } from '../utils/constants'
 import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
+import { sanitizeResponse } from '../utils/sanitizeResponse'
 
 const encryption = new EncryptorDecryptor()
 
@@ -35,31 +35,28 @@ export default {
       return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     } else {
       const servers = find.servers as ServerProps[]
-      if (!servers) {
+
+      if (!servers || servers.length === 0) {
         return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
       } else {
-        const serversRows = servers.map((server) =>
-          new MessageActionRow().addComponents(
-            new MessageButton()
-              .setCustomId(server.id)
-              .setEmoji('🎮')
-              .setLabel(server.name)
-              .setStyle('SECONDARY')
-          )
-        )
-
-        serversRows.push(
-          new MessageActionRow().addComponents(
-            new MessageButton()
-              .setCustomId('btn_cancel')
-              .setLabel(instance.messageHandler.get(guild, 'BTN_CANCEL_LBL'))
-              .setStyle('DANGER')
-          )
-        )
+        const serverGroups = createGroups(servers, 5)
+        const rows = serverGroups.map((group) => {
+          const row = new MessageActionRow()
+          group.forEach((server) => {
+            row.addComponents(
+              new MessageButton()
+                .setCustomId(server.id)
+                .setEmoji('🎮')
+                .setLabel(server.name)
+                .setStyle('SECONDARY')
+            )
+          })
+          return row
+        })
 
         await statusInt.reply({
           content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
-          components: serversRows,
+          components: rows.map((row) => row),
           ephemeral: true
         })
 
@@ -70,7 +67,7 @@ export default {
         const collector = channel.createMessageComponentCollector({
           filter,
           max: 1,
-          time: 1000 * 15
+          time: 1000 * 10
         })
 
         collector.on('end', async (collection) => {
@@ -92,12 +89,40 @@ export default {
               { servers: { $elemMatch: { _id: id } } }
             )
 
+            /**
+             * NOTE - Check if there is no server added
+             *        shoudnt be a problem since if bot get here
+             *        means that already have some server added,
+             *        but just to be sure
+             */
+            if (!query) {
+              await statusInt.editReply({
+                content: instance.messageHandler.get(
+                  guild,
+                  'ERROR_NONE_GAMESERVER'
+                ),
+                components: []
+              })
+            }
+
+            if (query.servers.length === 0) {
+              await statusInt.editReply({
+                content: instance.messageHandler.get(
+                  guild,
+                  'NO_SERVER_SELECTED'
+                ),
+                components: []
+              })
+            }
+
             const apiKey = encryption.decryptString(
               find.apiKey,
               __pwencription__
             )
 
             const serverSelected = query.servers[0] as ServerProps
+
+            if (!serverSelected) return
 
             const request = await serverInfoRequest({
               host: serverSelected.host,
@@ -108,70 +133,47 @@ export default {
 
             const embed = new MessageEmbed()
 
-            if (request.getServerInfo?.response) {
-              const server = request.getServerInfo.response
-              const embendFields: EmbedFieldData[] = []
+            const serverInfo = sanitizeResponse(
+              request.getServerInfo,
+              serverSelected.type,
+              serverSelected.description ?? 'The best server is the world'
+            )
 
-              let playersList = ''
-              server.players.forEach((player) => {
-                if (
-                  player.name.length !== 0 &&
-                  typeof player.raw.score === 'string'
-                ) {
-                  playersList += ` ${player.name}  \\ `
-                }
-              })
-
-              playersList = playersList.slice(0, playersList.length - 2)
-
-              const mapUrl = csgoMap.get(request.getServerInfo.response.map)
-              let tags = ''
-              request.getServerInfo.response.raw.tags?.forEach((tag) => {
-                tags += `${tag}, `
-              })
-
-              tags = tags.slice(0, tags.length - 2)
-
-              const numPlayers = request.getServerInfo.response.raw.numplayers
-              const maxPlayers = request.getServerInfo.response.maxplayers
-
-              embendFields.push({
-                name: 'Slots',
-                value: `${numPlayers ?? '-'}/${maxPlayers}`
-              })
-
-              embendFields.push({
-                name: 'Connect',
-                value: `connect ${request.getServerInfo.response.connect}`
-              })
-
-              embendFields.push({
-                name: 'Players',
-                value: playersList
-              })
-
+            if (serverInfo?.serverData) {
+              const data = serverInfo?.serverData
               embed
-                .setTitle(request.getServerInfo.response.name)
-                .setDescription(
-                  serverSelected.description ?? 'The best server is the world'
-                )
-                .setThumbnail(
-                  'https://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/6d/6d448876809d7b79aa8f070271c07b1296459400_full.jpg'
-                )
+                .setFields([
+                  {
+                    name: 'Slots',
+                    value: data.slots
+                  },
+                  {
+                    name: 'Connect',
+                    value: data.connect
+                  },
+                  {
+                    name: 'Players',
+                    value: data.players
+                  }
+                ])
+                .setTitle(data.title)
+                .setThumbnail(data.thumbUrl)
                 .setAuthor({
                   name: 'Apollo Servers',
                   url: 'https://github.com/henriquemod'
                 })
+                .setDescription(data.desc)
                 .setFooter({
-                  text: `Tags: ${tags}`
+                  text: data.tags
                 })
-
-              if (mapUrl) {
-                embed.setImage(mapUrl)
+              if (data.mapUrl.length > 1) {
+                embed.setImage(data.mapUrl)
               }
-              if (embendFields.length > 0) {
-                embed.setFields(embendFields)
-              }
+            } else if (serverInfo?.errors) {
+              await statusInt.editReply({
+                content: instance.messageHandler.get(guild, 'DEFAULT_ERROR'),
+                components: []
+              })
             } else {
               embed.setTitle('Offline').setDescription('Offline')
             }

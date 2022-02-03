@@ -86,5 +86,9 @@
   "NOT_AVAILABLE": {
     "english": "Not available",
     "portuguese": "Não disponivel"
+  },
+  "NO_SERVER_SELECTED": {
+    "english": "You didnt select a server",
+    "portuguese": "Você não selecionou nenhum servidor"
   }
 }
