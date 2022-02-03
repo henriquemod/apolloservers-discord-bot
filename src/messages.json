@@ -90,5 +90,9 @@
   "NO_SERVER_SELECTED": {
     "english": "You didnt select a server",
     "portuguese": "Você não selecionou nenhum servidor"
+  },
+  "MAX_SERVERS_REACHED": {
+    "english": "Max numbers of servers reached, at this moment only {MAX} servers are allowed",
+    "portuguese": "Numero máximo de servidores atingido, até o momento somente {MAX} servidores são permitidos"
   }
 }

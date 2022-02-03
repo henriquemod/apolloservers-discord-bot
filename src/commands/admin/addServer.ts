@@ -1,15 +1,17 @@
-import { __prod__ } from '../../utils/constants'
+import { __max_servers_allowed__, __prod__ } from '../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
 import guildServersSchema from '../../models/guild-servers'
 import { domainValidation, portValidation } from '../../utils/validations'
 import { isValveProtocol } from '../../utils/protocols'
+import { ServerProps } from '../../types/server'
 
 export default {
   category: 'Admin Panel',
   description: 'Add a server to your servers list',
   permissions: ['ADMINISTRATOR'],
   minArgs: 4,
+  maxArgs: 5,
   expectedArgs: '<name> <host> <port> <type> <description>',
   slash: true,
   testOnly: !__prod__,
@@ -52,6 +54,16 @@ export default {
     if (!guild) {
       return 'Please use this command within a server'
     }
+
+    const find = await guildServersSchema.findById({ _id: guild.id })
+    const servers = find.servers as ServerProps[]
+
+    if (servers.length >= __max_servers_allowed__) {
+      return instance.messageHandler.get(guild, 'MAX_SERVERS_REACHED', {
+        MAX: __max_servers_allowed__
+      })
+    }
+
     const serverName = interaction.options.getString('name')
     const serverHost = interaction.options.getString('host')
     const serverPort = interaction.options.getString('port')
