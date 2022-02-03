@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios from 'axios'
-// import { SingleServer } from '../../types/server'
+import { logInit, API_ERROR } from '../../config/log4jConfig'
 import {
   GetServerInfoQuery,
   GetMinimalServerinfoQuery,
@@ -8,6 +7,8 @@ import {
   GetMultiplesMinimalServerInfoQuery,
   GetServerInfoQueryVariables
 } from '../../generated/graphql'
+
+const log = logInit(['api', 'out']).getLogger('API')
 
 interface Props {
   host: string
@@ -18,75 +19,63 @@ interface Props {
 // ! Single Server - Complete
 export const serverInfoRequest = async (
   props: GetServerInfoQueryVariables
-): Promise<GetServerInfoQuery> => {
-  const restult = await axios({
-    url: 'http://localhost:4000/graphql',
-    method: 'post',
-    data: {
-      query: `
-        query serverInfo {
-          getServerInfo(apikey: "${props.apikey}", server: {host: "${props.host}", port: ${props.port}, type: "${props.type}"}) {
-            response {
-              name
-              connect
-              map
-              maxplayers
-              raw {
-                numplayers
-                tags
-                appId
-              }
-              players {
+): Promise<GetServerInfoQuery | undefined> => {
+  try {
+    const restult = await axios({
+      url: 'http://localhost:4000/graphql',
+      method: 'post',
+      data: {
+        query: `
+          query serverInfo {
+            getServerInfo(apikey: "${props.apikey}", server: {host: "${props.host}", port: ${props.port}, type: "${props.type}"}) {
+              response {
                 name
+                connect
+                map
+                maxplayers
                 raw {
-                  score
+                  numplayers
+                  tags
+                  appId
+                }
+                players {
+                  name
+                  raw {
+                    score
+                  }
                 }
               }
-            }
-            errors {
-              errorType
-              message
+              errors {
+                errorType
+                message
+              }
             }
           }
-        }
-        `
-    }
-  })
-
-  return restult.data.data as GetServerInfoQuery
+          `
+      }
+    })
+    return restult.data.data as GetServerInfoQuery
+  } catch (error) {
+    log.error(API_ERROR, error)
+  }
 }
 
 // ! Multiples Servers - Minimal
 export const multiplesMinimalServerRequest = async (
   props: QueryGetMultiplesServerInfoArgs
-): Promise<GetMultiplesMinimalServerInfoQuery> => {
-  let query = '['
-  props.servers.forEach((server) => {
-    query += `{ host: ${server.host}, port: ${server.port}, type: ${server.type}} `
-  })
-  query += ']'
+): Promise<GetMultiplesMinimalServerInfoQuery | undefined> => {
+  try {
+    let query = '['
+    props.servers.forEach((server) => {
+      query += `{ host: ${server.host}, port: ${server.port}, type: ${server.type}} `
+    })
+    query += ']'
 
-  // console.log(`
-  // query test {
-  //   getMultiplesServerInfo(apikey: "${props.apikey}", servers: ${query}) {
-  //     response {
-  //       name
-  //       map
-  //       maxplayers
-  //       raw {
-  //         numplayers
-  //       }
-  //       connect
-  //     }
-  //   }
-  // }
-  // `)
-
-  const restult = await axios({
-    url: 'http://localhost:4000/graphql',
-    method: 'post',
-    data: {
-      query: `
+    const restult = await axios({
+      url: 'http://localhost:4000/graphql',
+      method: 'post',
+      data: {
+        query: `
         query test {
           getMultiplesServerInfo(apikey: "${props.apikey}", servers: ${query}) {
             response {
@@ -101,40 +90,47 @@ export const multiplesMinimalServerRequest = async (
           }
         }
         `
-    }
-  })
-  // return null
-  return restult.data.data as GetMultiplesMinimalServerInfoQuery
+      }
+    })
+
+    return restult.data.data as GetMultiplesMinimalServerInfoQuery
+  } catch (error) {
+    log.error(API_ERROR, error)
+  }
 }
 
 export const minimalServerInfoRequest = async (
   props: Props
-): Promise<GetMinimalServerinfoQuery> => {
-  const restult = await axios({
-    url: 'http://localhost:4000/graphql',
-    method: 'post',
-    data: {
-      query: `
-        query test {
-          getServerInfo(apikey: "${props.apiKey}", server: {host: "${props.host}", port: ${props.port}, type: "csgo"}) {
-            response {
-              name
-              map
-              maxplayers
-              raw {
-                numplayers
+): Promise<GetMinimalServerinfoQuery | undefined> => {
+  try {
+    const restult = await axios({
+      url: 'http://localhost:4000/graphql',
+      method: 'post',
+      data: {
+        query: `
+          query test {
+            getServerInfo(apikey: "${props.apiKey}", server: {host: "${props.host}", port: ${props.port}, type: "csgo"}) {
+              response {
+                name
+                map
+                maxplayers
+                raw {
+                  numplayers
+                }
+                connect
               }
-              connect
-            }
-            errors {
-              errorType
-              message
+              errors {
+                errorType
+                message
+              }
             }
           }
-        }
-        `
-    }
-  })
+          `
+      }
+    })
 
-  return restult.data.data as GetMinimalServerinfoQuery
+    return restult.data.data as GetMinimalServerinfoQuery
+  } catch (error) {
+    log.error(API_ERROR, error)
+  }
 }
