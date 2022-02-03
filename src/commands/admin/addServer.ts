@@ -56,6 +56,9 @@ export default {
     }
 
     const find = await guildServersSchema.findById({ _id: guild.id })
+    if (!find) {
+      return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
+    }
     const servers = find.servers as ServerProps[]
 
     if (servers.length >= __max_servers_allowed__) {
