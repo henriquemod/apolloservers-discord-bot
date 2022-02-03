@@ -51,6 +51,10 @@ export default {
           servers: buildList
         })
 
+        if (!request) {
+          return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
+        }
+
         const result = request.getMultiplesServerInfo
 
         /**

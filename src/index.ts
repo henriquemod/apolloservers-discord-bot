@@ -3,10 +3,13 @@ import dotenv from 'dotenv'
 import { initializeWOK } from './utils/wokCommandsInit'
 import path from 'path'
 import { __prod__, __pwencription__ } from './utils/constants'
+import { logInit } from './config/log4jConfig'
 
 if (!__prod__) {
   dotenv.config()
 }
+
+const log = logInit(['app', 'out']).getLogger('APP')
 
 const COMMANDS_DIR = path.join(__dirname, 'commands')
 const MESSAGES_DIR = path.join(__dirname, 'messages.json')
@@ -42,5 +45,5 @@ const main = async (): Promise<void> => {
 }
 
 main().catch((err) => {
-  console.log(err)
+  log.error(err)
 })

@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import {
-  // EmbedFieldData,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
   MessageEmbed
 } from 'discord.js'
 import { createGroups } from '../utils/splitGroups'
-// import { csgoMap } from '../utils/urls/csgoMapsUrl'
 import { ICommand } from 'wokcommands'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
@@ -130,6 +127,14 @@ export default {
               type: serverSelected.type,
               apikey: apiKey
             })
+
+            if (!request) {
+              await statusInt.editReply({
+                content: instance.messageHandler.get(guild, 'DEFAULT_ERROR'),
+                components: []
+              })
+              return
+            }
 
             const embed = new MessageEmbed()
 
