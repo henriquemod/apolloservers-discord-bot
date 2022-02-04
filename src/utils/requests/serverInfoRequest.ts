@@ -7,6 +7,7 @@ import {
   GetMultiplesMinimalServerInfoQuery,
   GetServerInfoQueryVariables
 } from '../../generated/graphql'
+import { _apiendpoint_ } from '../constants'
 
 const log = logInit(['api', 'out']).getLogger('API')
 
@@ -22,7 +23,7 @@ export const serverInfoRequest = async (
 ): Promise<GetServerInfoQuery | undefined> => {
   try {
     const restult = await axios({
-      url: 'http://localhost:4000/graphql',
+      url: _apiendpoint_,
       method: 'post',
       data: {
         query: `
@@ -54,6 +55,7 @@ export const serverInfoRequest = async (
           `
       }
     })
+    log.info('REQUEST DATA: ', restult.data.data as GetServerInfoQuery)
     return restult.data.data as GetServerInfoQuery
   } catch (error) {
     log.error(API_ERROR, error)
@@ -72,7 +74,7 @@ export const multiplesMinimalServerRequest = async (
     query += ']'
 
     const restult = await axios({
-      url: 'http://localhost:4000/graphql',
+      url: _apiendpoint_,
       method: 'post',
       data: {
         query: `
@@ -104,7 +106,7 @@ export const minimalServerInfoRequest = async (
 ): Promise<GetMinimalServerinfoQuery | undefined> => {
   try {
     const restult = await axios({
-      url: 'http://localhost:4000/graphql',
+      url: _apiendpoint_,
       method: 'post',
       data: {
         query: `
