@@ -35,6 +35,7 @@ export type GamedigServerInfo = {
   ping: Scalars['Float'];
   players: Array<Player>;
   raw: RawInfo;
+  workshop?: Maybe<Workshop>;
 };
 
 export type Mutation = {
@@ -116,6 +117,7 @@ export type RawInfo = {
   secure?: Maybe<Scalars['Int']>;
   tags?: Maybe<Array<Scalars['String']>>;
   version?: Maybe<Scalars['String']>;
+  workshop_map_id?: Maybe<Scalars['Int']>;
 };
 
 export type Role = {
@@ -142,6 +144,11 @@ export type ServerResponse = {
   response?: Maybe<GamedigServerInfo>;
 };
 
+export type Tag = {
+  __typename?: 'Tag';
+  tag?: Maybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   apiKey?: Maybe<Scalars['String']>;
@@ -165,6 +172,34 @@ export type UsernamePasswordInput = {
   username: Scalars['String'];
 };
 
+export type Workshop = {
+  __typename?: 'Workshop';
+  ban_reason?: Maybe<Scalars['String']>;
+  banned?: Maybe<Scalars['Int']>;
+  consumer_app_id?: Maybe<Scalars['Int']>;
+  creator?: Maybe<Scalars['String']>;
+  creator_app_id?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  favorited?: Maybe<Scalars['Int']>;
+  file_size?: Maybe<Scalars['Int']>;
+  file_url?: Maybe<Scalars['String']>;
+  filename?: Maybe<Scalars['String']>;
+  hcontent_file?: Maybe<Scalars['String']>;
+  hcontent_preview?: Maybe<Scalars['String']>;
+  lifetime_favorited?: Maybe<Scalars['Int']>;
+  lifetime_subscriptions?: Maybe<Scalars['Int']>;
+  preview_url?: Maybe<Scalars['String']>;
+  publishedfileid?: Maybe<Scalars['String']>;
+  result?: Maybe<Scalars['Int']>;
+  subscriptions?: Maybe<Scalars['Int']>;
+  time_created?: Maybe<Scalars['Int']>;
+  time_updated?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  version?: Maybe<Array<Tag>>;
+  views?: Maybe<Scalars['Int']>;
+  visibility?: Maybe<Scalars['Int']>;
+};
+
 export type MinimalServerInfoFragment = { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string };
@@ -182,7 +217,7 @@ export type GetServerInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetServerInfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, password: boolean, connect: string, ping: number, raw: { __typename?: 'RawInfo', numplayers?: number | null, protocol?: number | null, folder?: string | null, game?: string | null, appId?: number | null, numbots?: number | null, secure?: number | null, version?: string | null, tags?: Array<string> | null }, players: Array<{ __typename?: 'Player', name: string, raw: { __typename?: 'Score', score?: string | null } }> } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };
+export type GetServerInfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, password: boolean, connect: string, ping: number, workshop?: { __typename?: 'Workshop', preview_url?: string | null } | null, raw: { __typename?: 'RawInfo', numplayers?: number | null, protocol?: number | null, folder?: string | null, game?: string | null, appId?: number | null, numbots?: number | null, secure?: number | null, version?: string | null, tags?: Array<string> | null }, players: Array<{ __typename?: 'Player', name: string, raw: { __typename?: 'Score', score?: string | null } }> } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };
 
 export type GetMinimalServerinfoQueryVariables = Exact<{
   apikey: Scalars['String'];

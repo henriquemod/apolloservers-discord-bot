@@ -34,6 +34,9 @@ export const serverInfoRequest = async (
                 connect
                 map
                 maxplayers
+                workshop {
+                  preview_url
+                }
                 raw {
                   numplayers
                   tags
@@ -55,7 +58,6 @@ export const serverInfoRequest = async (
           `
       }
     })
-    log.info('REQUEST DATA: ', restult.data.data as GetServerInfoQuery)
     return restult.data.data as GetServerInfoQuery
   } catch (error) {
     log.error(API_ERROR, error)

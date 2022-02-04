@@ -43,9 +43,13 @@ export const sanitizeResponse = (
     let thumbUrl = ''
     // If it pass this, we know is a valve protocol with a valid appid
     if (isValidProtocol(gametype) && typeof type === 'number') {
-      if (type === 730) {
-        const map = csgoMap.get(server.map)
-        mapUrl = map ?? ''
+      if (server.workshop?.preview_url) {
+        mapUrl = server.workshop.preview_url
+      } else {
+        if (type === 730) {
+          const map = csgoMap.get(server.map)
+          mapUrl = map ?? ''
+        }
       }
       thumbUrl = valveThumbsUrls.get(type) ?? ''
     }

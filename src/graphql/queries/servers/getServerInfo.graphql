@@ -12,6 +12,9 @@ query getServerInfo(
       name
       map
       maxplayers
+      workshop {
+        preview_url
+      }
       raw {
         numplayers
         protocol
