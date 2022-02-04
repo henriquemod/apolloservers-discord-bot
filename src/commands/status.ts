@@ -1,4 +1,5 @@
 import {
+  EmbedFieldData,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
@@ -175,10 +176,24 @@ export default {
                 embed.setImage(data.mapUrl)
               }
             } else if (serverInfo?.errors) {
+              const fields = serverInfo.errors.map(
+                (error) =>
+                  ({
+                    name: error.errorType,
+                    value: error.message
+                  } as EmbedFieldData)
+              )
               await statusInt.editReply({
-                content: instance.messageHandler.get(guild, 'DEFAULT_ERROR'),
+                content: '.',
+                embeds: [
+                  new MessageEmbed()
+                    .setTitle('Offline')
+                    .setDescription('Offline')
+                    .setFields(fields)
+                ],
                 components: []
               })
+              return
             } else {
               embed.setTitle('Offline').setDescription('Offline')
             }
