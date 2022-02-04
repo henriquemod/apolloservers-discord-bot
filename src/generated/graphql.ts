@@ -165,7 +165,7 @@ export type UsernamePasswordInput = {
   username: Scalars['String'];
 };
 
-export type MinimalServerInfoFragment = { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null } };
+export type MinimalServerInfoFragment = { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string };
 
@@ -192,7 +192,7 @@ export type GetMinimalServerinfoQueryVariables = Exact<{
 }>;
 
 
-export type GetMinimalServerinfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null } } | null } | null };
+export type GetMinimalServerinfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null } | null };
 
 export type GetMultiplesMinimalServerInfoQueryVariables = Exact<{
   apikey: Scalars['String'];
@@ -200,4 +200,4 @@ export type GetMultiplesMinimalServerInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetMultiplesMinimalServerInfoQuery = { __typename?: 'Query', getMultiplesServerInfo?: Array<{ __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null } } | null }> | null };
+export type GetMultiplesMinimalServerInfoQuery = { __typename?: 'Query', getMultiplesServerInfo?: Array<{ __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null }> | null };

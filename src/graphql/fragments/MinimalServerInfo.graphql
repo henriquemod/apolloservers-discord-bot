@@ -4,6 +4,7 @@ fragment MinimalServerInfo on GamedigServerInfo {
   maxplayers
   raw {
     numplayers
+    game
   }
   connect
 }

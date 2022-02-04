@@ -5,6 +5,7 @@ import { ServerProps } from '../types/server'
 import { EmbedFieldData, MessageEmbed } from 'discord.js'
 import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
 import EncryptorDecryptor from '../utils/encryption'
+import { sanitizeListResponse } from '../utils/sanitizeResponse'
 
 export default {
   category: 'Servers',
@@ -38,7 +39,7 @@ export default {
           apiKey = encryption.decryptString(find.apiKey, __pwencription__)
         }
 
-        const embendFields: EmbedFieldData[] = []
+        // const embendFields: EmbedFieldData[] = []
 
         const buildList = servers.map((server) => ({
           host: `"${server.host}"`,
@@ -57,28 +58,35 @@ export default {
 
         const result = request.getMultiplesServerInfo
 
-        /**
-         * TODO - Improve this mess
-         */
         if (result) {
-          result.forEach((server) => {
-            const players = server.response?.raw?.numplayers
-              ? server.response?.raw?.numplayers
-              : (instance.messageHandler.get(guild, 'NOT_AVAILABLE') as string)
-            if (server.response) {
-              embendFields.push({
-                name: server.response?.name,
-                value: `IP: ${server.response?.connect} | Players: ${players}/${server.response?.maxplayers}`
-              } as EmbedFieldData)
-            }
-          })
+          const data = sanitizeListResponse(result)
+          if (data) {
+            const embed = new MessageEmbed().setTitle(
+              instance.messageHandler.get(guild, 'LIST_SERVERS')
+            )
+            const fields: EmbedFieldData[] = []
+            data.servers.forEach((server) => {
+              const value =
+                '\n' +
+                server.game +
+                '\n IP: ' +
+                server.connect +
+                ' ' +
+                server.players +
+                '\n\n﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉'
+              fields.push({
+                name: server.title,
+                value: value
+              })
+            })
+            embed.setFields(fields)
+            return embed
+          } else {
+            return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
+          }
+        } else {
+          return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
         }
-
-        const embed = new MessageEmbed()
-          .setTitle(instance.messageHandler.get(guild, 'LIST_SERVERS'))
-          .setFields(embendFields)
-
-        return embed
       }
     }
   }

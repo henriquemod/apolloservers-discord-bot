@@ -86,6 +86,7 @@ export const multiplesMinimalServerRequest = async (
               maxplayers
               raw {
                 numplayers
+                game
               }
               connect
             }

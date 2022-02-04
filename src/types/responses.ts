@@ -9,6 +9,14 @@ interface SingleServer {
   thumbUrl: string
 }
 
+export interface SrvMinimalInfo {
+  title: string
+  map: string
+  players: string
+  connect: string
+  game: string
+}
+
 interface SingleServerError {
   errorType: string | null | undefined
   message: string | null | undefined
@@ -17,4 +25,8 @@ interface SingleServerError {
 export interface SingleServerResponse {
   serverData?: SingleServer
   errors: SingleServerError[] | undefined
+}
+
+export interface ListResponse {
+  servers: SrvMinimalInfo[]
 }

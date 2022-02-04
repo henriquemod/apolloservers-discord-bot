@@ -1,5 +1,12 @@
-import { SingleServerResponse } from '../types/responses'
-import { GetServerInfoQuery } from '../generated/graphql'
+import {
+  ListResponse,
+  SingleServerResponse,
+  SrvMinimalInfo
+} from '../types/responses'
+import {
+  GetMultiplesMinimalServerInfoQuery,
+  GetServerInfoQuery
+} from '../generated/graphql'
 import { isValidProtocol } from './protocols'
 import { csgoMap } from './urls/csgoMapsUrl'
 import { valveThumbsUrls } from './urls/valveThumbsUrls'
@@ -36,8 +43,6 @@ export const sanitizeResponse = (
     let thumbUrl = ''
     // If it pass this, we know is a valve protocol with a valid appid
     if (isValidProtocol(gametype) && typeof type === 'number') {
-      console.log('GAMETYPE: ', type)
-
       if (type === 730) {
         const map = csgoMap.get(server.map)
         mapUrl = map ?? ''
@@ -79,5 +84,33 @@ export const sanitizeResponse = (
         message: error.message
       }))
     }
+  }
+}
+
+export const sanitizeListResponse = (
+  data: GetMultiplesMinimalServerInfoQuery['getMultiplesServerInfo']
+): ListResponse | undefined => {
+  const build: SrvMinimalInfo[] = []
+
+  const result = data?.filter((server) => server.response)
+
+  if (result && result?.length > 0) {
+    result.forEach((server) => {
+      if (server.response) {
+        const data = server.response
+        const playerCount = data.raw.numplayers ?? '-'
+        const players = `Slots: ${playerCount}/${data.maxplayers}`
+        build.push({
+          title: data.name,
+          map: data.map,
+          players,
+          connect: data.connect,
+          game: data.raw.game ?? 'Unknown game'
+        })
+      }
+    })
+  }
+  return {
+    servers: build
   }
 }

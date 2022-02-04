@@ -46,7 +46,6 @@ export default {
       )
       return instance.messageHandler.get(guild, 'API_ADDED')
     } catch (error) {
-      console.log(error)
       return instance.messageHandler.get(guild, 'API_ADD_ERROR')
     }
   }

@@ -86,7 +86,6 @@ export default {
           })
         })
 
-        console.log('COLECTION', collection.size)
         await msgInt.editReply({
           content: instance.messageHandler.get(
             guild,
