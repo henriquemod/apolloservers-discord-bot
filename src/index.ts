@@ -12,8 +12,9 @@ import { logInit } from './config/log4jConfig'
 const log = logInit(['app', 'out']).getLogger('APP')
 
 const COMMANDS_DIR = path.join(__dirname, 'commands')
+const FEATURES_DIR = path.join(__dirname, 'features')
 const MESSAGES_DIR = path.join(__dirname, 'messages.json')
-const BOT_OWNER = process.env.OWNER
+const BOT_OWNER = process.env.OWNER ?? ''
 
 const main = async (): Promise<void> => {
   if (!__pwencription__) {
@@ -28,20 +29,15 @@ const main = async (): Promise<void> => {
     ]
   })
 
-  client.on('guildCreate', async (guild) => {
-    await guild.systemChannel?.send({
-      content: "Thank's for adding me into your server"
-    })
-  })
-
   client.on('ready', () => {
-    initializeWOK(
+    initializeWOK({
       client,
-      COMMANDS_DIR,
-      MESSAGES_DIR,
-      process.env.MONGO_URI ?? '',
-      BOT_OWNER
-    )
+      dir: COMMANDS_DIR,
+      messagesDir: MESSAGES_DIR,
+      featuresDir: FEATURES_DIR,
+      mongoUri: process.env.MONGO_URI ?? '',
+      owner: BOT_OWNER
+    })
     console.log('Bot is ready')
   })
 

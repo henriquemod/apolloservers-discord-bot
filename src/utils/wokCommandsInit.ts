@@ -1,19 +1,19 @@
-import DiscordJS from 'discord.js'
+import { WOKProps } from '../types/wok'
 import WOKCommands from 'wokcommands'
 
-// const MESSAGES_DIR = '../messages.json'
-
-export const initializeWOK = (
-  client: DiscordJS.Client<boolean>,
-  dir: string,
-  messagesDir: string,
-  mongoUri: string,
-  owner?: string
-): WOKCommands => {
+export const initializeWOK = ({
+  client,
+  dir,
+  messagesDir,
+  featuresDir,
+  mongoUri,
+  owner
+}: WOKProps): WOKCommands => {
   return new WOKCommands(client, {
     commandsDir: dir,
     messagesPath: messagesDir,
-    testServers: ['891477811481677834'],
+    featuresDir,
+    testServers: ['939523636535124018'],
     mongoUri,
     botOwners: owner ?? '',
     defaultLanguage: 'english'

@@ -115,7 +115,7 @@ export default {
 
             const apiKey = encryption.decryptString(
               find.apiKey,
-              __pwencription__
+              __pwencription__ ?? ''
             )
 
             const serverSelected = query.servers[0] as ServerProps

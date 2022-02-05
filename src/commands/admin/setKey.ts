@@ -34,7 +34,7 @@ export default {
 
     try {
       const enc = new EncryptorDecryptor()
-      const encryptedApiKey = enc.encryptString(apiKey, __pwencription__)
+      const encryptedApiKey = enc.encryptString(apiKey, __pwencription__ ?? '')
       await guildServersSchema.findByIdAndUpdate(
         { _id: guild.id },
         {
