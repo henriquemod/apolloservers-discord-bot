@@ -4,6 +4,7 @@ import { initializeWOK } from './utils/wokCommandsInit'
 import path from 'path'
 import { __pwencription__ } from './utils/constants'
 import { logInit } from './config/log4jConfig'
+import { C_PRIMARY } from './config/colors'
 
 // if (!__prod__) {
 //   dotenv.config()
@@ -37,7 +38,7 @@ const main = async (): Promise<void> => {
       featuresDir: FEATURES_DIR,
       mongoUri: process.env.MONGO_URI ?? '',
       owner: BOT_OWNER
-    })
+    }).setColor(C_PRIMARY)
     console.log('Bot is ready')
   })
 

@@ -1,5 +1,6 @@
 import { WOKProps } from '../types/wok'
 import WOKCommands from 'wokcommands'
+import { _botname_, __prod__ } from './constants'
 
 export const initializeWOK = ({
   client,
@@ -16,6 +17,25 @@ export const initializeWOK = ({
     testServers: ['939523636535124018'],
     mongoUri,
     botOwners: owner ?? '',
-    defaultLanguage: 'english'
+    defaultLanguage: 'english',
+    delErrMsgCooldown: 3,
+    debug: !__prod__
   })
+    .setDisplayName(_botname_)
+    .setCategorySettings([
+      {
+        name: 'Admin Panel',
+        emoji: '👮‍♂️',
+        hidden: true
+      },
+      {
+        name: 'Configuration',
+        emoji: '🚧',
+        hidden: true
+      },
+      {
+        name: 'Servers',
+        emoji: '🎮'
+      }
+    ])
 }
