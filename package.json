@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon dist/src/index.js",
+    "dev": "nodemon dist/index.js",
     "dev:ts": "ts-node src/index.ts",
     "gen": "graphql-codegen --config codegen.yml",
     "prepare": "husky install"
