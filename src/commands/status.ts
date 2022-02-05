@@ -3,7 +3,8 @@ import {
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
-  MessageEmbed
+  MessageEmbed,
+  Message
 } from 'discord.js'
 import { createGroups } from '../utils/splitGroups'
 import { ICommand } from 'wokcommands'
@@ -15,8 +16,6 @@ import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
 
 const encryption = new EncryptorDecryptor()
-
-const DEFAULT_TIMEOUT = 3500
 
 export default {
   category: 'Servers',
@@ -34,6 +33,8 @@ export default {
     if (!guild) {
       return 'Please use this command within a server'
     }
+
+    let botMessage: Message
 
     const find = await guildServersSchema.findById({ _id: guild.id })
 
@@ -61,15 +62,10 @@ export default {
         })
 
         if (message) {
-          const botReply = await message.reply({
+          botMessage = await message.reply({
             content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
             components: rows.map((row) => row)
           })
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          setTimeout(async () => {
-            await botReply.delete()
-            // await message.delete()
-          }, DEFAULT_TIMEOUT)
         } else {
           await statusInt.reply({
             content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
@@ -137,6 +133,7 @@ export default {
                 await message.reply(
                   instance.messageHandler.get(guild, 'NO_SERVER_SELECTED')
                 )
+                await botMessage.delete()
                 return
               } else {
                 await statusInt.editReply({
@@ -171,6 +168,7 @@ export default {
                 await message.reply(
                   instance.messageHandler.get(guild, 'DEFAULT_ERROR')
                 )
+                await botMessage.delete()
                 return
               } else {
                 await statusInt.editReply({
@@ -237,6 +235,7 @@ export default {
                       .setFields(fields)
                   ]
                 })
+                await botMessage.delete()
                 return
               } else {
                 await statusInt.editReply({
@@ -258,6 +257,7 @@ export default {
               await message.channel.send({
                 embeds: [embed]
               })
+              await botMessage.delete()
               return
             }
             await statusInt.editReply({
