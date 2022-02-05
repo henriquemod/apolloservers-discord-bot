@@ -1,20 +1,22 @@
 import {
   EmbedFieldData,
+  Message,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
   MessageEmbed,
-  Message
+  ReplyMessageOptions
 } from 'discord.js'
-import { createGroups } from '../utils/splitGroups'
 import { ICommand } from 'wokcommands'
+import { C_DANGER, C_SUCCESS } from '../config/colors'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { __prod__, __pwencription__ } from '../utils/constants'
+import { makeEmdedOptions, makeOffileEmbend } from '../utils/discord/embedUtils'
 import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
-import { C_SUCCESS, C_DANGER } from '../config/colors'
+import { createGroups } from '../utils/splitGroups'
 
 const encryption = new EncryptorDecryptor()
 
@@ -62,15 +64,18 @@ export default {
           return row
         })
 
+        /**
+         * Send to user the list of servers
+         */
+        const obj: ReplyMessageOptions = {
+          content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
+          components: rows.map((row) => row)
+        }
         if (message) {
-          botMessage = await message.reply({
-            content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
-            components: rows.map((row) => row)
-          })
+          botMessage = await message.reply(obj)
         } else {
           await statusInt.reply({
-            content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
-            components: rows.map((row) => row),
+            ...obj,
             ephemeral: true
           })
         }
@@ -83,200 +88,175 @@ export default {
         const collector = channel.createMessageComponentCollector({
           filter,
           max: 1,
-          time: 1000 * 10
+          time: 1000 * 7
         })
 
         collector.on('end', async (collection) => {
           let id
-          let wasCancel = false
           collection.forEach((click) => {
-            if (click.customId !== 'btn_cancel') {
-              id = click.customId
-            } else {
-              wasCancel = true
-            }
+            id = click.customId
           })
 
-          if (!wasCancel) {
-            const query = await guildServersSchema.findOne(
-              {
-                _id: guild.id
-              },
-              { servers: { $elemMatch: { _id: id } } }
-            )
+          const query = await guildServersSchema.findOne(
+            {
+              _id: guild.id
+            },
+            { servers: { $elemMatch: { _id: id } } }
+          )
 
-            /**
-             * NOTE - Check if there is no server added
-             *        shoudnt be a problem since if bot get here
-             *        means that already have some server added,
-             *        but just to be sure
-             */
-            if (!query) {
-              if (message) {
-                await message.reply(
-                  instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
-                )
-                return
-              } else {
-                await statusInt.editReply({
-                  content: instance.messageHandler.get(
-                    guild,
-                    'ERROR_NONE_GAMESERVER'
-                  ),
-                  components: []
-                })
-                return
-              }
-            }
-
-            if (query.servers.length === 0) {
-              if (message) {
-                await message.reply(
-                  instance.messageHandler.get(guild, 'NO_SERVER_SELECTED')
-                )
-                await botMessage.delete()
-                return
-              } else {
-                await statusInt.editReply({
-                  content: instance.messageHandler.get(
-                    guild,
-                    'NO_SERVER_SELECTED'
-                  ),
-                  components: []
-                })
-                return
-              }
-            }
-
-            const apiKey = encryption.decryptString(
-              find.apiKey,
-              __pwencription__ ?? ''
-            )
-
-            const serverSelected = query.servers[0] as ServerProps
-
-            if (!serverSelected) return
-
-            const request = await serverInfoRequest({
-              host: serverSelected.host,
-              port: serverSelected.port,
-              type: serverSelected.type,
-              apikey: apiKey
-            })
-
-            if (!request) {
-              if (message) {
-                await message.reply(
-                  instance.messageHandler.get(guild, 'DEFAULT_ERROR')
-                )
-                await botMessage.delete()
-                return
-              } else {
-                await statusInt.editReply({
-                  content: instance.messageHandler.get(guild, 'DEFAULT_ERROR'),
-                  components: []
-                })
-                return
-              }
-            }
-
-            const embed = new MessageEmbed()
-
-            const serverInfo = sanitizeResponse(
-              request.getServerInfo,
-              serverSelected.type,
-              serverSelected.description ?? 'The best server is the world'
-            )
-
-            if (serverInfo?.serverData) {
-              const data = serverInfo?.serverData
-              embed
-                .setFields([
-                  {
-                    name: 'Slots',
-                    value: data.slots
-                  },
-                  {
-                    name: 'Connect',
-                    value: data.connect
-                  },
-                  {
-                    name: 'Players',
-                    value: data.players
-                  }
-                ])
-                .setTitle(data.title)
-                .setThumbnail(data.thumbUrl)
-                .setAuthor({
-                  name: 'Apollo Servers',
-                  url: 'https://github.com/henriquemod'
-                })
-                .setDescription(data.desc)
-                .setColor(C_SUCCESS)
-                .setFooter({
-                  text: data.tags
-                })
-              if (data.mapUrl.length > 1) {
-                embed.setImage(data.mapUrl)
-              }
-            } else if (serverInfo?.errors) {
-              const fields = serverInfo.errors.map(
-                (error) =>
-                  ({
-                    name: error.errorType,
-                    value: error.message
-                  } as EmbedFieldData)
+          /**
+           * NOTE - Check if there is no server added
+           *        shoudnt be a problem since if bot get here
+           *        means that already have some server added,
+           *        but just to be sure
+           */
+          if (!query) {
+            const errormsg = makeEmdedOptions({
+              content: instance.messageHandler.get(
+                guild,
+                'ERROR_NONE_GAMESERVER'
               )
+            })
 
-              if (message) {
-                await message.reply({
-                  embeds: [
-                    new MessageEmbed()
-                      .setTitle('Offline')
-                      .setDescription('Offline')
-                      .setFields(fields)
-                      .setColor(C_DANGER)
-                  ]
-                })
-                await botMessage.delete()
-                return
-              } else {
-                await statusInt.editReply({
-                  content: '.',
-                  embeds: [
-                    new MessageEmbed()
-                      .setTitle('Offline')
-                      .setDescription('Offline')
-                      .setFields(fields)
-                      .setColor(C_DANGER)
-                  ],
-                  components: []
-                })
-                return
-              }
-            } else {
-              embed
-                .setTitle('Offline')
-                .setDescription('Offline')
-                .setColor(C_DANGER)
-            }
             if (message) {
-              await message.channel.send({
-                embeds: [embed]
-              })
-              await botMessage.delete()
-              return
+              await message.reply(errormsg)
+            } else {
+              await statusInt.editReply(errormsg)
             }
-            await statusInt.editReply({
-              content: '.',
-              embeds: [embed],
-              components: []
+
+            return
+          }
+
+          if (query.servers.length === 0) {
+            const errormsg = makeEmdedOptions({
+              content: instance.messageHandler.get(guild, 'NO_SERVER_SELECTED')
             })
+
+            if (message) {
+              await Promise.all([message.reply(errormsg), botMessage.delete()])
+            } else {
+              await statusInt.editReply(errormsg)
+            }
+
+            return
+          }
+
+          const serverSelected = query.servers[0] as ServerProps
+
+          if (!serverSelected) return
+
+          const apiKey = encryption.decryptString(
+            find.apiKey,
+            __pwencription__ ?? ''
+          )
+
+          const request = await serverInfoRequest({
+            host: serverSelected.host,
+            port: serverSelected.port,
+            type: serverSelected.type,
+            apikey: apiKey
+          })
+
+          if (!request) {
+            const errormsg = makeEmdedOptions({
+              content: instance.messageHandler.get(guild, 'DEFAULT_ERROR')
+            })
+
+            if (message) {
+              await Promise.all([message.reply(errormsg), botMessage.delete()])
+            } else {
+              await statusInt.editReply(errormsg)
+            }
+            return
+          }
+
+          const embed = new MessageEmbed()
+
+          const serverInfo = sanitizeResponse(
+            request.getServerInfo,
+            serverSelected.type,
+            serverSelected.description ?? 'The best server is the world'
+          )
+
+          /**
+           * NOTE - If serverData is present, it means that the server is online
+           *       and data is sanitized and ready to be sent to discord
+           */
+          if (serverInfo?.serverData) {
+            const data = serverInfo?.serverData
+            embed
+              .setFields([
+                {
+                  name: 'Slots',
+                  value: data.slots
+                },
+                {
+                  name: 'Connect',
+                  value: data.connect
+                },
+                {
+                  name: 'Players',
+                  value: data.players
+                }
+              ])
+              .setTitle(data.title)
+              .setThumbnail(data.thumbUrl)
+              .setAuthor({
+                name: 'Apollo Servers',
+                url: 'https://github.com/henriquemod'
+              })
+              .setDescription(data.desc)
+              .setColor(C_SUCCESS)
+              .setFooter({
+                text: data.tags
+              })
+            if (data.mapUrl.length > 1) {
+              embed.setImage(data.mapUrl)
+            }
+          } else if (serverInfo?.errors) {
+            /**
+             * NOTE - If serverData is not present, it means that the server is possibly offline
+             *        in this case, we want make sure if there is not an error coming from the api
+             *       and if there is an error, we want to show as embed to discord server
+             */
+            const fields = serverInfo.errors.map(
+              (error) =>
+                ({
+                  name: error.errorType,
+                  value: error.message
+                } as EmbedFieldData)
+            )
+
+            const replymsgn = makeEmdedOptions({
+              embed: makeOffileEmbend(fields)
+            })
+
+            if (message) {
+              await Promise.all([message.reply(replymsgn), botMessage.delete()])
+            } else {
+              await statusInt.editReply(replymsgn)
+            }
+
+            return
           } else {
-            await statusInt.editReply({
-              content: instance.messageHandler.get(guild, 'CANCEL_ACTION'),
-              components: []
-            })
+            /**
+             * NOTE - If neither serverData nor errors are present,
+             *        it means that the server is possibly offline
+             *        or missconfigured, in this case, we just want
+             *        to show a default offline embed to discord server
+             */
+            embed
+              .setTitle('Offline')
+              .setDescription('Offline')
+              .setColor(C_DANGER)
+          }
+          if (message) {
+            await Promise.all([
+              message.channel.send(makeEmdedOptions({ embed })),
+              botMessage.delete()
+            ])
+          } else {
+            await statusInt.editReply(makeEmdedOptions({ embed }))
           }
         })
       }
