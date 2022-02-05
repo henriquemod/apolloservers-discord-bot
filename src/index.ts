@@ -1,14 +1,11 @@
 import DiscordJS, { Intents } from 'discord.js'
-// import dotenv from 'dotenv'
 import { initializeWOK } from './utils/wokCommandsInit'
 import path from 'path'
 import { __pwencription__ } from './utils/constants'
 import { logInit } from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
-
-// if (!__prod__) {
-//   dotenv.config()
-// }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {} from './messages.json'
 
 const log = logInit(['app', 'out']).getLogger('APP')
 
@@ -40,7 +37,6 @@ const main = async (): Promise<void> => {
       owner: BOT_OWNER
     }).setColor(C_PRIMARY)
 
-    // Ran when an exception occurs within a command
     wok.on(
       'commandException',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

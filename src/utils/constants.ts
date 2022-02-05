@@ -1,5 +1,8 @@
-import dotenv from 'dotenv'
-dotenv.config()
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('dotenv').config()
+}
+
 /* eslint-disable @typescript-eslint/naming-convention */
 export const __prod__ = process.env.NODE_ENV === 'production'
 export const __pwencription__ = process.env.DECRIPT_KEY

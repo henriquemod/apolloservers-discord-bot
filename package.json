@@ -1,11 +1,14 @@
 {
   "name": "apolloservers-discord-bot",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "The only discord bot you will need to query your gameservers",
   "main": "dist/index.js",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon dist/index.js",
+    "compile": "tsc --build",
+    "clean": "rm -rf dist/*",
+    "build": "yarn clean && yarn compile",
+    "dev": "NODE_ENV=development nodemon dist/index.js",
     "dev:ts": "ts-node src/index.ts",
     "gen": "graphql-codegen --config codegen.yml",
     "prepare": "husky install"
