@@ -31,7 +31,7 @@ const main = async (): Promise<void> => {
   })
 
   client.on('ready', () => {
-    initializeWOK({
+    const wok = initializeWOK({
       client,
       dir: COMMANDS_DIR,
       messagesDir: MESSAGES_DIR,
@@ -39,6 +39,20 @@ const main = async (): Promise<void> => {
       mongoUri: process.env.MONGO_URI ?? '',
       owner: BOT_OWNER
     }).setColor(C_PRIMARY)
+
+    // Ran when an exception occurs within a command
+    wok.on(
+      'commandException',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (command: { names: any[] }, message: any, error: any) => {
+        log.error('Exception Error', {
+          command,
+          message,
+          error
+        })
+      }
+    )
+
     console.log('Bot is ready')
   })
 

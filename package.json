@@ -1,6 +1,6 @@
 {
   "name": "apolloservers-discord-bot",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The only discord bot you will need to query your gameservers",
   "main": "dist/index.js",
   "scripts": {
