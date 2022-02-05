@@ -1,19 +1,18 @@
 import DiscordJS, { Intents } from 'discord.js'
-// import dotenv from 'dotenv'
 import { initializeWOK } from './utils/wokCommandsInit'
 import path from 'path'
 import { __pwencription__ } from './utils/constants'
 import { logInit } from './config/log4jConfig'
-
-// if (!__prod__) {
-//   dotenv.config()
-// }
+import { C_PRIMARY } from './config/colors'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {} from './messages.json'
 
 const log = logInit(['app', 'out']).getLogger('APP')
 
 const COMMANDS_DIR = path.join(__dirname, 'commands')
+const FEATURES_DIR = path.join(__dirname, 'features')
 const MESSAGES_DIR = path.join(__dirname, 'messages.json')
-const BOT_OWNER = process.env.OWNER
+const BOT_OWNER = process.env.OWNER ?? ''
 
 const main = async (): Promise<void> => {
   if (!__pwencription__) {
@@ -28,20 +27,28 @@ const main = async (): Promise<void> => {
     ]
   })
 
-  client.on('guildCreate', async (guild) => {
-    await guild.systemChannel?.send({
-      content: "Thank's for adding me into your server"
-    })
-  })
-
   client.on('ready', () => {
-    initializeWOK(
+    const wok = initializeWOK({
       client,
-      COMMANDS_DIR,
-      MESSAGES_DIR,
-      process.env.MONGO_URI ?? '',
-      BOT_OWNER
+      dir: COMMANDS_DIR,
+      messagesDir: MESSAGES_DIR,
+      featuresDir: FEATURES_DIR,
+      mongoUri: process.env.MONGO_URI ?? '',
+      owner: BOT_OWNER
+    }).setColor(C_PRIMARY)
+
+    wok.on(
+      'commandException',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (command: { names: any[] }, message: any, error: any) => {
+        log.error('Exception Error', {
+          command,
+          message,
+          error
+        })
+      }
     )
+
     console.log('Bot is ready')
   })
 

@@ -9,10 +9,14 @@ import {
 } from '../generated/graphql'
 import { isValidProtocol } from './protocols'
 import { csgoMap } from './urls/csgoMapsUrl'
+import { cssMap } from './urls/cssMapsUrl'
 // import { valveThumbsUrls } from './urls/valveThumbsUrls'
 
 const UNDEFINED_APPID = 999
 
+const unkownString = (label: string): string => {
+  return label.length > 1 ? label : 'Unknown'
+}
 export const sanitizeResponse = (
   data: GetServerInfoQuery['getServerInfo'],
   gametype: string,
@@ -50,6 +54,10 @@ export const sanitizeResponse = (
           const map = csgoMap.get(server.map)
           mapUrl = map ?? ''
         }
+        if (type === 240) {
+          const map = cssMap.get(server.map)
+          mapUrl = map ?? ''
+        }
       }
       thumbUrl = server.gameDetails?.data?.header_image ?? ''
     }
@@ -69,13 +77,13 @@ export const sanitizeResponse = (
 
     return {
       serverData: {
-        title: server.name,
-        desc,
-        slots,
-        connect: server.connect,
-        players: playersList,
-        mapUrl: mapUrl,
-        tags,
+        title: unkownString(server.name),
+        desc: unkownString(desc),
+        slots: unkownString(slots),
+        connect: unkownString(server.connect),
+        players: unkownString(playersList),
+        mapUrl,
+        tags: unkownString(tags),
         thumbUrl
       },
       errors: undefined
