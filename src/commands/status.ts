@@ -16,13 +16,21 @@ import { sanitizeResponse } from '../utils/sanitizeResponse'
 
 const encryption = new EncryptorDecryptor()
 
+const DEFAULT_TIMEOUT = 3500
+
 export default {
   category: 'Servers',
   description: 'Show a server info',
   slash: 'both',
   testOnly: !__prod__,
 
-  callback: async ({ interaction: statusInt, channel, guild, instance }) => {
+  callback: async ({
+    interaction: statusInt,
+    channel,
+    guild,
+    instance,
+    message
+  }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
@@ -52,14 +60,27 @@ export default {
           return row
         })
 
-        await statusInt.reply({
-          content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
-          components: rows.map((row) => row),
-          ephemeral: true
-        })
+        if (message) {
+          const botReply = await message.reply({
+            content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
+            components: rows.map((row) => row)
+          })
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          setTimeout(async () => {
+            await botReply.delete()
+            // await message.delete()
+          }, DEFAULT_TIMEOUT)
+        } else {
+          await statusInt.reply({
+            content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
+            components: rows.map((row) => row),
+            ephemeral: true
+          })
+        }
 
         const filter = (btnInt: MessageComponentInteraction): boolean => {
-          return btnInt.user.id === statusInt.user.id
+          const userId = message ? message.author.id : statusInt.user.id
+          return btnInt.user.id === userId
         }
 
         const collector = channel.createMessageComponentCollector({
@@ -94,23 +115,39 @@ export default {
              *        but just to be sure
              */
             if (!query) {
-              await statusInt.editReply({
-                content: instance.messageHandler.get(
-                  guild,
-                  'ERROR_NONE_GAMESERVER'
-                ),
-                components: []
-              })
+              if (message) {
+                await message.reply(
+                  instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
+                )
+                return
+              } else {
+                await statusInt.editReply({
+                  content: instance.messageHandler.get(
+                    guild,
+                    'ERROR_NONE_GAMESERVER'
+                  ),
+                  components: []
+                })
+                return
+              }
             }
 
             if (query.servers.length === 0) {
-              await statusInt.editReply({
-                content: instance.messageHandler.get(
-                  guild,
-                  'NO_SERVER_SELECTED'
-                ),
-                components: []
-              })
+              if (message) {
+                await message.reply(
+                  instance.messageHandler.get(guild, 'NO_SERVER_SELECTED')
+                )
+                return
+              } else {
+                await statusInt.editReply({
+                  content: instance.messageHandler.get(
+                    guild,
+                    'NO_SERVER_SELECTED'
+                  ),
+                  components: []
+                })
+                return
+              }
             }
 
             const apiKey = encryption.decryptString(
@@ -130,19 +167,18 @@ export default {
             })
 
             if (!request) {
-              await statusInt.editReply({
-                content: instance.messageHandler.get(guild, 'DEFAULT_ERROR'),
-                components: []
-              })
-              return
-            }
-
-            if (request.getServerInfo?.errors) {
-              await statusInt.editReply({
-                content: instance.messageHandler.get(guild, 'API_KEY_ERROR'),
-                components: []
-              })
-              return
+              if (message) {
+                await message.reply(
+                  instance.messageHandler.get(guild, 'DEFAULT_ERROR')
+                )
+                return
+              } else {
+                await statusInt.editReply({
+                  content: instance.messageHandler.get(guild, 'DEFAULT_ERROR'),
+                  components: []
+                })
+                return
+              }
             }
 
             const embed = new MessageEmbed()
@@ -191,19 +227,38 @@ export default {
                     value: error.message
                   } as EmbedFieldData)
               )
-              await statusInt.editReply({
-                content: '.',
-                embeds: [
-                  new MessageEmbed()
-                    .setTitle('Offline')
-                    .setDescription('Offline')
-                    .setFields(fields)
-                ],
-                components: []
-              })
-              return
+
+              if (message) {
+                await message.reply({
+                  embeds: [
+                    new MessageEmbed()
+                      .setTitle('Offline')
+                      .setDescription('Offline')
+                      .setFields(fields)
+                  ]
+                })
+                return
+              } else {
+                await statusInt.editReply({
+                  content: '.',
+                  embeds: [
+                    new MessageEmbed()
+                      .setTitle('Offline')
+                      .setDescription('Offline')
+                      .setFields(fields)
+                  ],
+                  components: []
+                })
+                return
+              }
             } else {
               embed.setTitle('Offline').setDescription('Offline')
+            }
+            if (message) {
+              await message.channel.send({
+                embeds: [embed]
+              })
+              return
             }
             await statusInt.editReply({
               content: '.',
