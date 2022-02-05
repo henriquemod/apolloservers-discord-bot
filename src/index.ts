@@ -1,13 +1,13 @@
 import DiscordJS, { Intents } from 'discord.js'
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import { initializeWOK } from './utils/wokCommandsInit'
 import path from 'path'
-import { __prod__, __pwencription__ } from './utils/constants'
+import { __pwencription__ } from './utils/constants'
 import { logInit } from './config/log4jConfig'
 
-if (!__prod__) {
-  dotenv.config()
-}
+// if (!__prod__) {
+//   dotenv.config()
+// }
 
 const log = logInit(['app', 'out']).getLogger('APP')
 
