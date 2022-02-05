@@ -12,6 +12,24 @@ export type Scalars = {
   Float: number;
 };
 
+export type Data = {
+  __typename?: 'Data';
+  about_the_game?: Maybe<Scalars['String']>;
+  background?: Maybe<Scalars['String']>;
+  detailed_description?: Maybe<Scalars['String']>;
+  header_image?: Maybe<Scalars['String']>;
+  is_free?: Maybe<Scalars['Boolean']>;
+  name?: Maybe<Scalars['String']>;
+  platforms?: Maybe<Plataforms>;
+  required_age?: Maybe<Scalars['Int']>;
+  screenshots?: Maybe<Array<ScreenShot>>;
+  short_description?: Maybe<Scalars['String']>;
+  steam_appid?: Maybe<Scalars['Int']>;
+  supported_languages?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  website?: Maybe<Scalars['String']>;
+};
+
 export type ErrorOutput = {
   __typename?: 'ErrorOutput';
   errorType?: Maybe<Scalars['String']>;
@@ -24,9 +42,16 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type GameDetails = {
+  __typename?: 'GameDetails';
+  data?: Maybe<Data>;
+  success: Scalars['Boolean'];
+};
+
 export type GamedigServerInfo = {
   __typename?: 'GamedigServerInfo';
   connect: Scalars['String'];
+  gameDetails?: Maybe<GameDetails>;
   map: Scalars['String'];
   maxplayers: Scalars['Float'];
   message: Scalars['String'];
@@ -36,6 +61,12 @@ export type GamedigServerInfo = {
   players: Array<Player>;
   raw: RawInfo;
   workshop?: Maybe<Workshop>;
+};
+
+export type MultipleServerResponse = {
+  __typename?: 'MultipleServerResponse';
+  errors?: Maybe<Array<ErrorOutput>>;
+  response?: Maybe<Array<ServerResponse>>;
 };
 
 export type Mutation = {
@@ -63,6 +94,13 @@ export type MutationRegisterArgs = {
   options: UsernamePasswordInput;
 };
 
+export type Plataforms = {
+  __typename?: 'Plataforms';
+  linux: Scalars['Boolean'];
+  mac: Scalars['Boolean'];
+  windows: Scalars['Boolean'];
+};
+
 export type Player = {
   __typename?: 'Player';
   name: Scalars['String'];
@@ -71,7 +109,7 @@ export type Player = {
 
 export type Query = {
   __typename?: 'Query';
-  getMultiplesServerInfo?: Maybe<Array<ServerResponse>>;
+  getMultiplesServerInfo?: Maybe<MultipleServerResponse>;
   getServerGroupByHost?: Maybe<Array<ServerResponse>>;
   getServerGroupByPort?: Maybe<Array<ServerResponse>>;
   getServerInfo?: Maybe<ServerResponse>;
@@ -130,6 +168,13 @@ export type Score = {
   __typename?: 'Score';
   score?: Maybe<Scalars['String']>;
   time?: Maybe<Scalars['String']>;
+};
+
+export type ScreenShot = {
+  __typename?: 'ScreenShot';
+  id: Scalars['Int'];
+  path_full: Scalars['String'];
+  path_thumbnail: Scalars['String'];
 };
 
 export type ServerInput = {
@@ -200,14 +245,20 @@ export type Workshop = {
   visibility?: Maybe<Scalars['Int']>;
 };
 
-export type MinimalServerInfoFragment = { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } };
-
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string } | null };
+
+export type GetMultiplesServerInfoQueryVariables = Exact<{
+  apikey: Scalars['String'];
+  servers: Array<ServerInput> | ServerInput;
+}>;
+
+
+export type GetMultiplesServerInfoQuery = { __typename?: 'Query', getMultiplesServerInfo?: { __typename?: 'MultipleServerResponse', response?: Array<{ __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null }> | null }> | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null }> | null } | null };
 
 export type GetServerInfoQueryVariables = Exact<{
   apikey: Scalars['String'];
@@ -217,22 +268,4 @@ export type GetServerInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetServerInfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, password: boolean, connect: string, ping: number, workshop?: { __typename?: 'Workshop', preview_url?: string | null } | null, raw: { __typename?: 'RawInfo', numplayers?: number | null, protocol?: number | null, folder?: string | null, game?: string | null, appId?: number | null, numbots?: number | null, secure?: number | null, version?: string | null, tags?: Array<string> | null }, players: Array<{ __typename?: 'Player', name: string, raw: { __typename?: 'Score', score?: string | null } }> } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };
-
-export type GetMinimalServerinfoQueryVariables = Exact<{
-  apikey: Scalars['String'];
-  host: Scalars['String'];
-  port: Scalars['Int'];
-  type: Scalars['String'];
-}>;
-
-
-export type GetMinimalServerinfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null } | null };
-
-export type GetMultiplesMinimalServerInfoQueryVariables = Exact<{
-  apikey: Scalars['String'];
-  servers: Array<ServerInput> | ServerInput;
-}>;
-
-
-export type GetMultiplesMinimalServerInfoQuery = { __typename?: 'Query', getMultiplesServerInfo?: Array<{ __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null }> | null };
+export type GetServerInfoQuery = { __typename?: 'Query', getServerInfo?: { __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, password: boolean, connect: string, ping: number, raw: { __typename?: 'RawInfo', numplayers?: number | null, protocol?: number | null, folder?: string | null, game?: string | null, appId?: number | null, numbots?: number | null, secure?: number | null, version?: string | null, tags?: Array<string> | null }, workshop?: { __typename?: 'Workshop', preview_url?: string | null } | null, gameDetails?: { __typename?: 'GameDetails', success: boolean, data?: { __typename?: 'Data', header_image?: string | null } | null } | null, players: Array<{ __typename?: 'Player', name: string, raw: { __typename?: 'Score', score?: string | null } }> } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };

@@ -15,3 +15,6 @@ export const logInit = (appenders: logTypes[]): log4js.Log4js =>
 
 export const API_ERROR =
   'There was an error when requesting data from the API: '
+
+export const API_RESPONSE_ERROR = 'API replyed with an response error'
+export const API_REQUEST_ERROR = 'API replyed with an request error'

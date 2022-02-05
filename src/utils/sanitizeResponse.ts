@@ -4,12 +4,12 @@ import {
   SrvMinimalInfo
 } from '../types/responses'
 import {
-  GetMultiplesMinimalServerInfoQuery,
+  GetMultiplesServerInfoQuery,
   GetServerInfoQuery
 } from '../generated/graphql'
 import { isValidProtocol } from './protocols'
 import { csgoMap } from './urls/csgoMapsUrl'
-import { valveThumbsUrls } from './urls/valveThumbsUrls'
+// import { valveThumbsUrls } from './urls/valveThumbsUrls'
 
 const UNDEFINED_APPID = 999
 
@@ -51,7 +51,7 @@ export const sanitizeResponse = (
           mapUrl = map ?? ''
         }
       }
-      thumbUrl = valveThumbsUrls.get(type) ?? ''
+      thumbUrl = server.gameDetails?.data?.header_image ?? ''
     }
 
     thumbUrl =
@@ -92,11 +92,11 @@ export const sanitizeResponse = (
 }
 
 export const sanitizeListResponse = (
-  data: GetMultiplesMinimalServerInfoQuery['getMultiplesServerInfo']
+  data: GetMultiplesServerInfoQuery['getMultiplesServerInfo']
 ): ListResponse | undefined => {
   const build: SrvMinimalInfo[] = []
 
-  const result = data?.filter((server) => server.response)
+  const result = data?.response?.filter((server) => server.response)
 
   if (result && result?.length > 0) {
     result.forEach((server) => {

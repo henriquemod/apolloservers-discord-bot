@@ -137,6 +137,14 @@ export default {
               return
             }
 
+            if (request.getServerInfo?.errors) {
+              await statusInt.editReply({
+                content: instance.messageHandler.get(guild, 'API_KEY_ERROR'),
+                components: []
+              })
+              return
+            }
+
             const embed = new MessageEmbed()
 
             const serverInfo = sanitizeResponse(

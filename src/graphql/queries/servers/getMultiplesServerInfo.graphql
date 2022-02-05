@@ -1,0 +1,22 @@
+query getMultiplesServerInfo($apikey: String!, $servers: [ServerInput!]!) {
+  getMultiplesServerInfo(apikey: $apikey, servers: $servers) {
+    response {
+      response {
+        name
+        map
+        maxplayers
+        raw {
+          numplayers
+          game
+        }
+        connect
+      }
+      errors {
+        errorType
+      }
+    }
+    errors {
+      errorType
+    }
+  }
+}

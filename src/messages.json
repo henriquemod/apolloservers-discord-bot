@@ -83,6 +83,10 @@
     "english": "Error adding a API key, contact support",
     "portuguese": "Erro ao adicionar chave de API, favor contatar o suporte"
   },
+  "API_KEY_ERROR": {
+    "english": "The api key you provided in this server is invalid, please informe the discord owner",
+    "portuguese": "A chave de api fornecida nesse servidor esta invalida, favor informar o dono dese discord"
+  },
   "NOT_AVAILABLE": {
     "english": "Not available",
     "portuguese": "Não disponivel"

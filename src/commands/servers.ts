@@ -51,12 +51,19 @@ export default {
           apikey: apiKey,
           servers: buildList
         })
-
         if (!request) {
           return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
         }
 
         const result = request.getMultiplesServerInfo
+
+        if (result?.errors) {
+          for (const error of result.errors) {
+            if (error.errorType === 'api-error') {
+              return instance.messageHandler.get(guild, 'API_KEY_ERROR')
+            }
+          }
+        }
 
         if (result) {
           const data = sanitizeListResponse(result)

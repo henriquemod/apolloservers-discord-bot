@@ -12,9 +12,6 @@ query getServerInfo(
       name
       map
       maxplayers
-      workshop {
-        preview_url
-      }
       raw {
         numplayers
         protocol
@@ -25,6 +22,15 @@ query getServerInfo(
         secure
         version
         tags
+      }
+      workshop {
+        preview_url
+      }
+      gameDetails {
+        success
+        data {
+          header_image
+        }
       }
       password
       players {
