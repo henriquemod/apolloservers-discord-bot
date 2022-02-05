@@ -14,6 +14,7 @@ import { __prod__, __pwencription__ } from '../utils/constants'
 import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
+import { C_SUCCESS, C_DANGER } from '../config/colors'
 
 const encryption = new EncryptorDecryptor()
 
@@ -211,6 +212,7 @@ export default {
                   url: 'https://github.com/henriquemod'
                 })
                 .setDescription(data.desc)
+                .setColor(C_SUCCESS)
                 .setFooter({
                   text: data.tags
                 })
@@ -233,6 +235,7 @@ export default {
                       .setTitle('Offline')
                       .setDescription('Offline')
                       .setFields(fields)
+                      .setColor(C_DANGER)
                   ]
                 })
                 await botMessage.delete()
@@ -245,13 +248,17 @@ export default {
                       .setTitle('Offline')
                       .setDescription('Offline')
                       .setFields(fields)
+                      .setColor(C_DANGER)
                   ],
                   components: []
                 })
                 return
               }
             } else {
-              embed.setTitle('Offline').setDescription('Offline')
+              embed
+                .setTitle('Offline')
+                .setDescription('Offline')
+                .setColor(C_DANGER)
             }
             if (message) {
               await message.channel.send({

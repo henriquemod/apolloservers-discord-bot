@@ -6,6 +6,7 @@ import { EmbedFieldData, MessageEmbed } from 'discord.js'
 import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
 import EncryptorDecryptor from '../utils/encryption'
 import { sanitizeListResponse } from '../utils/sanitizeResponse'
+import { C_SUCCESS } from '../config/colors'
 
 export default {
   category: 'Servers',
@@ -86,7 +87,7 @@ export default {
                 value: value
               })
             })
-            embed.setFields(fields)
+            embed.setFields(fields).setColor(C_SUCCESS)
             return embed
           } else {
             return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
