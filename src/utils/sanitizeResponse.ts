@@ -9,6 +9,7 @@ import {
 } from '../generated/graphql'
 import { isValidProtocol } from './protocols'
 import { csgoMap } from './urls/csgoMapsUrl'
+import { cssMap } from './urls/cssMapsUrl'
 // import { valveThumbsUrls } from './urls/valveThumbsUrls'
 
 const UNDEFINED_APPID = 999
@@ -53,6 +54,10 @@ export const sanitizeResponse = (
           const map = csgoMap.get(server.map)
           mapUrl = map ?? ''
         }
+        if (type === 240) {
+          const map = cssMap.get(server.map)
+          mapUrl = map ?? ''
+        }
       }
       thumbUrl = server.gameDetails?.data?.header_image ?? ''
     }
@@ -77,7 +82,7 @@ export const sanitizeResponse = (
         slots: unkownString(slots),
         connect: unkownString(server.connect),
         players: unkownString(playersList),
-        mapUrl: unkownString(mapUrl),
+        mapUrl,
         tags: unkownString(tags),
         thumbUrl
       },
