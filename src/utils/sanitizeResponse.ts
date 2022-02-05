@@ -13,6 +13,9 @@ import { csgoMap } from './urls/csgoMapsUrl'
 
 const UNDEFINED_APPID = 999
 
+const unkownString = (label: string): string => {
+  return label.length > 1 ? label : 'Unknown'
+}
 export const sanitizeResponse = (
   data: GetServerInfoQuery['getServerInfo'],
   gametype: string,
@@ -69,13 +72,13 @@ export const sanitizeResponse = (
 
     return {
       serverData: {
-        title: server.name,
-        desc,
-        slots,
-        connect: server.connect,
-        players: playersList,
-        mapUrl: mapUrl,
-        tags,
+        title: unkownString(server.name),
+        desc: unkownString(desc),
+        slots: unkownString(slots),
+        connect: unkownString(server.connect),
+        players: unkownString(playersList),
+        mapUrl: unkownString(mapUrl),
+        tags: unkownString(tags),
         thumbUrl
       },
       errors: undefined
