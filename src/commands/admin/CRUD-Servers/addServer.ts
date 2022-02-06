@@ -1,9 +1,9 @@
-import { __max_servers_allowed__, __prod__ } from '../../utils/constants'
+import { __max_servers_allowed__, __prod__ } from '../../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import guildServersSchema, { Server } from '../../models/guild-servers'
-import { domainValidation, portValidation } from '../../utils/validations'
-import { isValveProtocol } from '../../utils/protocols'
+import guildServersSchema, { Server } from '../../../models/guild-servers'
+import { domainValidation, portValidation } from '../../../utils/validations'
+import { isValveProtocol } from '../../../utils/protocols'
 // import { ServerProps } from '../../types/server'
 
 export default {
