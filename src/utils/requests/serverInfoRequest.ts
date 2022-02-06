@@ -55,6 +55,7 @@ export const serverInfoRequest = async (
                   name
                   raw {
                     score
+                    time
                   }
                 }
               }

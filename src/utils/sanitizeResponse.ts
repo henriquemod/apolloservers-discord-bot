@@ -1,5 +1,6 @@
 import {
   ListResponse,
+  PlayersStatus,
   SingleServerResponse,
   SrvMinimalInfo
 } from '../types/responses'
@@ -31,16 +32,6 @@ export const sanitizeResponse = (
     const numPlayers = server.raw.numplayers ?? '-'
     const maxPlayers = server.maxplayers ?? '-'
     const slots = `${numPlayers}/${maxPlayers}`
-
-    // Lets create our players list string
-    let playersList = ''
-    server.players.forEach((player) => {
-      if (player.name.length !== 0 && typeof player.raw.score === 'string') {
-        playersList += ` ${player.name}  \\ `
-      }
-    })
-    playersList =
-      playersList.length > 1 ? playersList.slice(0, playersList.length - 2) : ''
 
     // Create link to embend image
     let mapUrl = ''
@@ -75,13 +66,31 @@ export const sanitizeResponse = (
 
     tags = tags.length > 1 ? tags.slice(0, tags.length - 2) : ''
 
+    // Lets create our plaers status list map
+    const playersStatus: PlayersStatus[] = []
+    server.players.forEach((player) => {
+      if (player.name.length !== 0 && typeof player.raw.score === 'string') {
+        const score = player.raw.score.length > 1
+        if (player.name.length >= 13) {
+          player.name = `${player.name.slice(0, 10)}...`
+        }
+        if (score) {
+          playersStatus.push({
+            name: player.name,
+            score: parseInt(player.raw.score),
+            time: parseInt(player.raw.time ?? '0')
+          })
+        }
+      }
+    })
+
     return {
       serverData: {
         title: unkownString(server.name),
         desc: unkownString(desc),
         slots: unkownString(slots),
         connect: unkownString(server.connect),
-        players: unkownString(playersList),
+        players: playersStatus,
         mapUrl,
         tags: unkownString(tags),
         thumbUrl
