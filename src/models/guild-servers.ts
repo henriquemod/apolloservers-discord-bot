@@ -11,8 +11,9 @@ const reqNumber = {
   required: true
 }
 
-interface Server {
-  _id: string
+export interface Server {
+  key: number
+  id: string
   name: string
   host: string
   port: number
@@ -31,6 +32,7 @@ const guildServersSchema = new Schema<Guild>({
   apiKey: { type: String },
   servers: [
     {
+      key: reqNumber,
       name: reqString,
       host: reqString,
       port: reqNumber,

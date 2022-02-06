@@ -9,7 +9,7 @@ import {
 } from 'discord.js'
 import { ICommand } from 'wokcommands'
 import { C_DANGER, C_SUCCESS } from '../config/colors'
-import guildServersSchema from '../models/guild-servers'
+import guildServersSchema, { Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { __prod__, __pwencription__ } from '../utils/constants'
 import { makeEmdedOptions, makeOffileEmbend } from '../utils/discord/embedUtils'
@@ -45,7 +45,7 @@ export default {
     if (!find) {
       return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     } else {
-      const servers = find.servers as ServerProps[]
+      const servers = find.servers as Server[]
 
       if (!servers || servers.length === 0) {
         return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
