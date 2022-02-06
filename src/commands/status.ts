@@ -17,7 +17,7 @@ import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
 import { createGroups } from '../utils/splitGroups'
-import { codeBlock } from '@discordjs/builders'
+import { codeBlock } from '@discordjs/builders
 
 const encryption = new EncryptorDecryptor()
 
@@ -185,6 +185,7 @@ export default {
            */
           if (serverInfo?.serverData) {
             const data = serverInfo?.serverData
+            
             embed.setFields([
               {
                 name: 'Slots',
