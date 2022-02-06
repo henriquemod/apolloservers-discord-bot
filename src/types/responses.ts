@@ -3,10 +3,16 @@ interface SingleServer {
   desc: string
   slots: string
   connect: string
-  players: string
+  players: PlayersStatus[]
   mapUrl: string
   tags: string
   thumbUrl: string
+}
+
+export interface PlayersStatus {
+  name: string
+  score: number
+  time: number
 }
 
 export interface SrvMinimalInfo {

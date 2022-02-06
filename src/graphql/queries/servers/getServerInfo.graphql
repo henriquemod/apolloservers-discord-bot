@@ -37,6 +37,7 @@ query getServerInfo(
         name
         raw {
           score
+          time
         }
       }
       connect

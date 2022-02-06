@@ -17,6 +17,7 @@ import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
 import { createGroups } from '../utils/splitGroups'
+import { codeBlock } from '@discordjs/builders
 
 const encryption = new EncryptorDecryptor()
 
@@ -184,32 +185,63 @@ export default {
            */
           if (serverInfo?.serverData) {
             const data = serverInfo?.serverData
-            embed
-              .setFields([
-                {
-                  name: 'Slots',
-                  value: data.slots
-                },
-                {
-                  name: 'Connect',
-                  value: data.connect
-                },
-                {
-                  name: 'Players',
-                  value: data.players
+            
+            embed.setFields([
+              {
+                name: 'Slots',
+                value: codeBlock(data.slots),
+                inline: true
+              },
+              {
+                name: 'Connect',
+                value: codeBlock(data.connect),
+                inline: true
+              },
+              {
+                name: 'Tags',
+                value: codeBlock(data.tags)
+              }
+            ])
+            if (data.players.length > 0) {
+              let nameField = ''
+              let scoreField = ''
+              let timeField = ''
+              data.players.forEach((player) => {
+                const timeFormatted = new Date(player.time * 1000)
+                  .toISOString()
+                  .substring(11, 19)
+
+                if (player.score >= 0) {
+                  nameField += `${player.name}\n`
+                  scoreField += `${player.score}\n`
+                  timeField += `${timeFormatted}\n`
                 }
-              ])
+              })
+              const namesField: EmbedFieldData = {
+                name: 'Players',
+                value: codeBlock(nameField),
+                inline: true
+              }
+              const scoresField: EmbedFieldData = {
+                name: 'Score',
+                value: codeBlock(scoreField),
+                inline: true
+              }
+              const timesField: EmbedFieldData = {
+                name: 'Time',
+                value: codeBlock(timeField),
+                inline: true
+              }
+              embed.addFields([namesField, scoresField, timesField])
+            }
+            embed
               .setTitle(data.title)
-              .setThumbnail(data.thumbUrl)
               .setAuthor({
                 name: 'Apollo Servers',
                 url: 'https://github.com/henriquemod'
               })
-              .setDescription(data.desc)
+              .setDescription(codeBlock(data.desc))
               .setColor(C_SUCCESS)
-              .setFooter({
-                text: data.tags
-              })
             if (data.mapUrl.length > 1) {
               embed.setImage(data.mapUrl)
             }
