@@ -1,13 +1,12 @@
 import { __prod__ } from '../../utils/constants'
 import { ICommand } from 'wokcommands'
-import guildServersSchema from '../../models/guild-servers'
+import guildServersSchema, { Server } from '../../models/guild-servers'
 import {
   ButtonInteraction,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction
 } from 'discord.js'
-import { ServerProps } from '../../types/server'
 import { createGroups } from '../../utils/splitGroups'
 
 export default {
@@ -25,7 +24,7 @@ export default {
     if (!find) {
       return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     }
-    const servers = find.servers as ServerProps[]
+    const servers = find.servers as Server[]
 
     if (!servers || servers.length === 0) {
       return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')

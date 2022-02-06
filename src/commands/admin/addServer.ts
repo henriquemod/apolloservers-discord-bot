@@ -1,10 +1,10 @@
 import { __max_servers_allowed__, __prod__ } from '../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import guildServersSchema from '../../models/guild-servers'
+import guildServersSchema, { Server } from '../../models/guild-servers'
 import { domainValidation, portValidation } from '../../utils/validations'
 import { isValveProtocol } from '../../utils/protocols'
-import { ServerProps } from '../../types/server'
+// import { ServerProps } from '../../types/server'
 
 export default {
   category: 'Admin Panel',
@@ -59,7 +59,7 @@ export default {
     if (!find) {
       return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     }
-    const servers = find.servers as ServerProps[]
+    const servers = find.servers as Server[]
 
     if (servers.length >= __max_servers_allowed__) {
       return instance.messageHandler.get(guild, 'MAX_SERVERS_REACHED', {
@@ -94,7 +94,13 @@ export default {
       return instance.messageHandler.get(guild, 'INVALID_SERVER_TYPE')
     }
 
+    const length = servers.length === 0 ? 0 : servers.length - 1
+    const serverid = servers[length]
+      ? servers[length].key + 1
+      : servers.length + 1
+
     const server = {
+      key: serverid,
       name: serverName,
       host: serverHost,
       port: parseInt(serverPort),

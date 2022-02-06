@@ -1,9 +1,6 @@
-import { ServerProps } from '../types/server'
+import { Server } from 'src/models/guild-servers'
 
-export const createGroups = (
-  arr: ServerProps[],
-  numGroups: number
-): ServerProps[][] => {
+export const createGroups = (arr: Server[], numGroups: number): Server[][] => {
   const perGroup = Math.ceil(arr.length / numGroups)
   const newGroup = new Array(numGroups)
     .fill('')
