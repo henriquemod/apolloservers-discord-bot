@@ -39,6 +39,10 @@
     "english": "This discord server is not configured",
     "portuguese": "Este servidor discord não foi configurado"
   },
+  "ERROR_SERVER_NOT_FOUND": {
+    "english": "Server not found",
+    "portuguese": "Servidor não encontrado"
+  },
   "ERROR_NONE_GAMESERVER": {
     "english": "There is no server added in this discord server 😥",
     "portuguese": "Não tem nenhum servidor adicionado nesse discord 😥"
@@ -98,6 +102,58 @@
   "MAX_SERVERS_REACHED": {
     "english": "Max numbers of servers reached, at this moment only {MAX} servers are allowed",
     "portuguese": "Numero máximo de servidores atingido, até o momento somente {MAX} servidores são permitidos"
+  },
+  "NAME_LENGTH": {
+    "english": "🛑 Name length must be between {MIN} and {MAX} characters",
+    "portuguese": "🛑 O nome precisa ter entre {MIN} e {MAX} caracteres"
+  },
+  "DESCRIPTION_LENGTH": {
+    "english": "🛑 Description length must have maximum {MAX} characters",
+    "portuguese": "🛑 A descrição precisa ter no máximo {MAX} caracteres"
+  },
+  "INVALID_HOST": {
+    "english": "🛑 Invalid host {HOST}",
+    "portuguese": "🛑 Host {HOST} invalido"
+  },
+  "INVALID_PORT": {
+    "english": "🛑 Invalid port {PORT}",
+    "portuguese": "🛑 Porta {PORT} invalida"
+  },
+  "INVALID_TYPE": {
+    "english": "🛑 Invalid type {TYPE}",
+    "portuguese": "🛑 Type {TYPE} invalido"
+  },
+  "TYPE_UPDATED": {
+    "english": "✅ Type updated successfully to {TYPE}",
+    "portuguese": "✅ Type atualizado com sucesso para {TYPE}"
+  },
+  "HOST_UPDATED": {
+    "english": "✅ Host updated successfully to {HOST}",
+    "portuguese": "✅ Host atualizado com sucesso para {HOST}"
+  },
+  "PORT_UPDATED": {
+    "english": "✅ Port updated successfully to {PORT}",
+    "portuguese": "✅ Porta atualizada com sucesso para {PORT}"
+  },
+  "SERVER_NAME_UPDATED": {
+    "english": "✅ Server name updated successfully to {NAME}",
+    "portuguese": "✅ Nome do servidor atualizado com sucesso para {NAME}"
+  },
+  "SERVER_DESC_UPDATED": {
+    "english": "✅ Server description updated successfully",
+    "portuguese": "✅ Descrição do servidor atualizada com sucesso"
+  },
+  "ONLY_IN_SERVER": {
+    "english": "This command is only available in servers",
+    "portuguese": "Este comando está disponivel somente em servidores"
+  },
+  "MISSING_PARAMETER": {
+    "english": "Missing parameter {PARAM}",
+    "portuguese": "Faltando parametro {PARAM}"
+  },
+  "SYNTAX_ERROR": {
+    "english": "Incorrect usage! Please use \"{PREFIX}{COMMAND} {ARGUMENTS}\"",
+    "portuguese": "Uso incorreto! Utilize \"{PREFIX}{COMMAND} {ARGUMENTS}\""
   },
 
   "HELP_MENU": {

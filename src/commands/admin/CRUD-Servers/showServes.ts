@@ -59,12 +59,12 @@ export default {
         value: codeBlock(server.description ?? 'No description')
       }
       const hostField: EmbedFieldData = {
-        name: 'Type',
+        name: 'Host',
         value: codeBlock(server.host),
         inline: true
       }
       const portField: EmbedFieldData = {
-        name: 'Type',
+        name: 'Port',
         value: codeBlock(server.port.toString()),
         inline: true
       }
