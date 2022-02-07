@@ -1,4 +1,4 @@
-interface SingleServer {
+export interface SingleServer {
   title: string
   desc: string
   slots: string
