@@ -41,3 +41,8 @@ export const makeOffileEmbend = (fields?: EmbedFieldData[]): MessageEmbed => {
 
   return embed
 }
+
+export const emberdDivider: EmbedFieldData = {
+  name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
+  value: '\u200b'
+}
