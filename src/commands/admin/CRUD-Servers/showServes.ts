@@ -4,6 +4,7 @@ import { ICommand } from 'wokcommands'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
 import { codeBlock } from '@discordjs/builders'
 import { C_WARNING } from '../../../config/colors'
+import { emberdDivider } from '../../../utils/discord/embedUtils'
 
 export default {
   category: 'Admin Panel',
@@ -32,11 +33,6 @@ export default {
     embed.setTitle('ADMIN PANEL - SERVERS').setColor(C_WARNING)
 
     const serversFields: EmbedFieldData[] = []
-
-    const topEmbed: EmbedFieldData = {
-      name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
-      value: '\u200b'
-    }
 
     servers.forEach((server, i, arr) => {
       const idField: EmbedFieldData = {
@@ -69,11 +65,6 @@ export default {
         inline: true
       }
 
-      const divisorField: EmbedFieldData = {
-        name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
-        value: '\u200b'
-      }
-
       const fields: EmbedFieldData[] = [
         idField,
         nameField,
@@ -84,7 +75,7 @@ export default {
       ]
 
       if (i === 0) {
-        serversFields.push(topEmbed)
+        serversFields.push(emberdDivider)
       }
 
       // serversFields.push(...fields)
@@ -92,7 +83,7 @@ export default {
       if (i === arr.length - 1) {
         serversFields.push(...fields)
       } else {
-        serversFields.push(...fields, divisorField)
+        serversFields.push(...fields, emberdDivider)
       }
     })
 

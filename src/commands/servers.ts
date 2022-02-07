@@ -1,12 +1,13 @@
-import { __prod__, __pwencription__ } from '../utils/constants'
+import { MessageEmbed } from 'discord.js'
 import { ICommand } from 'wokcommands'
+import { C_SUCCESS } from '../config/colors'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
-import { EmbedFieldData, MessageEmbed } from 'discord.js'
-import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
+import { __prod__, __pwencription__ } from '../utils/constants'
+import { minimalStatusEmbed } from '../utils/discord/embedStatus'
 import EncryptorDecryptor from '../utils/encryption'
+import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeListResponse } from '../utils/sanitizeResponse'
-import { C_SUCCESS } from '../config/colors'
 
 export default {
   category: 'Servers',
@@ -40,8 +41,6 @@ export default {
           apiKey = encryption.decryptString(find.apiKey, __pwencription__)
         }
 
-        // const embendFields: EmbedFieldData[] = []
-
         const buildList = servers.map((server) => ({
           host: `"${server.host}"`,
           port: server.port,
@@ -69,25 +68,17 @@ export default {
         if (result) {
           const data = sanitizeListResponse(result)
           if (data) {
-            const embed = new MessageEmbed().setTitle(
-              instance.messageHandler.get(guild, 'LIST_SERVERS')
-            )
-            const fields: EmbedFieldData[] = []
-            data.servers.forEach((server) => {
-              const value =
-                '\n' +
-                server.game +
-                '\n IP: ' +
-                server.connect +
-                ' ' +
-                server.players +
-                '\n\n﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉﹉'
-              fields.push({
-                name: server.title,
-                value: value
-              })
+            const embed = new MessageEmbed()
+
+            data.servers.forEach((server, i, arr) => {
+              if (i === arr.length - 1) {
+                embed.addFields(minimalStatusEmbed(server))
+              } else {
+                embed.addFields(minimalStatusEmbed(server, true))
+              }
             })
-            embed.setFields(fields).setColor(C_SUCCESS)
+
+            embed.setColor(C_SUCCESS)
             return embed
           } else {
             return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
