@@ -62,7 +62,7 @@ export const successEmbed = ({ embed, data }: SuccessProps): void => {
   }
 
   embed
-    .setTitle(data.title)
+    .setTitle(limitString(data.title, 50))
     .setAuthor({
       name: 'Apollo Servers',
       url: 'https://github.com/henriquemod'
