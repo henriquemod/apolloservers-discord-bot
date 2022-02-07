@@ -8,7 +8,7 @@ import {
   ReplyMessageOptions
 } from 'discord.js'
 import { ICommand } from 'wokcommands'
-import { C_DANGER, C_SUCCESS } from '../config/colors'
+import { C_DANGER } from '../config/colors'
 import guildServersSchema, { Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { __prod__, __pwencription__ } from '../utils/constants'
@@ -17,7 +17,8 @@ import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
 import { createGroups } from '../utils/splitGroups'
-import { codeBlock } from '@discordjs/builders'
+import { statusSkeleton } from '../utils/skeleton/statusSkeleton'
+import { successEmbed } from '../utils/discord/embedStatus'
 
 const encryption = new EncryptorDecryptor()
 
@@ -39,6 +40,7 @@ export default {
     }
 
     let botMessage: Message
+    let botMessageStatus: Message
 
     const find = await guildServersSchema.findById({ _id: guild.id })
 
@@ -151,6 +153,20 @@ export default {
             __pwencription__ ?? ''
           )
 
+          if (message) {
+            const msgn = await Promise.all([
+              message.channel.send(
+                makeEmdedOptions({ embed: statusSkeleton() })
+              ),
+              botMessage.delete()
+            ])
+            botMessageStatus = msgn[0]
+          } else {
+            await statusInt.editReply(
+              makeEmdedOptions({ embed: statusSkeleton() })
+            )
+          }
+
           const request = await serverInfoRequest({
             host: serverSelected.host,
             port: serverSelected.port,
@@ -184,67 +200,7 @@ export default {
            *       and data is sanitized and ready to be sent to discord
            */
           if (serverInfo?.serverData) {
-            const data = serverInfo?.serverData
-
-            embed.setFields([
-              {
-                name: 'Slots',
-                value: codeBlock(data.slots),
-                inline: true
-              },
-              {
-                name: 'Connect',
-                value: codeBlock(data.connect),
-                inline: true
-              },
-              {
-                name: 'Tags',
-                value: codeBlock(data.tags)
-              }
-            ])
-            if (data.players.length > 0) {
-              let nameField = ''
-              let scoreField = ''
-              let timeField = ''
-              data.players.forEach((player) => {
-                const timeFormatted = new Date(player.time * 1000)
-                  .toISOString()
-                  .substring(11, 19)
-
-                if (player.score >= 0) {
-                  nameField += `${player.name}\n`
-                  scoreField += `${player.score}\n`
-                  timeField += `${timeFormatted}\n`
-                }
-              })
-              const namesField: EmbedFieldData = {
-                name: 'Players',
-                value: codeBlock(nameField),
-                inline: true
-              }
-              const scoresField: EmbedFieldData = {
-                name: 'Score',
-                value: codeBlock(scoreField),
-                inline: true
-              }
-              const timesField: EmbedFieldData = {
-                name: 'Time',
-                value: codeBlock(timeField),
-                inline: true
-              }
-              embed.addFields([namesField, scoresField, timesField])
-            }
-            embed
-              .setTitle(data.title)
-              .setAuthor({
-                name: 'Apollo Servers',
-                url: 'https://github.com/henriquemod'
-              })
-              .setDescription(codeBlock(data.desc))
-              .setColor(C_SUCCESS)
-            if (data.mapUrl.length > 1) {
-              embed.setImage(data.mapUrl)
-            }
+            successEmbed({ data: serverInfo?.serverData, embed })
           } else if (serverInfo?.errors) {
             /**
              * NOTE - If serverData is not present, it means that the server is possibly offline
@@ -285,7 +241,8 @@ export default {
           if (message) {
             await Promise.all([
               message.channel.send(makeEmdedOptions({ embed })),
-              botMessage.delete()
+              // botMessage.delete()
+              botMessageStatus.delete()
             ])
           } else {
             await statusInt.editReply(makeEmdedOptions({ embed }))
