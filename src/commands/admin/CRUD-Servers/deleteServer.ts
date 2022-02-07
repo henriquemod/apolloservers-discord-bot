@@ -1,13 +1,13 @@
-import { __prod__ } from '../../utils/constants'
+import { __prod__ } from '../../../utils/constants'
 import { ICommand } from 'wokcommands'
-import guildServersSchema, { Server } from '../../models/guild-servers'
+import guildServersSchema, { Server } from '../../../models/guild-servers'
 import {
   ButtonInteraction,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction
 } from 'discord.js'
-import { createGroups } from '../../utils/splitGroups'
+import { createGroups } from '../../../utils/splitGroups'
 
 export default {
   category: 'Admin Panel',
