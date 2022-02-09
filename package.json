@@ -13,6 +13,7 @@
     "gen": "graphql-codegen --config codegen.yml",
     "prepare": "husky install"
   },
+  "files": [ "dist/**/*" ],
   "keywords": [],
   "author": "",
   "license": "ISC",
