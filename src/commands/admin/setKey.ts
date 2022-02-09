@@ -3,6 +3,9 @@ import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
 import EncryptorDecryptor from '../../utils/encryption'
 import guildServersSchema from '../../models/guild-servers'
+import { APP_COMMAND_ERROR, logInit } from '../../config/log4jConfig'
+
+const log = logInit(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Admin Panel',
@@ -12,6 +15,15 @@ export default {
   expectedArgs: '<key>',
   slash: true,
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   options: [
     {

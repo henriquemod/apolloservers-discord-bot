@@ -1,4 +1,5 @@
 import { MessageEmbed } from 'discord.js'
+import { APP_COMMAND_ERROR, logInit } from '../config/log4jConfig'
 import { ICommand } from 'wokcommands'
 import { C_SUCCESS } from '../config/colors'
 import guildServersSchema from '../models/guild-servers'
@@ -9,11 +10,22 @@ import EncryptorDecryptor from '../utils/encryption'
 import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeListResponse } from '../utils/sanitizeResponse'
 
+const log = logInit(['app', 'out']).getLogger('APP')
+
 export default {
   category: 'Servers',
   description: 'Server list resumed',
   slash: 'both',
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   callback: async ({ guild, instance }) => {
     if (!guild) {

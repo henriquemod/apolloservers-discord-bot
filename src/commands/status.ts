@@ -19,7 +19,9 @@ import { sanitizeResponse } from '../utils/sanitizeResponse'
 import { createGroups } from '../utils/splitGroups'
 import { statusSkeleton } from '../utils/skeleton/statusSkeleton'
 import { successEmbed } from '../utils/discord/embedStatus'
+import { APP_COMMAND_ERROR, logInit } from '../config/log4jConfig'
 
+const log = logInit(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
 
 export default {
@@ -27,6 +29,15 @@ export default {
   description: 'Show a server info',
   slash: 'both',
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   callback: async ({
     interaction: statusInt,

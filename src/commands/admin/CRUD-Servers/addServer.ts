@@ -1,10 +1,12 @@
-import { __max_servers_allowed__, __prod__ } from '../../../utils/constants'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
+import { APP_COMMAND_ERROR, logInit } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
-import { domainValidation, portValidation } from '../../../utils/validations'
+import { __max_servers_allowed__, __prod__ } from '../../../utils/constants'
 import { isValveProtocol } from '../../../utils/protocols'
-// import { ServerProps } from '../../types/server'
+import { domainValidation, portValidation } from '../../../utils/validations'
+
+const log = logInit(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Admin Panel',
@@ -15,6 +17,15 @@ export default {
   expectedArgs: '<name> <host> <port> <type> <description>',
   slash: true,
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   options: [
     {

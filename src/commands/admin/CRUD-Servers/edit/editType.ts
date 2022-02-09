@@ -1,9 +1,12 @@
-import { __prod__ } from '../../../../utils/constants'
+import { codeBlock } from '@discordjs/builders'
 import DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
+import { APP_COMMAND_ERROR, logInit } from '../../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../../models/guild-servers'
+import { __prod__ } from '../../../../utils/constants'
 import { isValveProtocol } from '../../../../utils/protocols'
-import { codeBlock } from '@discordjs/builders'
+
+const log = logInit(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Admin Panel',
@@ -13,6 +16,15 @@ export default {
   testOnly: !__prod__,
   minArgs: 2,
   expectedArgs: '<id> <type>',
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   options: [
     {
