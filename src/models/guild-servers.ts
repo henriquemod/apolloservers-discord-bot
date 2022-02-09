@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose'
+import * as mongoose from 'mongoose'
 const { Schema } = mongoose
 
 const reqString = {
@@ -24,7 +24,7 @@ export interface Server {
 interface Guild {
   _id: string
   apiKey: string
-  servers: Types.DocumentArray<Server>
+  servers: mongoose.Types.DocumentArray<Server>
 }
 
 const guildServersSchema = new Schema<Guild>({

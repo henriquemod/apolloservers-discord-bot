@@ -258,7 +258,7 @@ export type GetMultiplesServerInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetMultiplesServerInfoQuery = { __typename?: 'Query', getMultiplesServerInfo?: { __typename?: 'MultipleServerResponse', response?: Array<{ __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null }> | null }> | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null }> | null } | null };
+export type GetMultiplesServerInfoQuery = { __typename?: 'Query', getMultiplesServerInfo?: { __typename?: 'MultipleServerResponse', response?: Array<{ __typename?: 'ServerResponse', response?: { __typename?: 'GamedigServerInfo', name: string, map: string, maxplayers: number, connect: string, raw: { __typename?: 'RawInfo', numplayers?: number | null, game?: string | null } } | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null }> | null, errors?: Array<{ __typename?: 'ErrorOutput', errorType?: string | null, message?: string | null }> | null } | null };
 
 export type GetServerInfoQueryVariables = Exact<{
   apikey: Scalars['String'];

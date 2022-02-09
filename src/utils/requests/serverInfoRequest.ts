@@ -1,19 +1,14 @@
 import axios from 'axios'
+import log4jConfig, { API_ERROR } from '../../config/log4jConfig'
 import {
-  logInit,
-  API_ERROR,
-  API_RESPONSE_ERROR,
-  API_REQUEST_ERROR
-} from '../../config/log4jConfig'
-import {
+  GetMultiplesServerInfoQuery,
   GetServerInfoQuery,
-  QueryGetMultiplesServerInfoArgs,
   GetServerInfoQueryVariables,
-  GetMultiplesServerInfoQuery
+  QueryGetMultiplesServerInfoArgs
 } from '../../generated/graphql'
 import { _apiendpoint_ } from '../constants'
 
-const log = logInit(['api', 'out']).getLogger('API')
+const log = log4jConfig(['api', 'out']).getLogger('API')
 
 interface Props {
   host: string
@@ -70,19 +65,24 @@ export const serverInfoRequest = async (
   })
     .then((result) => result.data.data as GetServerInfoQuery)
     .catch((error) => {
-      if (error.response) {
-        log.error(API_RESPONSE_ERROR, {
-          data: error.response.data,
-          status: error.response.status,
-          headers: error.response.headers
-        })
-      } else if (error.request) {
-        log.error(API_REQUEST_ERROR, {
-          error: error.request
-        })
-      } else {
-        log.error(API_ERROR, error.message)
+      if (
+        error.code === 'ECONNREFUSED' ||
+        error.response?.status === 404 ||
+        error.code === 'ENOTFOUND'
+      ) {
+        return {
+          getServerInfo: {
+            errors: [
+              {
+                errorType: 'API Request Error',
+                message: 'Server is offline'
+              }
+            ]
+          }
+        } as GetServerInfoQuery
       }
+
+      log.error(API_ERROR, error)
       return null
     })
 }
@@ -96,35 +96,6 @@ export const multiplesMinimalServerRequest = async (
     query += `{ host: ${server.host}, port: ${server.port}, type: ${server.type}} `
   })
   query += ']'
-
-  // console.log(
-  //   'QUERY',
-  //   `
-  //   query multiplesServerInfo {
-  //     getMultiplesServerInfo(apikey: "${props.apikey}", servers: ${query}) {
-  //       response {
-  //         response {
-  //           name
-  //           map
-  //           maxplayers
-  //           raw {
-  //             numplayers
-  //             game
-  //           }
-  //           connect
-  //         }
-  //         errors {
-  //           errorType
-  //           message
-  //         }
-  //       }
-  //       errors {
-  //         errorType
-  //       }
-  //     }
-  //   }
-  //     `
-  // )
 
   return await axios({
     url: _apiendpoint_,
@@ -159,19 +130,23 @@ export const multiplesMinimalServerRequest = async (
   })
     .then((result) => result.data.data as GetMultiplesServerInfoQuery)
     .catch((error) => {
-      if (error.response) {
-        log.error(API_RESPONSE_ERROR, {
-          data: error.response.data,
-          status: error.response.status,
-          headers: error.response.headers
-        })
-      } else if (error.request) {
-        log.error(API_REQUEST_ERROR, {
-          error: error.request
-        })
-      } else {
-        log.error(API_ERROR, error.message)
+      if (
+        error.code === 'ECONNREFUSED' ||
+        error.response?.status === 404 ||
+        error.code === 'ENOTFOUND'
+      ) {
+        return {
+          getMultiplesServerInfo: {
+            errors: [
+              {
+                errorType: 'API Request Error',
+                message: 'Server is offline'
+              }
+            ]
+          }
+        } as GetMultiplesServerInfoQuery
       }
+      log.error(API_ERROR, error)
       return null
     })
 }

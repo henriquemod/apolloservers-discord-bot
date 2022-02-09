@@ -1,5 +1,5 @@
 import { EmbedFieldData } from 'discord.js'
-import { Server } from 'src/models/guild-servers'
+import { Server } from '../models/guild-servers'
 
 export const createGroups = (arr: Server[], numGroups: number): Server[][] => {
   const perGroup = Math.ceil(arr.length / numGroups)

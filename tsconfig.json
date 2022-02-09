@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "es2018",
     "lib": ["es2018", "esnext.asynciterable"],
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "module": "commonjs",
     "baseUrl": ".",
     "allowJs": true,
@@ -13,10 +16,13 @@
     "strictPropertyInitialization": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "skipLibCheck": true,
-    "outDir": "./dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true
-  }
+    "allowSyntheticDefaultImports": true,
+    "types": []
+  },
+  "include": [ "src", "index.ts"],
+  "exclude": [
+    "node_modules"
+  ]
 }

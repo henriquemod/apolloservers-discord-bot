@@ -1,8 +1,8 @@
 import { ICommand } from 'wokcommands'
-import { APP_COMMAND_ERROR, logInit } from '../../config/log4jConfig'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../config/log4jConfig'
 import { __prod__ } from '../../utils/constants'
 
-const log = logInit(['app', 'out']).getLogger('APP')
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Configuration',

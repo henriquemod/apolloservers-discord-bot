@@ -1,12 +1,12 @@
-import DJS from 'discord.js'
+import * as DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import { APP_COMMAND_ERROR, logInit } from '../../../config/log4jConfig'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
 import { __max_servers_allowed__, __prod__ } from '../../../utils/constants'
 import { isValveProtocol } from '../../../utils/protocols'
 import { domainValidation, portValidation } from '../../../utils/validations'
 
-const log = logInit(['app', 'out']).getLogger('APP')
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Admin Panel',

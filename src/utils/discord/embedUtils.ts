@@ -7,6 +7,7 @@ import {
   EmbedFieldData
 } from 'discord.js'
 import { C_DANGER } from '../../config/colors'
+import { codeBlock } from '@discordjs/builders'
 
 interface MakeEmbedProps {
   embed?: MessageEmbed
@@ -30,8 +31,12 @@ export const makeEmdedOptions = ({
 
 export const makeOffileEmbend = (fields?: EmbedFieldData[]): MessageEmbed => {
   const embed = new MessageEmbed()
-    .setTitle('Offline')
-    .setDescription('Offline')
+    .setTitle('Request failed')
+    .setDescription(
+      codeBlock(
+        'Please try again later an if the problem persist, contact the bot owner'
+      )
+    )
 
     .setColor(C_DANGER)
 
@@ -44,5 +49,10 @@ export const makeOffileEmbend = (fields?: EmbedFieldData[]): MessageEmbed => {
 
 export const emberdDivider: EmbedFieldData = {
   name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
+  value: '\u200b'
+}
+
+export const fullEmberdDivider: EmbedFieldData = {
+  name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
   value: '\u200b'
 }

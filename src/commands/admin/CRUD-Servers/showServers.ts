@@ -7,7 +7,7 @@ import {
   TextChannel,
   User
 } from 'discord.js'
-import { APP_COMMAND_ERROR, logInit } from '../../../config/log4jConfig'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import { ICommand } from 'wokcommands'
 import { C_WARNING } from '../../../config/colors'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
@@ -15,7 +15,7 @@ import { __prod__ } from '../../../utils/constants'
 import { emberdDivider } from '../../../utils/discord/embedUtils'
 import { createEmbedsGroups } from '../../../utils/splitGroups'
 
-const log = logInit(['app', 'out']).getLogger('APP')
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 const LIMITER = 3
 
 export default {

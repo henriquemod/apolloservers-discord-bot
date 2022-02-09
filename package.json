@@ -1,6 +1,6 @@
 {
   "name": "apolloservers-discord-bot",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "The only discord bot you will need to query your gameservers",
   "main": "dist/index.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "gen": "graphql-codegen --config codegen.yml",
     "prepare": "husky install"
   },
+  "files": [ "dist/**/*" ],
   "keywords": [],
   "author": "",
   "license": "ISC",
