@@ -91,6 +91,14 @@
     "english": "The api key you provided in this server is invalid, please informe the discord owner",
     "portuguese": "A chave de api fornecida nesse servidor esta invalida, favor informar o dono dese discord"
   },
+  "API_REQUEST_ERROR": {
+    "english": "Error requesting API, please try again later",
+    "portuguese": "Erro ao requisitar API, favor tentar novamente mais tarde"
+  },
+  "REQUEST_FAILED": {
+    "english": "Request failed, please try again later",
+    "portuguese": "Requisição falhou, favor tentar novamente mais tarde"
+  },
   "NOT_AVAILABLE": {
     "english": "Not available",
     "portuguese": "Não disponivel"

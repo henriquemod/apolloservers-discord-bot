@@ -1,9 +1,13 @@
-import { __prod__ } from '../../../../utils/constants'
-import DJS from 'discord.js'
-import { ICommand } from 'wokcommands'
-import guildServersSchema, { Server } from '../../../../models/guild-servers'
-import { domainValidation } from '../../../../utils/validations'
 import { codeBlock } from '@discordjs/builders'
+import * as DJS from 'discord.js'
+import { ICommand } from 'wokcommands'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../../../config/log4jConfig'
+import guildServersSchema, { Server } from '../../../../models/guild-servers'
+import { __prod__ } from '../../../../utils/constants'
+import { domainValidation } from '../../../../utils/validations'
+
+const log = log4jConfig(['app', 'out']).getLogger('APP')
+
 export default {
   category: 'Admin Panel',
   description: 'Edit a server name',
@@ -12,6 +16,15 @@ export default {
   testOnly: !__prod__,
   minArgs: 2,
   expectedArgs: '<id> <host>',
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   options: [
     {

@@ -7,19 +7,26 @@ import {
   MessageEmbed,
   ReplyMessageOptions
 } from 'discord.js'
+import { codeBlock } from '@discordjs/builders'
 import { ICommand } from 'wokcommands'
 import { C_DANGER } from '../config/colors'
 import guildServersSchema, { Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { __prod__, __pwencription__ } from '../utils/constants'
-import { makeEmdedOptions, makeOffileEmbend } from '../utils/discord/embedUtils'
+import {
+  makeEmdedOptions,
+  makeOffileEmbend,
+  fullEmberdDivider
+} from '../utils/discord/embedUtils'
 import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
 import { createGroups } from '../utils/splitGroups'
 import { statusSkeleton } from '../utils/skeleton/statusSkeleton'
 import { successEmbed } from '../utils/discord/embedStatus'
+import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
 
 export default {
@@ -27,6 +34,15 @@ export default {
   description: 'Show a server info',
   slash: 'both',
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   callback: async ({
     interaction: statusInt,
@@ -171,7 +187,9 @@ export default {
             host: serverSelected.host,
             port: serverSelected.port,
             type: serverSelected.type,
-            apikey: apiKey
+            apikey: apiKey,
+            instance,
+            guild
           })
 
           if (!request) {
@@ -180,7 +198,10 @@ export default {
             })
 
             if (message) {
-              await Promise.all([message.reply(errormsg), botMessage.delete()])
+              await Promise.all([
+                message.reply(errormsg),
+                botMessageStatus.delete()
+              ])
             } else {
               await statusInt.editReply(errormsg)
             }
@@ -211,16 +232,21 @@ export default {
               (error) =>
                 ({
                   name: error.errorType,
-                  value: error.message
+                  value: codeBlock(error.message ?? 'Unknown error')
                 } as EmbedFieldData)
             )
 
+            fields.unshift(fullEmberdDivider)
+
             const replymsgn = makeEmdedOptions({
-              embed: makeOffileEmbend(fields)
+              embed: makeOffileEmbend(instance, guild, fields)
             })
 
             if (message) {
-              await Promise.all([message.reply(replymsgn), botMessage.delete()])
+              await Promise.all([
+                message.reply(replymsgn),
+                botMessageStatus.delete()
+              ])
             } else {
               await statusInt.editReply(replymsgn)
             }
@@ -241,7 +267,6 @@ export default {
           if (message) {
             await Promise.all([
               message.channel.send(makeEmdedOptions({ embed })),
-              // botMessage.delete()
               botMessageStatus.delete()
             ])
           } else {

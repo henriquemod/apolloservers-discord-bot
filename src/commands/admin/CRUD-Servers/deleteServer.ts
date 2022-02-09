@@ -1,13 +1,16 @@
-import { __prod__ } from '../../../utils/constants'
-import { ICommand } from 'wokcommands'
-import guildServersSchema, { Server } from '../../../models/guild-servers'
 import {
   ButtonInteraction,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction
 } from 'discord.js'
+import { ICommand } from 'wokcommands'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
+import guildServersSchema, { Server } from '../../../models/guild-servers'
+import { __prod__ } from '../../../utils/constants'
 import { createGroups } from '../../../utils/splitGroups'
+
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Admin Panel',
@@ -15,6 +18,15 @@ export default {
   permissions: ['ADMINISTRATOR'],
   slash: 'both',
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   callback: async ({ interaction: msgInt, channel, guild, instance }) => {
     if (!guild) {

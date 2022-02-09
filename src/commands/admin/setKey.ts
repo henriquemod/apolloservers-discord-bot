@@ -1,8 +1,11 @@
 import { __prod__, __pwencription__ } from '../../utils/constants'
-import DJS from 'discord.js'
+import * as DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
 import EncryptorDecryptor from '../../utils/encryption'
 import guildServersSchema from '../../models/guild-servers'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../config/log4jConfig'
+
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Admin Panel',
@@ -12,6 +15,15 @@ export default {
   expectedArgs: '<key>',
   slash: true,
   testOnly: !__prod__,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   options: [
     {

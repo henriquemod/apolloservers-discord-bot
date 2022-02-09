@@ -1,5 +1,8 @@
-import { __prod__ } from '../../utils/constants'
 import { ICommand } from 'wokcommands'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../config/log4jConfig'
+import { __prod__ } from '../../utils/constants'
+
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Configuration',
@@ -7,6 +10,15 @@ export default {
   slash: 'both',
   testOnly: !__prod__,
   ownerOnly: true,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   callback: async ({ client }) => {
     const { guilds } = client

@@ -1,13 +1,16 @@
-import DiscordJS, { Intents } from 'discord.js'
+import * as DJS from 'discord.js'
 import { initializeWOK } from './utils/wokCommandsInit'
-import path from 'path'
+import * as path from 'path'
 import { __pwencription__ } from './utils/constants'
-import { logInit } from './config/log4jConfig'
+import log4jConfig from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {} from './messages.json'
+import * as msgns from './messages.json'
 
-const log = logInit(['app', 'out']).getLogger('APP')
+if (msgns) {
+  console.log('Messages loaded')
+}
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 const COMMANDS_DIR = path.join(__dirname, 'commands')
 const FEATURES_DIR = path.join(__dirname, 'features')
@@ -19,11 +22,11 @@ const main = async (): Promise<void> => {
     throw new Error('You must define a master key!!!')
   }
 
-  const client = new DiscordJS.Client({
+  const client = new DJS.Client({
     intents: [
-      Intents.FLAGS.GUILDS,
-      Intents.FLAGS.GUILD_MESSAGES,
-      Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+      DJS.Intents.FLAGS.GUILDS,
+      DJS.Intents.FLAGS.GUILD_MESSAGES,
+      DJS.Intents.FLAGS.GUILD_MESSAGE_REACTIONS
     ]
   })
 

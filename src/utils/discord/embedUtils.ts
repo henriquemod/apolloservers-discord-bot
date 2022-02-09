@@ -4,9 +4,12 @@ import {
   BaseMessageComponentOptions,
   MessageActionRowOptions,
   ReplyMessageOptions,
-  EmbedFieldData
+  EmbedFieldData,
+  Guild
 } from 'discord.js'
 import { C_DANGER } from '../../config/colors'
+import { codeBlock } from '@discordjs/builders'
+import WOKCommands from 'wokcommands'
 
 interface MakeEmbedProps {
   embed?: MessageEmbed
@@ -28,10 +31,16 @@ export const makeEmdedOptions = ({
   }
 }
 
-export const makeOffileEmbend = (fields?: EmbedFieldData[]): MessageEmbed => {
+export const makeOffileEmbend = (
+  instance: WOKCommands,
+  guild: Guild,
+  fields?: EmbedFieldData[]
+): MessageEmbed => {
   const embed = new MessageEmbed()
-    .setTitle('Offline')
-    .setDescription('Offline')
+    .setTitle('Request failed')
+    .setDescription(
+      codeBlock(instance.messageHandler.get(guild, 'REQUEST_FAILED'))
+    )
 
     .setColor(C_DANGER)
 
@@ -44,5 +53,10 @@ export const makeOffileEmbend = (fields?: EmbedFieldData[]): MessageEmbed => {
 
 export const emberdDivider: EmbedFieldData = {
   name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
+  value: '\u200b'
+}
+
+export const fullEmberdDivider: EmbedFieldData = {
+  name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
   value: '\u200b'
 }
