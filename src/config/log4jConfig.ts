@@ -18,3 +18,4 @@ export const API_ERROR =
 
 export const API_RESPONSE_ERROR = 'API replyed with an response error'
 export const API_REQUEST_ERROR = 'API replyed with an request error'
+export const APP_COMMAND_ERROR = 'There was an error when executing a command'
