@@ -1,16 +1,26 @@
-import { __prod__ } from '../../utils/constants'
 import { ICommand } from 'wokcommands'
+import { APP_COMMAND_ERROR, logInit } from '../../config/log4jConfig'
+import { __prod__ } from '../../utils/constants'
+
+const log = logInit(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Configuration',
   description: 'Set an status for Apollo Servers Bot',
   slash: true,
   testOnly: !__prod__,
-
   minArgs: 1,
   expectedArgs: '<status>',
-
   ownerOnly: true,
+
+  error: ({ error, command, message, info }) => {
+    log.error(APP_COMMAND_ERROR, {
+      error,
+      command,
+      message,
+      info
+    })
+  },
 
   callback: async ({ client, text }) => {
     client.user?.setPresence({
