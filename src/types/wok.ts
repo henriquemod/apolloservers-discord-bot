@@ -1,4 +1,4 @@
-import DiscordJS from 'discord.js'
+import * as DiscordJS from 'discord.js'
 
 export interface WOKProps {
   client: DiscordJS.Client<boolean>
