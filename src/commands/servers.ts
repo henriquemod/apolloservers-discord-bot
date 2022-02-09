@@ -67,7 +67,9 @@ export default {
 
         const request = await multiplesMinimalServerRequest({
           apikey: apiKey,
-          servers: buildList
+          servers: buildList,
+          instance,
+          guild
         })
 
         if (!request) {
@@ -93,7 +95,7 @@ export default {
           fields.unshift(fullEmberdDivider)
 
           const replymsgn = makeEmdedOptions({
-            embed: makeOffileEmbend(fields)
+            embed: makeOffileEmbend(instance, guild, fields)
           })
 
           if (message) {

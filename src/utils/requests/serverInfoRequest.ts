@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { Guild } from 'discord.js'
+import WOKCommands from 'wokcommands'
 import log4jConfig, { API_ERROR } from '../../config/log4jConfig'
 import {
   GetMultiplesServerInfoQuery,
@@ -14,11 +16,23 @@ interface Props {
   host: string
   port: number
   apiKey: string
+  instance: WOKCommands
+  guild: Guild
+}
+
+interface ServerInfoProps extends GetServerInfoQueryVariables {
+  instance: WOKCommands
+  guild: Guild
+}
+
+interface MultiServerInfoProps extends QueryGetMultiplesServerInfoArgs {
+  instance: WOKCommands
+  guild: Guild
 }
 
 // ! Single Server - Complete
 export const serverInfoRequest = async (
-  props: GetServerInfoQueryVariables
+  props: ServerInfoProps
 ): Promise<GetServerInfoQuery | null> => {
   return await axios({
     url: _apiendpoint_,
@@ -75,7 +89,10 @@ export const serverInfoRequest = async (
             errors: [
               {
                 errorType: 'API Request Error',
-                message: 'Server is offline'
+                message: props.instance.messageHandler.get(
+                  props.guild,
+                  'API_REQUEST_ERROR'
+                )
               }
             ]
           }
@@ -89,7 +106,7 @@ export const serverInfoRequest = async (
 
 // ! Multiples Servers - Minimal
 export const multiplesMinimalServerRequest = async (
-  props: QueryGetMultiplesServerInfoArgs
+  props: MultiServerInfoProps
 ): Promise<GetMultiplesServerInfoQuery | null> => {
   let query = '['
   props.servers.forEach((server) => {
@@ -140,7 +157,10 @@ export const multiplesMinimalServerRequest = async (
             errors: [
               {
                 errorType: 'API Request Error',
-                message: 'Server is offline'
+                message: props.instance.messageHandler.get(
+                  props.guild,
+                  'API_REQUEST_ERROR'
+                )
               }
             ]
           }

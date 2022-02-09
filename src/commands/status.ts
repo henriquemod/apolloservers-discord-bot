@@ -187,7 +187,9 @@ export default {
             host: serverSelected.host,
             port: serverSelected.port,
             type: serverSelected.type,
-            apikey: apiKey
+            apikey: apiKey,
+            instance,
+            guild
           })
 
           if (!request) {
@@ -237,7 +239,7 @@ export default {
             fields.unshift(fullEmberdDivider)
 
             const replymsgn = makeEmdedOptions({
-              embed: makeOffileEmbend(fields)
+              embed: makeOffileEmbend(instance, guild, fields)
             })
 
             if (message) {
