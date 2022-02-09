@@ -1,5 +1,5 @@
 /* eslint-disable new-cap */
-import sjcl from 'sjcl'
+import * as sjcl from 'sjcl'
 
 export default class EncryptorDecryptor {
   private readonly BITS_PER_WORD: number = 32

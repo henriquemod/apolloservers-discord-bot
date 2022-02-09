@@ -13,10 +13,12 @@ query getMultiplesServerInfo($apikey: String!, $servers: [ServerInput!]!) {
       }
       errors {
         errorType
+        message
       }
     }
     errors {
       errorType
+      message
     }
   }
 }

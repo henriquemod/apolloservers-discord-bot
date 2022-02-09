@@ -7,21 +7,26 @@ import {
   MessageEmbed,
   ReplyMessageOptions
 } from 'discord.js'
+import { codeBlock } from '@discordjs/builders'
 import { ICommand } from 'wokcommands'
 import { C_DANGER } from '../config/colors'
 import guildServersSchema, { Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import { __prod__, __pwencription__ } from '../utils/constants'
-import { makeEmdedOptions, makeOffileEmbend } from '../utils/discord/embedUtils'
+import {
+  makeEmdedOptions,
+  makeOffileEmbend,
+  fullEmberdDivider
+} from '../utils/discord/embedUtils'
 import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
 import { createGroups } from '../utils/splitGroups'
 import { statusSkeleton } from '../utils/skeleton/statusSkeleton'
 import { successEmbed } from '../utils/discord/embedStatus'
-import { APP_COMMAND_ERROR, logInit } from '../config/log4jConfig'
+import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 
-const log = logInit(['app', 'out']).getLogger('APP')
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
 
 export default {
@@ -191,7 +196,10 @@ export default {
             })
 
             if (message) {
-              await Promise.all([message.reply(errormsg), botMessage.delete()])
+              await Promise.all([
+                message.reply(errormsg),
+                botMessageStatus.delete()
+              ])
             } else {
               await statusInt.editReply(errormsg)
             }
@@ -222,16 +230,21 @@ export default {
               (error) =>
                 ({
                   name: error.errorType,
-                  value: error.message
+                  value: codeBlock(error.message ?? 'Unknown error')
                 } as EmbedFieldData)
             )
+
+            fields.unshift(fullEmberdDivider)
 
             const replymsgn = makeEmdedOptions({
               embed: makeOffileEmbend(fields)
             })
 
             if (message) {
-              await Promise.all([message.reply(replymsgn), botMessage.delete()])
+              await Promise.all([
+                message.reply(replymsgn),
+                botMessageStatus.delete()
+              ])
             } else {
               await statusInt.editReply(replymsgn)
             }
@@ -252,7 +265,6 @@ export default {
           if (message) {
             await Promise.all([
               message.channel.send(makeEmdedOptions({ embed })),
-              // botMessage.delete()
               botMessageStatus.delete()
             ])
           } else {

@@ -1,11 +1,14 @@
 import { EmbedFieldData, MessageEmbed } from 'discord.js'
 import { codeBlock } from '@discordjs/builders'
 import { C_SECONDARY } from '../../config/colors'
+import { emberdDivider } from '../discord/embedUtils'
 
 export const statusSkeleton = (): MessageEmbed => {
   const embed = new MessageEmbed()
 
-  embed.setFields([
+  embed.addFields([emberdDivider])
+
+  embed.addFields([
     {
       name: 'Slots',
       value: codeBlock('loading...'),

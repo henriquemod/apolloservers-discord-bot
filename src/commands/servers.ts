@@ -1,5 +1,5 @@
-import { MessageEmbed } from 'discord.js'
-import { APP_COMMAND_ERROR, logInit } from '../config/log4jConfig'
+import { EmbedFieldData, MessageEmbed } from 'discord.js'
+import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import { ICommand } from 'wokcommands'
 import { C_SUCCESS } from '../config/colors'
 import guildServersSchema from '../models/guild-servers'
@@ -9,8 +9,14 @@ import { minimalStatusEmbed } from '../utils/discord/embedStatus'
 import EncryptorDecryptor from '../utils/encryption'
 import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeListResponse } from '../utils/sanitizeResponse'
+import { codeBlock } from '@discordjs/builders'
+import {
+  fullEmberdDivider,
+  makeEmdedOptions,
+  makeOffileEmbend
+} from '../utils/discord/embedUtils'
 
-const log = logInit(['app', 'out']).getLogger('APP')
+const log = log4jConfig(['app', 'out']).getLogger('APP')
 
 export default {
   category: 'Servers',
@@ -27,7 +33,7 @@ export default {
     })
   },
 
-  callback: async ({ guild, instance }) => {
+  callback: async ({ message, guild, instance, interaction }) => {
     if (!guild) {
       return 'Please use this command within a server'
     }
@@ -63,18 +69,40 @@ export default {
           apikey: apiKey,
           servers: buildList
         })
+
         if (!request) {
           return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
         }
 
         const result = request.getMultiplesServerInfo
 
+        /**
+         * If the request is not valid, return the error response
+         */
         if (result?.errors) {
-          for (const error of result.errors) {
-            if (error.errorType === 'api-error') {
-              return instance.messageHandler.get(guild, 'API_KEY_ERROR')
-            }
+          const errors = result.errors
+
+          const fields = errors.map(
+            (error) =>
+              ({
+                name: error.errorType,
+                value: codeBlock(error.message ?? 'Unknown error')
+              } as EmbedFieldData)
+          )
+
+          fields.unshift(fullEmberdDivider)
+
+          const replymsgn = makeEmdedOptions({
+            embed: makeOffileEmbend(fields)
+          })
+
+          if (message) {
+            await Promise.all([message.reply(replymsgn)])
+          } else {
+            await interaction.editReply(replymsgn)
           }
+
+          return
         }
 
         if (result) {
