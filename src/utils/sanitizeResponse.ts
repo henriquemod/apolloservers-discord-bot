@@ -11,7 +11,6 @@ import {
 import { isValidProtocol } from './protocols'
 import { csgoMap } from './urls/csgoMapsUrl'
 import { cssMap } from './urls/cssMapsUrl'
-// import { valveThumbsUrls } from './urls/valveThumbsUrls'
 
 const UNDEFINED_APPID = 999
 

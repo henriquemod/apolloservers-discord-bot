@@ -4,7 +4,6 @@ import * as path from 'path'
 import { __pwencription__ } from './utils/constants'
 import log4jConfig from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as msgns from './messages.json'
 
 if (msgns) {

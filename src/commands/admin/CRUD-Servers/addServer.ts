@@ -84,7 +84,6 @@ export default {
     const serverType = interaction.options.getString('type')
     const description = interaction.options.getString('description')
 
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     if (!serverName || !serverHost || !serverPort || !serverType) {
       return instance.messageHandler.get(guild, 'INVALID_VALUES')
     }
