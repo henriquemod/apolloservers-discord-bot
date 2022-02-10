@@ -19,6 +19,7 @@ interface Props {
   msgn: Message
   authorMessage: Message | CommandInteraction<CacheType>
   callback: (props: Props) => Promise<boolean>
+  timeout: number
 }
 
 export default async ({
@@ -30,7 +31,8 @@ export default async ({
   authorid,
   msgn,
   authorMessage,
-  callback
+  callback,
+  timeout
 }: Props): Promise<boolean> => {
   embed.setFields(...groupedServers[index])
   embed.setFooter({ text: `Page ${index + 1} of ${size}` })
@@ -46,7 +48,7 @@ export default async ({
 
   const collector = msgn.createReactionCollector({
     filter,
-    time: 1000 * 15
+    time: 1000 * timeout
   })
 
   let haveInteraction = false
@@ -90,12 +92,19 @@ export default async ({
       authorid,
       msgn,
       authorMessage,
-      callback: callback
+      callback: callback,
+      timeout
     })
   })
 
-  collector.on('end', (collected) => {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  collector.on('end', async (collected) => {
     if (collected.size === 0) {
+      if (authorMessage instanceof Message) {
+        await Promise.all([msgn.delete(), authorMessage.delete()])
+      } else {
+        await msgn.delete()
+      }
       return false
     }
   })
