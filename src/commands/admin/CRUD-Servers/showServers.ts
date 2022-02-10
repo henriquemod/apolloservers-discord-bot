@@ -1,5 +1,7 @@
 import { codeBlock } from '@discordjs/builders'
 import {
+  CacheType,
+  CommandInteraction,
   EmbedFieldData,
   Message,
   MessageEmbed,
@@ -22,7 +24,7 @@ export default {
   category: 'Admin Panel',
   description: 'Display all servers',
   permissions: ['ADMINISTRATOR'],
-  slash: false,
+  slash: 'both',
   testOnly: !__prod__,
 
   error: ({ error, command, message, info }) => {
@@ -34,8 +36,8 @@ export default {
     })
   },
 
-  callback: async ({ message, channel, guild, instance }) => {
-    const authorid = message.author.id
+  callback: async ({ message, channel, guild, instance, interaction }) => {
+    const authorid = interaction ? interaction.user.id : message.author.id
     const index = 0
     if (!guild) {
       return 'Please use this command within a server'
@@ -101,11 +103,16 @@ export default {
       serversFields.push(fields)
     })
 
+    await interaction.reply('.')
+
     const botMessage = await channel.send({
       embeds: [embed]
     })
 
     const groupedServers = createEmbedsGroups(serversFields, LIMITER)
+
+    const msgnObj: Message | CommandInteraction<CacheType> =
+      interaction ?? message
 
     await buildEmbendBlock(
       embed,
@@ -115,7 +122,7 @@ export default {
       channel,
       authorid,
       botMessage,
-      message
+      msgnObj
     )
   }
 } as ICommand
@@ -162,7 +169,7 @@ const buildEmbendBlock = async (
   channel: TextChannel,
   authorid: string,
   msgn: Message,
-  authorMessage: Message
+  authorMessage: Message | CommandInteraction<CacheType>
 ): Promise<boolean> => {
   embed.setFields(...groupedServers[index])
   embed.setFooter({ text: `Page ${index + 1} of ${size}` })
@@ -203,7 +210,11 @@ const buildEmbendBlock = async (
       haveInteraction = true
     }
     if (reaction.emoji.name === '🚪') {
-      await Promise.all([msgn.delete(), authorMessage.delete()])
+      if (authorMessage instanceof Message) {
+        await Promise.all([msgn.delete(), authorMessage.delete()])
+      } else {
+        await msgn.delete()
+      }
       return
     }
     msgn = await updateMessage(msgn, embed, channel)
