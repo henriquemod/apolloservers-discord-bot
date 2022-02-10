@@ -3,7 +3,7 @@ import { codeBlock } from '@discordjs/builders'
 import { C_SUCCESS } from '../../config/colors'
 import { SingleServer, SrvMinimalInfo } from '../../types/responses'
 import { limitString } from '../limiter'
-import { emberdDivider } from './embedUtils'
+import { fullEmberdDivider } from './embedUtils'
 
 interface SuccessProps {
   data: SingleServer
@@ -102,7 +102,7 @@ export const minimalStatusEmbed = (
   const result = [serverData, gameData, connectData, slotsData]
 
   if (basDivider) {
-    return [...result, emberdDivider]
+    return [...result, fullEmberdDivider]
   }
 
   return result

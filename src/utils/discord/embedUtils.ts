@@ -56,7 +56,12 @@ export const emberdDivider: EmbedFieldData = {
   value: '\u200b'
 }
 
-export const fullEmberdDivider: EmbedFieldData = {
+export const mediumEmberdDivider: EmbedFieldData = {
   name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
+  value: '\u200b'
+}
+
+export const fullEmberdDivider: EmbedFieldData = {
+  name: '▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃',
   value: '\u200b'
 }
