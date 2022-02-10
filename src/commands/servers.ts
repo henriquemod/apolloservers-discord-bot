@@ -1,4 +1,10 @@
-import { EmbedFieldData, MessageEmbed } from 'discord.js'
+import {
+  CacheType,
+  CommandInteraction,
+  EmbedFieldData,
+  Message,
+  MessageEmbed
+} from 'discord.js'
 import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import { ICommand } from 'wokcommands'
 import { C_SUCCESS } from '../config/colors'
@@ -15,6 +21,8 @@ import {
   makeEmdedOptions,
   makeOffileEmbend
 } from '../utils/discord/embedUtils'
+import { createEmbedsGroups } from '../utils/splitGroups'
+import embedPaginated from '../utils/discord/embedPaginated'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 
@@ -33,7 +41,9 @@ export default {
     })
   },
 
-  callback: async ({ message, guild, instance, interaction }) => {
+  callback: async ({ message, channel, guild, instance, interaction }) => {
+    const index = 0
+    const authorid = interaction ? interaction.user.id : message.author.id
     if (!guild) {
       return 'Please use this command within a server'
     }
@@ -111,17 +121,59 @@ export default {
           const data = sanitizeListResponse(result)
           if (data) {
             const embed = new MessageEmbed()
+              .setTitle('Servers List')
+              .setColor(C_SUCCESS)
 
-            data.servers.forEach((server, i, arr) => {
+            const serversFields = data.servers.map((server, i, arr) => {
               if (i === arr.length - 1) {
-                embed.addFields(minimalStatusEmbed(server))
+                return minimalStatusEmbed(server)
               } else {
-                embed.addFields(minimalStatusEmbed(server, true))
+                return minimalStatusEmbed(server, true)
               }
             })
 
-            embed.setColor(C_SUCCESS)
-            return embed
+            const length = serversFields.length
+            let grouped = 0
+
+            if (length <= 4) {
+              grouped = 1
+            } else if (length <= 8) {
+              grouped = 2
+            } else if (length <= 12) {
+              grouped = 3
+            } else if (length <= 16) {
+              grouped = 4
+            } else {
+              grouped = 5
+            }
+
+            const groupedServers = createEmbedsGroups(serversFields, grouped)
+
+            if (interaction) {
+              await interaction.reply('.')
+            }
+
+            const botMessage = await channel.send({
+              embeds: [embed]
+            })
+
+            const msgnObj: Message | CommandInteraction<CacheType> =
+              interaction ?? message
+
+            await embedPaginated({
+              embed,
+              groupedServers,
+              index,
+              size: groupedServers.length,
+              channel,
+              authorid,
+              msgn: botMessage,
+              authorMessage: msgnObj,
+              callback: embedPaginated,
+              timeout: 15
+            })
+
+            // return embed
           } else {
             return instance.messageHandler.get(guild, 'DEFAULT_ERROR')
           }

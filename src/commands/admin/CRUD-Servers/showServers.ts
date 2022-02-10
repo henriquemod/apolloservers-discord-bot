@@ -122,7 +122,8 @@ export default {
       authorid,
       msgn: botMessage,
       authorMessage: msgnObj,
-      callback: embedPaginated
+      callback: embedPaginated,
+      timeout: 30
     })
   }
 } as ICommand
