@@ -1,17 +1,17 @@
 import { codeBlock } from '@discordjs/builders'
 import {
+  CacheType,
+  CommandInteraction,
   EmbedFieldData,
   Message,
-  MessageEmbed,
-  MessageReaction,
-  TextChannel,
-  User
+  MessageEmbed
 } from 'discord.js'
-import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import { ICommand } from 'wokcommands'
 import { C_WARNING } from '../../../config/colors'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
 import { __prod__ } from '../../../utils/constants'
+import embedPaginated from '../../../utils/discord/embedPaginated'
 import { emberdDivider } from '../../../utils/discord/embedUtils'
 import { createEmbedsGroups } from '../../../utils/splitGroups'
 
@@ -22,7 +22,7 @@ export default {
   category: 'Admin Panel',
   description: 'Display all servers',
   permissions: ['ADMINISTRATOR'],
-  slash: false,
+  slash: 'both',
   testOnly: !__prod__,
 
   error: ({ error, command, message, info }) => {
@@ -34,8 +34,8 @@ export default {
     })
   },
 
-  callback: async ({ message, channel, guild, instance }) => {
-    const authorid = message.author.id
+  callback: async ({ message, channel, guild, instance, interaction }) => {
+    const authorid = interaction ? interaction.user.id : message.author.id
     const index = 0
     if (!guild) {
       return 'Please use this command within a server'
@@ -101,129 +101,29 @@ export default {
       serversFields.push(fields)
     })
 
+    if (interaction) {
+      await interaction.reply('.')
+    }
     const botMessage = await channel.send({
       embeds: [embed]
     })
 
     const groupedServers = createEmbedsGroups(serversFields, LIMITER)
 
-    await buildEmbendBlock(
+    const msgnObj: Message | CommandInteraction<CacheType> =
+      interaction ?? message
+
+    await embedPaginated({
       embed,
       groupedServers,
       index,
-      groupedServers.length,
+      size: groupedServers.length,
       channel,
       authorid,
-      botMessage,
-      message
-    )
+      msgn: botMessage,
+      authorMessage: msgnObj,
+      callback: embedPaginated,
+      timeout: 30
+    })
   }
 } as ICommand
-
-const updateMessage = async (
-  msgn: Message,
-  embed: MessageEmbed,
-  channel: TextChannel
-): Promise<Message> => {
-  const result = await Promise.all([
-    msgn.delete(),
-    await channel.send({
-      embeds: [embed]
-    })
-  ])
-  return result[1]
-}
-
-const buildReactions = async (
-  msgn: Message,
-  fist: boolean,
-  last: boolean
-): Promise<void> => {
-  try {
-    if (!fist) {
-      await msgn.react('⏮')
-      await msgn.react('◀')
-    }
-    if (!last) {
-      await msgn.react('▶')
-      await msgn.react('⏭')
-    }
-    await msgn.react('🚪')
-  } catch (error) {
-    console.error('One of the emojis failed to react:', error)
-  }
-}
-
-const buildEmbendBlock = async (
-  embed: MessageEmbed,
-  groupedServers: EmbedFieldData[][][],
-  index: number,
-  size: number,
-  channel: TextChannel,
-  authorid: string,
-  msgn: Message,
-  authorMessage: Message
-): Promise<boolean> => {
-  embed.setFields(...groupedServers[index])
-  embed.setFooter({ text: `Page ${index + 1} of ${size}` })
-
-  msgn = await updateMessage(msgn, embed, channel)
-  const fist = index === 0
-  const last = index === size - 1
-  await buildReactions(msgn, fist, last)
-
-  const filter = (_m: MessageReaction, user: User): boolean => {
-    return user.id === authorid
-  }
-
-  const collector = msgn.createReactionCollector({
-    filter,
-    time: 1000 * 15
-  })
-
-  let haveInteraction = false
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  collector.on('collect', async (reaction) => {
-    if (reaction.emoji.name === '⏮') {
-      embed.setFields(...groupedServers[0])
-      index = 0
-      haveInteraction = true
-    }
-    if (reaction.emoji.name === '◀') {
-      embed.setFields(...groupedServers[index--])
-      haveInteraction = true
-    }
-    if (reaction.emoji.name === '▶') {
-      embed.setFields(...groupedServers[index++])
-      haveInteraction = true
-    }
-    if (reaction.emoji.name === '⏭') {
-      embed.setFields(...groupedServers[groupedServers.length - 1])
-      index = groupedServers.length - 1
-      haveInteraction = true
-    }
-    if (reaction.emoji.name === '🚪') {
-      await Promise.all([msgn.delete(), authorMessage.delete()])
-      return
-    }
-    msgn = await updateMessage(msgn, embed, channel)
-    await buildEmbendBlock(
-      embed,
-      groupedServers,
-      index,
-      size,
-      channel,
-      authorid,
-      msgn,
-      authorMessage
-    )
-  })
-
-  collector.on('end', (collected) => {
-    if (collected.size === 0) {
-      return false
-    }
-  })
-
-  return haveInteraction
-}
