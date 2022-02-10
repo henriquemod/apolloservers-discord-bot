@@ -101,8 +101,9 @@ export default {
       serversFields.push(fields)
     })
 
-    await interaction.reply('.')
-
+    if (interaction) {
+      await interaction.reply('.')
+    }
     const botMessage = await channel.send({
       embeds: [embed]
     })
