@@ -13,7 +13,9 @@
     "gen": "graphql-codegen --config codegen.yml",
     "prepare": "husky install"
   },
-  "files": [ "dist/**/*" ],
+  "files": [
+    "dist/**/*"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -21,6 +23,7 @@
     "@graphql-codegen/cli": "2.4.0",
     "@graphql-codegen/typescript": "2.4.2",
     "@graphql-codegen/typescript-operations": "2.2.3",
+    "@types/node-cron": "3.0.1",
     "@types/sjcl": "1.0.30",
     "@typescript-eslint/eslint-plugin": "5.10.1",
     "commit-msg": "0.2.3",
@@ -48,6 +51,7 @@
     "graphql": "16.3.0",
     "log4js": "6.4.1",
     "mongoose": "^6.1.8",
+    "node-cron": "3.0.0",
     "sjcl": "1.0.8",
     "wokcommands": "1.5.3"
   }

@@ -5,6 +5,9 @@ import { __pwencription__ } from './utils/constants'
 import log4jConfig from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
 import * as msgns from './messages.json'
+import { loadSchedules } from './utils/loadScheduels'
+// import * as cron from 'node-cron'
+// import { getDate } from './utils/getDate'
 
 if (msgns) {
   console.log('Messages loaded')
@@ -29,7 +32,7 @@ const main = async (): Promise<void> => {
     ]
   })
 
-  client.on('ready', () => {
+  client.on('ready', async () => {
     const wok = initializeWOK({
       client,
       dir: COMMANDS_DIR,
@@ -50,6 +53,12 @@ const main = async (): Promise<void> => {
         })
       }
     )
+
+    await loadSchedules({ client, instance: wok })
+
+    // cron.schedule('* * * * * *', () => {
+    //   console.log(getDate())
+    // })
 
     console.log('Bot is ready')
   })
