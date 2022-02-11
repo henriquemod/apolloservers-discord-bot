@@ -12,7 +12,7 @@ import {
 import { serverInfoRequest } from '../requests/serverInfoRequest'
 import { sanitizeResponse } from '../sanitizeResponse'
 
-interface Props {
+export interface UpdateServerProps {
   server: ServerProps // Represents the actial server with its properties
   apikey: string // Apoy key for the server
   instance: WOKCommands // Instance of the WOKCommands
@@ -27,7 +27,7 @@ export const updateServerStatus = async ({
   instance,
   guild,
   message
-}: Props): Promise<void> => {
+}: UpdateServerProps): Promise<void> => {
   const request = await serverInfoRequest({
     host: server.host,
     port: server.port,

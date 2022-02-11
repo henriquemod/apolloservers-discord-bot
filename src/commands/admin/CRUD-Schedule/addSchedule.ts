@@ -73,8 +73,6 @@ export default {
     }
     // SECTION - end
 
-    // ! const test = await channel.messages.fetch(botMessage.id)
-
     const server = await findServerByKey({ guild, serverKey: serverId })
 
     // Servers has to exist in order to add a schedule
@@ -126,7 +124,7 @@ export default {
           })
         })
       } else {
-        return 'This server is already scheduled'
+        return `This server is already scheduled in <#${schedule.channelid}>`
       }
     } else {
       return 'Server not found'

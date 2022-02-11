@@ -1,7 +1,11 @@
 import getAllSchedules from './queries/getAllSchedules'
 import * as DJS from 'discord.js'
 import * as cron from 'node-cron'
-import { updateServerStatus } from './status/updateServerStatus'
+import * as R from 'ramda'
+import {
+  UpdateServerProps,
+  updateServerStatus
+} from './status/updateServerStatus'
 import { findServerById } from './queries/findServerById'
 import guildServersSchema from '../models/guild-servers'
 import EncryptorDecryptor from './encryption'
@@ -20,10 +24,10 @@ export const loadSchedules = async ({
   const schedules = await getAllSchedules()
 
   if (schedules) {
-    schedules.forEach((guild) => {
+    const buildServers: UpdateServerProps[] = []
+    for (const guild of schedules) {
       const guildid = guild._id
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      guild.schedules.forEach(async (schedule) => {
+      for (const schedule of guild.schedules) {
         const { serverid, channelid, messageid } = schedule
         const guild = client.guilds.cache.get(guildid)
         if (guild) {
@@ -40,20 +44,25 @@ export const loadSchedules = async ({
 
             const message = await channel.messages.fetch(messageid)
             if (message) {
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              cron.schedule('*/20 * * * * *', async () => {
-                await updateServerStatus({
-                  guild,
-                  server,
-                  apikey: apiKey,
-                  instance,
-                  message
-                })
+              buildServers.push({
+                guild,
+                server,
+                apikey: apiKey,
+                instance,
+                message
               })
             }
           }
         }
-      })
+      }
+    }
+
+    cron.schedule('*/20 * * * * *', () => {
+      Promise.allSettled(R.map(updateServerStatus, buildServers)).catch(
+        (err) => {
+          console.log(err)
+        }
+      )
     })
   }
 }
