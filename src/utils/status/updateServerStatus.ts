@@ -42,8 +42,12 @@ export const updateServerStatus = async ({
     return
   }
 
-  const msgn = await channel.messages.fetch(message.id)
-  console.log(msgn.id)
+  const loadMessage = async (): Promise<DJS.Message | undefined> => {
+    try {
+      return await channel.messages.fetch(message.id)
+    } catch (error) {}
+  }
+  const msgn = await loadMessage()
 
   if (!msgn) {
     // TODO - This shit isn't working, for some reason the schedule isnt being deleted but when node restarts it works
