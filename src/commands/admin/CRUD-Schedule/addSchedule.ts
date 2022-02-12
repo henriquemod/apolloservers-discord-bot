@@ -1,15 +1,16 @@
 import * as DJS from 'discord.js'
 import * as cron from 'node-cron'
-import { findScheduleServerId } from '../../../utils/queries/findScheduleById'
 import { ICommand } from 'wokcommands'
+import { appContext } from '../../..'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
-import { __prod__, __pwencription__ } from '../../../utils/constants'
+import { __prod__ } from '../../../utils/constants'
+import { isValidTextChannel } from '../../../utils/discord/validations'
 import EncryptorDecryptor from '../../../utils/encryption'
+import { addSchedule } from '../../../utils/queries/addSchedule'
+import { findScheduleServerId } from '../../../utils/queries/findScheduleById'
 import { findServerByKey } from '../../../utils/queries/findServerByKey'
 import { updateServerStatus } from '../../../utils/status/updateServerStatus'
-import { addSchedule } from '../../../utils/queries/addSchedule'
-import { isValidTextChannel } from '../../../utils/discord/validations'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
@@ -23,11 +24,6 @@ export default {
   expectedArgs: '<id> <channel>',
   slash: 'both',
   testOnly: !__prod__,
-
-  // init: async () => {
-  //   const test = await getAllSchedules()
-  //   console.log(test)
-  // },
 
   error: ({ error, command, message, info }) => {
     log.error(APP_COMMAND_ERROR, {
@@ -88,10 +84,7 @@ export default {
 
     // Servers has to exist in order to add a schedule
     if (server) {
-      const apiKey = encryption.decryptString(
-        find.apiKey,
-        __pwencription__ ?? ''
-      )
+      const apiKey = encryption.decryptString(find.apiKey, appContext.masterkey)
       const schedule = await findScheduleServerId({
         guildid: guild.id,
         serverid: server.id
