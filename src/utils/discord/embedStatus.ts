@@ -1,16 +1,28 @@
+import * as DJS from 'discord.js'
 import { EmbedFieldData, MessageEmbed } from 'discord.js'
 import { codeBlock } from '@discordjs/builders'
 import { C_SUCCESS } from '../../config/colors'
 import { SingleServer, SrvMinimalInfo } from '../../types/responses'
 import { limitString } from '../limiter'
-import { emberdDivider } from './embedUtils'
+import { fullEmberdDivider } from './embedUtils'
+import getDate from '../getDate'
+import IDate from '../../types/date'
+import { appContext } from '../../.'
 
 interface SuccessProps {
   data: SingleServer
   embed: MessageEmbed
+  date: IDate
+  guild: DJS.Guild
 }
 
-export const successEmbed = ({ embed, data }: SuccessProps): void => {
+export const successEmbed = ({
+  embed,
+  data,
+  date,
+  guild
+}: SuccessProps): void => {
+  const { instance } = appContext
   embed.setFields([
     {
       name: 'Slots',
@@ -61,6 +73,12 @@ export const successEmbed = ({ embed, data }: SuccessProps): void => {
     embed.addFields([namesField, scoresField, timesField])
   }
 
+  embed.setFooter({
+    text: instance.messageHandler.get(guild, 'UPDATED_AT', {
+      DATE: getDate(date)
+    })
+  })
+
   embed
     .setTitle(limitString(data.title, 50))
     .setAuthor({
@@ -102,7 +120,7 @@ export const minimalStatusEmbed = (
   const result = [serverData, gameData, connectData, slotsData]
 
   if (basDivider) {
-    return [...result, emberdDivider]
+    return [...result, fullEmberdDivider]
   }
 
   return result

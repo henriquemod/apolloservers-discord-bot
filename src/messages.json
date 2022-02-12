@@ -163,7 +163,46 @@
     "english": "Incorrect usage! Please use \"{PREFIX}{COMMAND} {ARGUMENTS}\"",
     "portuguese": "Uso incorreto! Utilize \"{PREFIX}{COMMAND} {ARGUMENTS}\""
   },
-
+  "INVALID_CHANNEL": {
+    "english": "Please provide a valid channel",
+    "portuguese": "Favor informar um canal válido"
+  },
+  "PROVIDE_SERVER_ID": {
+    "english": "Please provide a server id",
+    "portuguese": "Favor informar um id de servidor"
+  },
+  "SERVER_NOT_FOUND": {
+    "english": "Server not found",
+    "portuguese": "Servidor não encontrado"
+  },
+  "SCHEDULE_CREATED": {
+    "english": "Schedule created successfully for server {SERVER} on channel {CHANNEL}",
+    "portuguese": "Agendamento criado com sucesso para servidor {SERVER} no canal {CHANNEL}"
+  },
+  "SERVER_ALREADY_SCHEDULED": {
+    "english": "This server is already scheduled in {CHANNEL}",
+    "portuguese": "Este servidor já está agendado em {CHANNEL}"
+  },
+  "GUILD_COMMAND_ONLY": {
+    "english": "This command is only available in guilds",
+    "portuguese": "Este comando está disponivel somente em servidores"
+  },
+  "TIMEZONE_UPDATED": {
+    "english": "✅ Timezone updated successfully to {TIMEZONE}",
+    "portuguese": "✅ Timezone atualizado com sucesso para {TIMEZONE}"
+  },
+  "LOCALE_UPDATED": {
+    "english": "✅ Locale updated successfully to {LOCALE}",
+    "portuguese": "✅ Locale atualizado com sucesso para {LOCALE}"
+  },
+  "LOCALE_NEEDED": {
+    "english": "Please provide a locale",
+    "portuguese": "Favor informar um locale"
+  },
+  "UPDATED_AT": {
+    "english": "🕒 Updated at: {DATE}",
+    "portuguese": "🕐 Atualizado em: {DATE}"
+  },
   "HELP_MENU": {
     "TITLE": {
       "english": "Help Menu",

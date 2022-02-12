@@ -24,12 +24,16 @@ export interface Server {
 interface Guild {
   _id: string
   apiKey: string
+  timezone: string
+  locale: string
   servers: mongoose.Types.DocumentArray<Server>
 }
 
 const guildServersSchema = new Schema<Guild>({
   _id: reqString,
   apiKey: { type: String },
+  timezone: { type: String, default: 'UTC' },
+  locale: { type: String, default: 'en-US' },
   servers: [
     {
       key: reqNumber,
