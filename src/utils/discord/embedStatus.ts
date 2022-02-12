@@ -1,3 +1,4 @@
+import * as DJS from 'discord.js'
 import { EmbedFieldData, MessageEmbed } from 'discord.js'
 import { codeBlock } from '@discordjs/builders'
 import { C_SUCCESS } from '../../config/colors'
@@ -6,14 +7,22 @@ import { limitString } from '../limiter'
 import { fullEmberdDivider } from './embedUtils'
 import getDate from '../getDate'
 import IDate from '../../types/date'
+import { appContext } from '../../.'
 
 interface SuccessProps {
   data: SingleServer
   embed: MessageEmbed
   date: IDate
+  guild: DJS.Guild
 }
 
-export const successEmbed = ({ embed, data, date }: SuccessProps): void => {
+export const successEmbed = ({
+  embed,
+  data,
+  date,
+  guild
+}: SuccessProps): void => {
+  const { instance } = appContext
   embed.setFields([
     {
       name: 'Slots',
@@ -64,7 +73,11 @@ export const successEmbed = ({ embed, data, date }: SuccessProps): void => {
     embed.addFields([namesField, scoresField, timesField])
   }
 
-  embed.setFooter({ text: `Last updated: ${getDate(date)}` })
+  embed.setFooter({
+    text: instance.messageHandler.get(guild, 'UPDATED_AT', {
+      DATE: getDate(date)
+    })
+  })
 
   embed
     .setTitle(limitString(data.title, 50))

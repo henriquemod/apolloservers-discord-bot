@@ -52,7 +52,7 @@ export const updateByClientDJS = async ({
   )
 
   if (serverInfo?.serverData) {
-    successEmbed({ data: serverInfo?.serverData, embed, date })
+    successEmbed({ data: serverInfo?.serverData, embed, date, guild })
   } else if (serverInfo?.errors) {
     /**
      * NOTE - If serverData is not present, it means that the server is possibly offline

@@ -2,13 +2,13 @@ import WOKCommands from 'wokcommands'
 
 export class AppContext {
   masterkey: string
-  intance: WOKCommands
+  instance: WOKCommands
 
   setMasterkey(masterkey: string): void {
     this.masterkey = masterkey
   }
 
   setInstance(instance: WOKCommands): void {
-    this.intance = instance
+    this.instance = instance
   }
 }

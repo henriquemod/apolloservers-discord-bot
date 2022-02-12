@@ -16,7 +16,7 @@ import { deleteScheduleByChannelId } from './queries/deleteScheduleByChannelId'
 const INCREMENTAL = 3000
 
 const createCron = (options: UpdateServerProps): void => {
-  cron.schedule('*/20 * * * * *', () => {
+  cron.schedule('*/30 * * * *', () => {
     updateServerStatus(options).catch((err) => {
       console.log(err)
     })
@@ -74,11 +74,7 @@ export const loadSchedules = async ({
                     apikey: apiKey,
                     instance,
                     message,
-                    channelid: channel.id,
-                    date: {
-                      locale: find.locale,
-                      timezone: find.timezone
-                    }
+                    channelid: channel.id
                   })
                 }, time)
                 time += INCREMENTAL

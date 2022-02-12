@@ -199,6 +199,10 @@
     "english": "Please provide a locale",
     "portuguese": "Favor informar um locale"
   },
+  "UPDATED_AT": {
+    "english": "🕒 Updated at: {DATE}",
+    "portuguese": "🕐 Atualizado em: {DATE}"
+  },
   "HELP_MENU": {
     "TITLE": {
       "english": "Help Menu",

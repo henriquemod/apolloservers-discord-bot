@@ -226,7 +226,8 @@ export default {
             successEmbed({
               data: serverInfo?.serverData,
               embed,
-              date: { locale: find.locale, timezone: find.timezone }
+              date: { locale: find.locale, timezone: find.timezone },
+              guild
             })
           } else if (serverInfo?.errors) {
             /**
