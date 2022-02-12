@@ -11,6 +11,7 @@ import { serverInfoRequest } from '../requests/serverInfoRequest'
 import { sanitizeResponse } from '../sanitizeResponse'
 import WOKCommands from 'wokcommands'
 import { codeBlock } from '@discordjs/builders'
+import IDate from '../../types/date'
 
 interface Props {
   server: ServerProps
@@ -19,6 +20,7 @@ interface Props {
   guild: DJS.Guild
   message: DJS.Message | DJS.CommandInteraction<DJS.CacheType>
   embed: DJS.MessageEmbed
+  date: IDate
 }
 
 export const serverStatus = async ({
@@ -27,7 +29,8 @@ export const serverStatus = async ({
   instance,
   guild,
   message,
-  embed
+  embed,
+  date
 }: Props): Promise<void> => {
   const request = await serverInfoRequest({
     host: server.host,
@@ -54,7 +57,7 @@ export const serverStatus = async ({
   )
 
   if (serverInfo?.serverData) {
-    successEmbed({ data: serverInfo?.serverData, embed })
+    successEmbed({ data: serverInfo?.serverData, embed, date })
   } else if (serverInfo?.errors) {
     /**
      * NOTE - If serverData is not present, it means that the server is possibly offline

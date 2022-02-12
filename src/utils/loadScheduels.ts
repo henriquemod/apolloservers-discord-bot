@@ -74,7 +74,11 @@ export const loadSchedules = async ({
                     apikey: apiKey,
                     instance,
                     message,
-                    channelid: channel.id
+                    channelid: channel.id,
+                    date: {
+                      locale: find.locale,
+                      timezone: find.timezone
+                    }
                   })
                 }, time)
                 time += INCREMENTAL

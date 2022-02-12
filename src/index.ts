@@ -6,8 +6,6 @@ import log4jConfig from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
 import * as msgns from './messages.json'
 import { loadSchedules } from './utils/loadScheduels'
-// import * as cron from 'node-cron'
-// import { getDate } from './utils/getDate'
 import { AppContext } from './lib/appContext'
 
 if (msgns) {
@@ -60,9 +58,6 @@ const main = async (): Promise<void> => {
 
     await loadSchedules({ client, instance: wok })
 
-    // cron.schedule('* * * * * *', () => {
-    //   console.log(getDate())
-    // })
     appContext.setInstance(wok)
 
     console.log('Bot is ready')

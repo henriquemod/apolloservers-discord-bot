@@ -1,6 +1,6 @@
 {
   "name": "apolloservers-discord-bot",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "The only discord bot you will need to query your gameservers",
   "main": "dist/index.js",
   "scripts": {
@@ -48,6 +48,7 @@
   "dependencies": {
     "@apollo/client": "3.5.8",
     "axios": "0.25.0",
+    "countries-and-timezones": "3.3.0",
     "discord.js": "13.6.0",
     "graphql": "16.3.0",
     "log4js": "6.4.1",

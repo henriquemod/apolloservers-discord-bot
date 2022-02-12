@@ -1,5 +1,6 @@
 import { codeBlock } from '@discordjs/builders'
 import * as DJS from 'discord.js'
+import IDate from '../../types/date'
 import WOKCommands from 'wokcommands'
 import { C_DANGER } from '../../config/colors'
 import { ServerProps } from '../../types/server'
@@ -19,6 +20,7 @@ interface Props {
   guild: DJS.Guild // Guild where the command was executed
   message: DJS.Message // Message where the command was executed, this is the message that will be edited over time
   embed: DJS.MessageEmbed // Embed that will be manipulated over time and sent with the message
+  date: IDate
 }
 
 export const updateByClientDJS = async ({
@@ -27,7 +29,8 @@ export const updateByClientDJS = async ({
   instance,
   guild,
   message,
-  embed
+  embed,
+  date
 }: Props): Promise<void> => {
   const request = await serverInfoRequest({
     host: server.host,
@@ -49,7 +52,7 @@ export const updateByClientDJS = async ({
   )
 
   if (serverInfo?.serverData) {
-    successEmbed({ data: serverInfo?.serverData, embed })
+    successEmbed({ data: serverInfo?.serverData, embed, date })
   } else if (serverInfo?.errors) {
     /**
      * NOTE - If serverData is not present, it means that the server is possibly offline

@@ -183,6 +183,18 @@
     "english": "This command is only available in guilds",
     "portuguese": "Este comando está disponivel somente em servidores"
   },
+  "TIMEZONE_UPDATED": {
+    "english": "✅ Timezone updated successfully to {TIMEZONE}",
+    "portuguese": "✅ Timezone atualizado com sucesso para {TIMEZONE}"
+  },
+  "LOCALE_UPDATED": {
+    "english": "✅ Locale updated successfully to {LOCALE}",
+    "portuguese": "✅ Locale atualizado com sucesso para {LOCALE}"
+  },
+  "LOCALE_NEEDED": {
+    "english": "Please provide a locale",
+    "portuguese": "Favor informar um locale"
+  },
   "HELP_MENU": {
     "TITLE": {
       "english": "Help Menu",

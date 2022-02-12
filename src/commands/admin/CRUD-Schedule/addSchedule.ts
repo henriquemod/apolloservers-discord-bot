@@ -116,7 +116,11 @@ export default {
           apikey,
           instance,
           message: fixedMessage,
-          channelid: validChannel.id
+          channelid: validChannel.id,
+          date: {
+            locale: find.locale,
+            timezone: find.timezone
+          }
         }
 
         await Promise.all([

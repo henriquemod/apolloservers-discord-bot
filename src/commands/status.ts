@@ -223,7 +223,11 @@ export default {
            *       and data is sanitized and ready to be sent to discord
            */
           if (serverInfo?.serverData) {
-            successEmbed({ data: serverInfo?.serverData, embed })
+            successEmbed({
+              data: serverInfo?.serverData,
+              embed,
+              date: { locale: find.locale, timezone: find.timezone }
+            })
           } else if (serverInfo?.errors) {
             /**
              * NOTE - If serverData is not present, it means that the server is possibly offline
