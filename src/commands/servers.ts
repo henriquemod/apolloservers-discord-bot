@@ -1,3 +1,4 @@
+import { codeBlock } from '@discordjs/builders'
 import {
   CacheType,
   CommandInteraction,
@@ -5,24 +6,24 @@ import {
   Message,
   MessageEmbed
 } from 'discord.js'
-import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import { ICommand } from 'wokcommands'
+import { appContext } from '../.'
 import { C_SUCCESS } from '../config/colors'
+import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
-import { __prod__, __pwencription__ } from '../utils/constants'
+import { __prod__ } from '../utils/constants'
+import embedPaginated from '../utils/discord/embedPaginated'
 import { minimalStatusEmbed } from '../utils/discord/embedStatus'
-import EncryptorDecryptor from '../utils/encryption'
-import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
-import { sanitizeListResponse } from '../utils/sanitizeResponse'
-import { codeBlock } from '@discordjs/builders'
 import {
   fullEmberdDivider,
   makeEmdedOptions,
   makeOffileEmbend
 } from '../utils/discord/embedUtils'
+import EncryptorDecryptor from '../utils/encryption'
+import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
+import { sanitizeListResponse } from '../utils/sanitizeResponse'
 import { createEmbedsGroups } from '../utils/splitGroups'
-import embedPaginated from '../utils/discord/embedPaginated'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 
@@ -65,10 +66,7 @@ export default {
       } else {
         const encryption = new EncryptorDecryptor()
         let apiKey = ''
-        if (__pwencription__) {
-          apiKey = encryption.decryptString(find.apiKey, __pwencription__)
-        }
-
+        apiKey = encryption.decryptString(find.apiKey, appContext.masterkey)
         const buildList = servers.map((server) => ({
           host: `"${server.host}"`,
           port: server.port,

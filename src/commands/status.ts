@@ -1,3 +1,4 @@
+import { codeBlock } from '@discordjs/builders'
 import {
   EmbedFieldData,
   Message,
@@ -7,24 +8,24 @@ import {
   MessageEmbed,
   ReplyMessageOptions
 } from 'discord.js'
-import { codeBlock } from '@discordjs/builders'
 import { ICommand } from 'wokcommands'
+import { appContext } from '../.'
 import { C_DANGER } from '../config/colors'
+import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import guildServersSchema, { Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
-import { __prod__, __pwencription__ } from '../utils/constants'
+import { __prod__ } from '../utils/constants'
+import { successEmbed } from '../utils/discord/embedStatus'
 import {
+  fullEmberdDivider,
   makeEmdedOptions,
-  makeOffileEmbend,
-  fullEmberdDivider
+  makeOffileEmbend
 } from '../utils/discord/embedUtils'
 import EncryptorDecryptor from '../utils/encryption'
 import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
 import { sanitizeResponse } from '../utils/sanitizeResponse'
-import { createGroups } from '../utils/splitGroups'
 import { statusSkeleton } from '../utils/skeleton/statusSkeleton'
-import { successEmbed } from '../utils/discord/embedStatus'
-import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
+import { createGroups } from '../utils/splitGroups'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
@@ -54,6 +55,7 @@ export default {
     if (!guild) {
       return 'Please use this command within a server'
     }
+    const context = appContext
 
     let botMessage: Message
     let botMessageStatus: Message
@@ -166,7 +168,7 @@ export default {
 
           const apiKey = encryption.decryptString(
             find.apiKey,
-            __pwencription__ ?? ''
+            context.masterkey
           )
 
           if (message) {

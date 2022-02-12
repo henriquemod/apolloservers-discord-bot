@@ -8,6 +8,7 @@ import * as msgns from './messages.json'
 import { loadSchedules } from './utils/loadScheduels'
 // import * as cron from 'node-cron'
 // import { getDate } from './utils/getDate'
+import { AppContext } from './lib/appContext'
 
 if (msgns) {
   console.log('Messages loaded')
@@ -19,10 +20,13 @@ const FEATURES_DIR = path.join(__dirname, 'features')
 const MESSAGES_DIR = path.join(__dirname, 'messages.json')
 const BOT_OWNER = process.env.OWNER ?? ''
 
+export const appContext = new AppContext()
+
 const main = async (): Promise<void> => {
   if (!__pwencription__) {
     throw new Error('You must define a master key!!!')
   }
+  appContext.setMasterkey(__pwencription__)
 
   const client = new DJS.Client({
     intents: [
@@ -59,6 +63,7 @@ const main = async (): Promise<void> => {
     // cron.schedule('* * * * * *', () => {
     //   console.log(getDate())
     // })
+    appContext.setInstance(wok)
 
     console.log('Bot is ready')
   })
