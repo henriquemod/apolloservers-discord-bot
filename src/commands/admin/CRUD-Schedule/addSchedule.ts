@@ -102,7 +102,8 @@ export default {
           apikey: apiKey,
           instance,
           // embed: testMessage,
-          message: fixedMessage
+          message: fixedMessage,
+          channelid: channel.id
         })
 
         await addSchedule({
@@ -120,7 +121,8 @@ export default {
             apikey: apiKey,
             instance,
             // embed: testMessage,
-            message: fixedMessage
+            message: fixedMessage,
+            channelid: channel.id
           })
         })
       } else {

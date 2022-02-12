@@ -9,6 +9,8 @@ import {
   makeEmdedOptions,
   makeOffileEmbend
 } from '../discord/embedUtils'
+import { deleteScheduleByChannelId } from '../queries/deleteScheduleByChannelId'
+import { deleteScheduleByMessageId } from '../queries/deleteScheduleByMessageId'
 import { serverInfoRequest } from '../requests/serverInfoRequest'
 import { sanitizeResponse } from '../sanitizeResponse'
 
@@ -18,6 +20,7 @@ export interface UpdateServerProps {
   instance: WOKCommands // Instance of the WOKCommands
   guild: DJS.Guild // Guild where the command was executed
   message: DJS.Message // Message where the command was executed, this is the message that will be edited over time
+  channelid: string // Channel where the command was executed
   // embed: DJS.MessageEmbed // Embed that will be manipulated over time and sent with the message
 }
 
@@ -26,8 +29,31 @@ export const updateServerStatus = async ({
   apikey,
   instance,
   guild,
-  message
+  message,
+  channelid
 }: UpdateServerProps): Promise<void> => {
+  const channel = guild.channels.cache.get(channelid) as DJS.TextChannel
+  if (!channel) {
+    // TODO - This shit isn't working, for some reason the schedule isnt being deleted but when node restarts it works
+    await deleteScheduleByChannelId({
+      guildid: guild.id,
+      channelid
+    })
+    return
+  }
+
+  const msgn = await channel.messages.fetch(message.id)
+  console.log(msgn.id)
+
+  if (!msgn) {
+    // TODO - This shit isn't working, for some reason the schedule isnt being deleted but when node restarts it works
+    await deleteScheduleByMessageId({
+      guildid: guild.id,
+      messageid: message.id
+    })
+    return
+  }
+
   const request = await serverInfoRequest({
     host: server.host,
     port: server.port,
@@ -70,7 +96,7 @@ export const updateServerStatus = async ({
       embed: makeOffileEmbend(instance, guild, fields)
     })
 
-    await message.edit(replymsgn)
+    await msgn.edit(replymsgn)
     return
   } else {
     /**
@@ -82,5 +108,5 @@ export const updateServerStatus = async ({
     embed.setTitle('Offline').setDescription('Offline').setColor(C_DANGER)
   }
 
-  await message.edit(makeEmdedOptions({ embed }))
+  await msgn.edit(makeEmdedOptions({ embed }))
 }
