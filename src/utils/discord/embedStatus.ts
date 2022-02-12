@@ -4,6 +4,7 @@ import { C_SUCCESS } from '../../config/colors'
 import { SingleServer, SrvMinimalInfo } from '../../types/responses'
 import { limitString } from '../limiter'
 import { fullEmberdDivider } from './embedUtils'
+import { getDate } from '../getDate'
 
 interface SuccessProps {
   data: SingleServer
@@ -60,6 +61,8 @@ export const successEmbed = ({ embed, data }: SuccessProps): void => {
     }
     embed.addFields([namesField, scoresField, timesField])
   }
+
+  embed.setFooter({ text: `Last updated: ${getDate()}` })
 
   embed
     .setTitle(limitString(data.title, 50))
