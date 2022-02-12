@@ -63,10 +63,29 @@ export default {
       return instance.messageHandler.get(guild, 'GUILD_COMMAND_ONLY')
     }
 
+    interaction && (await interaction.reply('Please wait...'))
+
     // Validation if is a valid text channel
-    const targetChannel = message
-      ? args[1]
-      : interaction.options.getString('channel')
+    let targetChannel: string | DJS.GuildTextBasedChannel | undefined
+    if (message) {
+      targetChannel = args[1]
+    }
+    if (interaction) {
+      const txtChannel = interaction.options.getChannel('channel')
+      if (txtChannel === null) {
+        return instance.messageHandler.get(guild, 'CHANNEL_NEEDED')
+      }
+      if (
+        txtChannel instanceof DJS.BaseGuildTextChannel &&
+        txtChannel.isText()
+      ) {
+        targetChannel = txtChannel
+      }
+    }
+    if (!targetChannel) {
+      return instance.messageHandler.get(guild, 'CHANNEL_NEEDED')
+    }
+
     const validChannel = await isValidTextChannel({
       guild,
       channel: targetChannel
@@ -133,6 +152,21 @@ export default {
             channelid: validChannel.id
           })
         ])
+        if (message) {
+          await message.reply(
+            instance.messageHandler.get(guild, 'SCHEDULE_CREATED', {
+              SERVER: server.name,
+              CHANNEL: `<#${validChannel.id}>`
+            })
+          )
+        } else {
+          await interaction.editReply({
+            content: instance.messageHandler.get(guild, 'SCHEDULE_CREATED', {
+              SERVER: server.name,
+              CHANNEL: `<#${validChannel.id}>`
+            })
+          })
+        }
       } else {
         return instance.messageHandler.get(guild, 'SERVER_ALREADY_SCHEDULED', {
           CHANNEL: `<#${validChannel.id}>`

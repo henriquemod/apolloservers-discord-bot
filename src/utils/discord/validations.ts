@@ -1,17 +1,24 @@
 import * as DJS from 'discord.js'
 interface Props {
   guild: DJS.Guild
-  channel: string | null
+  channel: string | DJS.GuildBasedChannel | null
 }
 export const isValidTextChannel = async ({
   guild,
   channel
 }: Props): Promise<DJS.GuildTextBasedChannel | undefined> => {
   if (!channel) return
-  try {
-    const result = guild.channels.cache.get(channel)
-    if (result?.isText()) {
-      return result
+  if (channel instanceof DJS.GuildChannel) {
+    if (channel.isText()) {
+      return channel as DJS.GuildTextBasedChannel
     }
-  } catch (error) {}
+  }
+  if (typeof channel === 'string') {
+    try {
+      const result = guild.channels.cache.get(channel)
+      if (result?.isText()) {
+        return result
+      }
+    } catch (error) {}
+  }
 }

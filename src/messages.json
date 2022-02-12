@@ -175,6 +175,10 @@
     "english": "Server not found",
     "portuguese": "Servidor não encontrado"
   },
+  "SCHEDULE_CREATED": {
+    "english": "Schedule created successfully for server {SERVER} on channel {CHANNEL}",
+    "portuguese": "Agendamento criado com sucesso para servidor {SERVER} no canal {CHANNEL}"
+  },
   "SERVER_ALREADY_SCHEDULED": {
     "english": "This server is already scheduled in {CHANNEL}",
     "portuguese": "Este servidor já está agendado em {CHANNEL}"
