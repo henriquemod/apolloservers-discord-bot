@@ -10,11 +10,19 @@ import EncryptorDecryptor from '../../../utils/encryption'
 import { addSchedule } from '../../../utils/queries/addSchedule'
 import { findScheduleServerId } from '../../../utils/queries/findScheduleById'
 import { findServerByKey } from '../../../utils/queries/findServerByKey'
-import { updateServerStatus } from '../../../utils/status/updateServerStatus'
+import {
+  UpdateServerProps,
+  updateServerStatus
+} from '../../../utils/status/updateServerStatus'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
-
+const createCron = async (server: UpdateServerProps): Promise<void> => {
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  cron.schedule('*/20 * * * * *', async () => {
+    await updateServerStatus(server)
+  })
+}
 export default {
   category: 'Admin Panel',
   description: 'Add a schedule on a server to it be refreshed periodically',
@@ -52,8 +60,10 @@ export default {
   callback: async ({ guild, interaction, message, args, instance }) => {
     // SECTION - Check if command is executed in a guild and collects server ID
     if (!guild) {
-      return 'Please use this command within a server'
+      return instance.messageHandler.get(guild, 'GUILD_COMMAND_ONLY')
     }
+
+    // Validation if is a valid text channel
     const targetChannel = message
       ? args[1]
       : interaction.options.getString('channel')
@@ -61,9 +71,8 @@ export default {
       guild,
       channel: targetChannel
     })
-
     if (!validChannel) {
-      return 'Please provide a valid channel'
+      return instance.messageHandler.get(guild, 'INVALID_CHANNEL')
     }
 
     const find = await guildServersSchema.findById({ _id: guild.id })
@@ -76,7 +85,7 @@ export default {
     }
     const serverId = message ? args[0] : interaction.options.getString('id')
     if (!serverId) {
-      return 'Please provide a server id'
+      return instance.messageHandler.get(guild, 'PROVIDE_SERVER_ID')
     }
     // SECTION - end
 
@@ -84,7 +93,7 @@ export default {
 
     // Servers has to exist in order to add a schedule
     if (server) {
-      const apiKey = encryption.decryptString(find.apiKey, appContext.masterkey)
+      const apikey = encryption.decryptString(find.apiKey, appContext.masterkey)
       const schedule = await findScheduleServerId({
         guildid: guild.id,
         serverid: server.id
@@ -100,40 +109,33 @@ export default {
           embeds: [testMessage],
           content: 'Please wait...'
         })
-        await updateServerStatus({
+
+        const statusObj: UpdateServerProps = {
           guild,
           server: server,
-          apikey: apiKey,
+          apikey,
           instance,
-          // embed: testMessage,
           message: fixedMessage,
           channelid: validChannel.id
-        })
+        }
 
-        await addSchedule({
-          guildid: guild.id,
-          serverid: server.id,
-          messageid: fixedMessage.id,
-          channelid: validChannel.id
-        })
-
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        cron.schedule('*/20 * * * * *', async () => {
-          await updateServerStatus({
-            guild,
-            server,
-            apikey: apiKey,
-            instance,
-            // embed: testMessage,
-            message: fixedMessage,
+        await Promise.all([
+          await updateServerStatus(statusObj),
+          await createCron(statusObj),
+          await addSchedule({
+            guildid: guild.id,
+            serverid: server.id,
+            messageid: fixedMessage.id,
             channelid: validChannel.id
           })
-        })
+        ])
       } else {
-        return `This server is already scheduled in <#${validChannel.id}>`
+        return instance.messageHandler.get(guild, 'SERVER_ALREADY_SCHEDULED', {
+          CHANNEL: `<#${validChannel.id}>`
+        })
       }
     } else {
-      return 'Server not found'
+      return instance.messageHandler.get(guild, 'SERVER_NOT_FOUND')
     }
   }
 } as ICommand

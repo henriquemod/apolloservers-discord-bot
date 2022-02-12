@@ -163,7 +163,26 @@
     "english": "Incorrect usage! Please use \"{PREFIX}{COMMAND} {ARGUMENTS}\"",
     "portuguese": "Uso incorreto! Utilize \"{PREFIX}{COMMAND} {ARGUMENTS}\""
   },
-
+  "INVALID_CHANNEL": {
+    "english": "Please provide a valid channel",
+    "portuguese": "Favor informar um canal válido"
+  },
+  "PROVIDE_SERVER_ID": {
+    "english": "Please provide a server id",
+    "portuguese": "Favor informar um id de servidor"
+  },
+  "SERVER_NOT_FOUND": {
+    "english": "Server not found",
+    "portuguese": "Servidor não encontrado"
+  },
+  "SERVER_ALREADY_SCHEDULED": {
+    "english": "This server is already scheduled in {CHANNEL}",
+    "portuguese": "Este servidor já está agendado em {CHANNEL}"
+  },
+  "GUILD_COMMAND_ONLY": {
+    "english": "This command is only available in guilds",
+    "portuguese": "Este comando está disponivel somente em servidores"
+  },
   "HELP_MENU": {
     "TITLE": {
       "english": "Help Menu",
