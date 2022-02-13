@@ -4,7 +4,7 @@ import { codeBlock } from '@discordjs/builders'
 import { C_SUCCESS } from '../../config/colors'
 import { SingleServer, SrvMinimalInfo } from '../../types/responses'
 import { limitString } from '../limiter'
-import { fullEmberdDivider } from './embedUtils'
+import { mediumEmberdDivider } from './embedUtils'
 import getDate from '../getDate'
 import IDate from '../../types/date'
 import { appContext } from '../../.'
@@ -120,7 +120,7 @@ export const minimalStatusEmbed = (
   const result = [serverData, gameData, connectData, slotsData]
 
   if (basDivider) {
-    return [...result, fullEmberdDivider]
+    return [...result, mediumEmberdDivider]
   }
 
   return result
