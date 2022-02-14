@@ -15,6 +15,7 @@ import { deleteScheduleByMessageId } from '../queries/deleteScheduleByMessageId'
 import { serverInfoRequest } from '../requests/serverInfoRequest'
 import { sanitizeResponse } from '../sanitizeResponse'
 import guildServersSchema from '../../models/guild-servers'
+import { findServerById } from '../queries/findServerById'
 
 export interface UpdateServerProps {
   server: ServerProps // Represents the actial server with its properties
@@ -51,7 +52,8 @@ export const updateServerStatus = async ({
   }
   const data = await Promise.all([
     guildServersSchema.findById({ _id: guild.id }),
-    loadMessage()
+    loadMessage(),
+    findServerById({ guild, serverid: server.id })
   ])
 
   const guildDate: IDate = {
@@ -86,7 +88,7 @@ export const updateServerStatus = async ({
   const serverInfo = sanitizeResponse(
     request.getServerInfo,
     server.type,
-    server.description ?? 'The best server is the world'
+    data[2]?.description ?? 'The best server is the world'
   )
 
   if (serverInfo?.serverData) {

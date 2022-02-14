@@ -2,7 +2,7 @@ import * as DJS from 'discord.js'
 import * as cron from 'node-cron'
 import { ICommand } from 'wokcommands'
 import { appContext } from '../../..'
-import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
+// import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
 import { __prod__ } from '../../../utils/constants'
 import { isValidTextChannel } from '../../../utils/discord/validations'
@@ -15,7 +15,7 @@ import {
   updateServerStatus
 } from '../../../utils/status/updateServerStatus'
 
-const log = log4jConfig(['app', 'out']).getLogger('APP')
+// const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
 const createCron = async (server: UpdateServerProps): Promise<void> => {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -32,15 +32,6 @@ export default {
   expectedArgs: '<id> <channel>',
   slash: 'both',
   testOnly: !__prod__,
-
-  error: ({ error, command, message, info }) => {
-    log.error(APP_COMMAND_ERROR, {
-      error,
-      command,
-      message,
-      info
-    })
-  },
 
   options: [
     {
