@@ -22,7 +22,7 @@ interface Props {
   timeout: number
 }
 
-export default async ({
+export const embedPaginated = async ({
   embed,
   groupedServers,
   index,

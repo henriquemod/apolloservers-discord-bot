@@ -4,14 +4,14 @@ import { appContext } from '../.'
 import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
-import { __prod__ } from '../utils/constants'
 import {
+  __prod__,
   errorEmbed,
   REmbedProps,
-  successEmbed
-} from '../utils/discord/returnEmbed'
-import EncryptorDecryptor from '../utils/encryption'
-import { multiplesMinimalServerRequest } from '../utils/requests/serverInfoRequest'
+  successEmbed,
+  EncryptorDecryptor,
+  multiplesMinimalServerRequest
+} from '../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 

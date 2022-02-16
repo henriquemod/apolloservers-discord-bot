@@ -2,11 +2,12 @@ import * as DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
-import { __prod__ } from '../../../utils/constants'
-import { deleteScheduleByServerId } from '../../../utils/queries/deleteScheduleByServerId'
-import { findScheduleServerId } from '../../../utils/queries/findScheduleById'
-import { findServerByKey } from '../../../utils/queries/findServerByKey'
-// import getAllSchedules from '../../../utils/queries/getAllSchedules'
+import {
+  findServerByKey,
+  findScheduleServerId,
+  deleteScheduleByServerId,
+  __prod__
+} from '../../../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 

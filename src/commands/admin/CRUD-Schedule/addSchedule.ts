@@ -2,18 +2,17 @@ import * as DJS from 'discord.js'
 import * as cron from 'node-cron'
 import { ICommand } from 'wokcommands'
 import { appContext } from '../../..'
-// import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
-import { __prod__ } from '../../../utils/constants'
-import { isValidTextChannel } from '../../../utils/discord/validations'
-import EncryptorDecryptor from '../../../utils/encryption'
-import { addSchedule } from '../../../utils/queries/addSchedule'
-import { findScheduleServerId } from '../../../utils/queries/findScheduleById'
-import { findServerByKey } from '../../../utils/queries/findServerByKey'
 import {
+  isValidTextChannel,
+  __prod__,
+  addSchedule,
+  findScheduleServerId,
+  findServerByKey,
+  EncryptorDecryptor,
   UpdateServerProps,
   updateServerStatus
-} from '../../../utils/status/updateServerStatus'
+} from '../../../utils'
 
 // const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()

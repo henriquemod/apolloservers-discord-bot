@@ -16,7 +16,7 @@ interface SuccessProps {
   guild: DJS.Guild
 }
 
-export const successEmbed = ({
+export const singleSuccessEmbed = ({
   embed,
   data,
   date,

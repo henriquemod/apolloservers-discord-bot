@@ -11,7 +11,7 @@ import { sanitizeListResponse } from '../sanitizeResponse'
 import { C_SUCCESS } from '../../config/colors'
 import { minimalStatusEmbed } from './embedStatus'
 import { createEmbedsGroups } from '../splitGroups'
-import embedPaginated from './embedPaginated'
+import { embedPaginated } from './embedPaginated'
 
 export interface REmbedProps {
   result: GetMultiplesServerInfoQuery['getMultiplesServerInfo']

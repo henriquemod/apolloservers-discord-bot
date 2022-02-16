@@ -14,18 +14,20 @@ import { C_DANGER } from '../config/colors'
 import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import guildServersSchema, { Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
-import { __prod__ } from '../utils/constants'
-import { successEmbed } from '../utils/discord/embedStatus'
 import {
   fullEmberdDivider,
   makeEmdedOptions,
   makeOffileEmbend
 } from '../utils/discord/embedUtils'
-import EncryptorDecryptor from '../utils/encryption'
-import { serverInfoRequest } from '../utils/requests/serverInfoRequest'
-import { sanitizeResponse } from '../utils/sanitizeResponse'
-import { statusSkeleton } from '../utils/skeleton/statusSkeleton'
-import { createGroups } from '../utils/splitGroups'
+import {
+  singleSuccessEmbed,
+  __prod__,
+  sanitizeResponse,
+  EncryptorDecryptor,
+  serverInfoRequest,
+  createGroups,
+  statusSkeleton
+} from '../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
@@ -223,7 +225,7 @@ export default {
            *       and data is sanitized and ready to be sent to discord
            */
           if (serverInfo?.serverData) {
-            successEmbed({
+            singleSuccessEmbed({
               data: serverInfo?.serverData,
               embed,
               date: { locale: find.locale, timezone: find.timezone },

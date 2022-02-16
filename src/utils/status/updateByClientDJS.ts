@@ -4,7 +4,7 @@ import IDate from '../../types/date'
 import WOKCommands from 'wokcommands'
 import { C_DANGER } from '../../config/colors'
 import { ServerProps } from '../../types/server'
-import { successEmbed } from '../discord/embedStatus'
+import { singleSuccessEmbed } from '../discord/embedStatus'
 import {
   fullEmberdDivider,
   makeEmdedOptions,
@@ -52,7 +52,7 @@ export const updateByClientDJS = async ({
   )
 
   if (serverInfo?.serverData) {
-    successEmbed({ data: serverInfo?.serverData, embed, date, guild })
+    singleSuccessEmbed({ data: serverInfo?.serverData, embed, date, guild })
   } else if (serverInfo?.errors) {
     /**
      * NOTE - If serverData is not present, it means that the server is possibly offline

@@ -1,6 +1,6 @@
 import { ICommand } from 'wokcommands'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../config/log4jConfig'
-import { __prod__ } from '../../utils/constants'
+import { __prod__ } from '../../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 

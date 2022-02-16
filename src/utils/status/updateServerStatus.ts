@@ -4,7 +4,7 @@ import IDate from '../../types/date'
 import WOKCommands from 'wokcommands'
 import { C_DANGER } from '../../config/colors'
 import { ServerProps } from '../../types/server'
-import { successEmbed } from '../discord/embedStatus'
+import { singleSuccessEmbed } from '../discord/embedStatus'
 import {
   fullEmberdDivider,
   makeEmdedOptions,
@@ -92,7 +92,7 @@ export const updateServerStatus = async ({
   )
 
   if (serverInfo?.serverData) {
-    successEmbed({
+    singleSuccessEmbed({
       data: serverInfo?.serverData,
       embed,
       date: guildDate,

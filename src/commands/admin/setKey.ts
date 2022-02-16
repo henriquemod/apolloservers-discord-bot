@@ -1,7 +1,6 @@
-import { __prod__, __pwencription__ } from '../../utils/constants'
+import { __prod__, __pwencription__, EncryptorDecryptor } from '../../utils'
 import * as DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import EncryptorDecryptor from '../../utils/encryption'
 import guildServersSchema from '../../models/guild-servers'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../config/log4jConfig'
 
