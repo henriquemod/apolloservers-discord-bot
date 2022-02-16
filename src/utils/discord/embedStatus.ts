@@ -1,17 +1,15 @@
 import * as DJS from 'discord.js'
-import { EmbedFieldData, MessageEmbed } from 'discord.js'
 import { codeBlock } from '@discordjs/builders'
 import { C_SUCCESS } from '../../config/colors'
 import { SingleServer, SrvMinimalInfo } from '../../types/responses'
-import { limitString } from '../limiter'
+import { limitString, getDate } from '../'
 import { mediumEmberdDivider } from './embedUtils'
-import getDate from '../getDate'
 import IDate from '../../types/date'
 import { appContext } from '../../.'
 
 interface SuccessProps {
   data: SingleServer
-  embed: MessageEmbed
+  embed: DJS.MessageEmbed
   date: IDate
   guild: DJS.Guild
 }
@@ -55,17 +53,17 @@ export const singleSuccessEmbed = ({
         timeField += `${timeFormatted}\n`
       }
     })
-    const namesField: EmbedFieldData = {
+    const namesField: DJS.EmbedFieldData = {
       name: 'Players',
       value: codeBlock(nameField),
       inline: true
     }
-    const scoresField: EmbedFieldData = {
+    const scoresField: DJS.EmbedFieldData = {
       name: 'Score',
       value: codeBlock(scoreField),
       inline: true
     }
-    const timesField: EmbedFieldData = {
+    const timesField: DJS.EmbedFieldData = {
       name: 'Time',
       value: codeBlock(timeField),
       inline: true
@@ -95,24 +93,24 @@ export const singleSuccessEmbed = ({
 export const minimalStatusEmbed = (
   server: SrvMinimalInfo,
   basDivider?: boolean
-): EmbedFieldData[] => {
-  const serverData: EmbedFieldData = {
+): DJS.EmbedFieldData[] => {
+  const serverData: DJS.EmbedFieldData = {
     name: 'Servidor',
     value: codeBlock(limitString(server.title, 50))
   }
 
-  const gameData: EmbedFieldData = {
+  const gameData: DJS.EmbedFieldData = {
     name: 'Game',
     value: codeBlock(limitString(server.game, 50))
   }
 
-  const connectData: EmbedFieldData = {
+  const connectData: DJS.EmbedFieldData = {
     name: 'Connect',
     value: codeBlock(server.connect),
     inline: true
   }
 
-  const slotsData: EmbedFieldData = {
+  const slotsData: DJS.EmbedFieldData = {
     name: 'Slots',
     value: codeBlock(server.players),
     inline: true

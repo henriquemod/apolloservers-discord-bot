@@ -7,7 +7,7 @@ interface Props {
 const DEFAULT_TIMEZONE = 'UTC'
 const DEFAULT_LOCALE = 'en-US'
 
-export default ({ timezone, locale }: Props): string => {
+export const getDate = ({ timezone, locale }: Props): string => {
   const guildTz = tz.getTimezone(timezone ?? DEFAULT_TIMEZONE)
   locale = locale ?? DEFAULT_LOCALE
   return new Date(Date.now()).toLocaleDateString(locale, {
