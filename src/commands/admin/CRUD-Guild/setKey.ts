@@ -1,8 +1,8 @@
-import { __prod__, __pwencription__, EncryptorDecryptor } from '../../utils'
+import { __prod__, __pwencription__, EncryptorDecryptor } from '../../../utils'
 import * as DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
-import guildServersSchema from '../../models/guild-servers'
-import log4jConfig, { APP_COMMAND_ERROR } from '../../config/log4jConfig'
+import guildServersSchema from '../../../models/guild-servers'
+import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 
