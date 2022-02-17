@@ -21,7 +21,7 @@ export interface Server {
   description?: string
 }
 
-interface Guild {
+export interface Guild {
   _id: string
   apiKey: string
   timezone: string

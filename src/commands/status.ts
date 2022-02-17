@@ -1,6 +1,4 @@
-import { codeBlock } from '@discordjs/builders'
 import {
-  EmbedFieldData,
   Message,
   MessageActionRow,
   MessageButton,
@@ -8,21 +6,22 @@ import {
   MessageEmbed,
   ReplyMessageOptions
 } from 'discord.js'
+import { cond } from 'ramda'
 import { ICommand } from 'wokcommands'
 import { appContext } from '../.'
-import { C_DANGER } from '../config/colors'
 import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
-import guildServersSchema, { Server } from '../models/guild-servers'
+import guildServersSchema, { Guild, Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import {
   createGroups,
   EncryptorDecryptor,
   makeEmdedOptions,
-  makeOffileEmbend,
-  mediumEmberdDivider,
   sanitizeResponse,
   serverInfoRequest,
-  singleSuccessEmbed,
+  singleServerEmbed,
+  SingleServerEmbedProps,
+  singleServerError,
+  generalOfflineEmbed,
   statusSkeleton,
   __prod__
 } from '../utils'
@@ -56,7 +55,6 @@ export default {
       return 'Please use this command within a server'
     }
     const context = appContext
-
     let botMessage: Message
     let botMessageStatus: Message
 
@@ -65,6 +63,8 @@ export default {
     if (!find) {
       return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     }
+
+    const queryResult: Guild = find
 
     const servers = find.servers as Server[]
 
@@ -210,53 +210,24 @@ export default {
         serverSelected.description ?? 'The best server is the world'
       )
 
-      if (!serverInfo) {
-        embed.setTitle('Offline').setDescription('Offline').setColor(C_DANGER)
+      const obj: SingleServerEmbedProps = {
+        guild,
+        instance,
+        message,
+        interaction: statusInt,
+        server: serverInfo,
+        botMessageStatus,
+        embed,
+        guildQuery: queryResult
       }
 
-      if (serverInfo?.serverData) {
-        singleSuccessEmbed({
-          data: serverInfo?.serverData,
-          embed,
-          date: { locale: find.locale, timezone: find.timezone },
-          guild
-        })
+      const fn = cond([
+        [(x) => !x.server, generalOfflineEmbed],
+        [(x) => !!x.server?.errors, singleServerError],
+        [(x) => !!x.server?.serverData, singleServerEmbed]
+      ])
 
-        if (message) {
-          await Promise.all([
-            message.channel.send(makeEmdedOptions({ embed })),
-            botMessageStatus.delete()
-          ])
-        } else {
-          await statusInt.editReply(makeEmdedOptions({ embed }))
-        }
-        return
-      }
-
-      if (serverInfo?.errors) {
-        const fields = serverInfo.errors.map(
-          (error) =>
-            ({
-              name: error.errorType,
-              value: codeBlock(error.message ?? 'Unknown error')
-            } as EmbedFieldData)
-        )
-
-        fields.unshift(mediumEmberdDivider)
-
-        const replymsgn = makeEmdedOptions({
-          embed: makeOffileEmbend(instance, guild, fields)
-        })
-
-        if (message) {
-          await Promise.all([
-            message.reply(replymsgn),
-            botMessageStatus.delete()
-          ])
-        } else {
-          await statusInt.editReply(replymsgn)
-        }
-      }
+      await fn(obj)
     })
   }
 } as ICommand
