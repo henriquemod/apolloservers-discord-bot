@@ -4,6 +4,7 @@ import { appContext } from '../.'
 import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
 import guildServersSchema from '../models/guild-servers'
 import { ServerProps } from '../types/server'
+import { MessageController } from '../controllers/messages-controller'
 import {
   __prod__,
   errorEmbed,
@@ -31,6 +32,7 @@ export default {
   },
 
   callback: async ({ message, channel, guild, instance, interaction }) => {
+    const msgnController = new MessageController(message, interaction)
     interaction && (await interaction.reply('Please wait...'))
     const authorid = interaction ? interaction.user.id : message.author.id
     if (!guild) {
@@ -72,8 +74,7 @@ export default {
       authorid: authorid,
       guild,
       instance,
-      message,
-      interaction,
+      msgnController,
       channel,
       result
     }

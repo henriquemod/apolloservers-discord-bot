@@ -12,13 +12,13 @@ import { C_SUCCESS } from '../../config/colors'
 import { minimalStatusEmbed } from './embedStatus'
 import { createEmbedsGroups } from '../splitGroups'
 import { embedPaginated } from './embedPaginated'
+import { MessageController } from '../../controllers/messages-controller'
 
 export interface REmbedProps {
   result: GetMultiplesServerInfoQuery['getMultiplesServerInfo']
   instance: WOKCommands
   guild: DJS.Guild
-  message: DJS.Message
-  interaction: DJS.CommandInteraction<DJS.CacheType>
+  msgnController: MessageController
   channel: DJS.TextChannel
   authorid: string
 }
@@ -26,9 +26,8 @@ export interface REmbedProps {
 export const errorEmbed = async ({
   result,
   instance,
-  guild,
-  message,
-  interaction
+  msgnController,
+  guild
 }: REmbedProps): Promise<void> => {
   if (!result?.errors) {
     return
@@ -48,19 +47,13 @@ export const errorEmbed = async ({
   const replymsgn = makeEmdedOptions({
     embed: makeOffileEmbend(instance, guild, fields)
   })
-
-  if (message) {
-    await Promise.all([message.reply(replymsgn)])
-  } else {
-    await interaction.editReply(replymsgn)
-  }
+  await msgnController.replyOrEdit(replymsgn)
 }
 
 export const successEmbed = async ({
   result,
-  message,
-  interaction,
   channel,
+  msgnController,
   authorid
 }: REmbedProps): Promise<void> => {
   const index = 0
@@ -95,17 +88,14 @@ export const successEmbed = async ({
     }
 
     const groupedServers = createEmbedsGroups(serversFields, grouped)
-
-    if (interaction) {
-      await interaction.editReply('.')
-    }
+    await msgnController.editReply('.')
 
     const botMessage = await channel.send({
       embeds: [embed]
     })
 
     const msgnObj: DJS.Message | DJS.CommandInteraction<DJS.CacheType> =
-      interaction ?? message
+      msgnController.getBotMessage()
 
     await embedPaginated({
       embed,

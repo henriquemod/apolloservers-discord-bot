@@ -31,6 +31,14 @@ export class MessageController {
     }
   }
 
+  public async editReply(
+    message: DJS.ReplyMessageOptions | string
+  ): Promise<void> {
+    if (this.message instanceof DJS.CommandInteraction) {
+      await this.message.editReply(message)
+    }
+  }
+
   public async replyOrEdit(
     message: DJS.ReplyMessageOptions,
     deleteMsgn?: boolean
