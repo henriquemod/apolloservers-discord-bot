@@ -1,5 +1,4 @@
 import {
-  Message,
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
@@ -10,18 +9,19 @@ import { cond } from 'ramda'
 import { ICommand } from 'wokcommands'
 import { appContext } from '../.'
 import log4jConfig, { APP_COMMAND_ERROR } from '../config/log4jConfig'
+import { MessageController } from '../controllers/messages-controller'
 import guildServersSchema, { Guild, Server } from '../models/guild-servers'
 import { ServerProps } from '../types/server'
 import {
   createGroups,
   EncryptorDecryptor,
+  generalOfflineEmbed,
   makeEmdedOptions,
   sanitizeResponse,
   serverInfoRequest,
   singleServerEmbed,
   SingleServerEmbedProps,
   singleServerError,
-  generalOfflineEmbed,
   statusSkeleton,
   __prod__
 } from '../utils'
@@ -54,9 +54,8 @@ export default {
     if (!guild) {
       return 'Please use this command within a server'
     }
+    const msgnController = new MessageController(message, statusInt)
     const context = appContext
-    let botMessage: Message
-    let botMessageStatus: Message
 
     const find = await guildServersSchema.findById({ _id: guild.id })
 
@@ -94,14 +93,8 @@ export default {
       content: instance.messageHandler.get(guild, 'SELECT_SERVER'),
       components: rows.map((row) => row)
     }
-    if (message) {
-      botMessage = await message.reply(obj)
-    } else {
-      await statusInt.reply({
-        ...obj,
-        ephemeral: true
-      })
-    }
+
+    await msgnController.replyto(obj)
 
     const filter = (btnInt: MessageComponentInteraction): boolean => {
       const userId = message ? message.author.id : statusInt.user.id
@@ -138,11 +131,7 @@ export default {
           content: instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
         })
 
-        if (message) {
-          await message.reply(errormsg)
-        } else {
-          await statusInt.editReply(errormsg)
-        }
+        await msgnController.replyOrEdit(errormsg)
 
         return
       }
@@ -152,11 +141,7 @@ export default {
           content: instance.messageHandler.get(guild, 'NO_SERVER_SELECTED')
         })
 
-        if (message) {
-          await Promise.all([message.reply(errormsg), botMessage.delete()])
-        } else {
-          await statusInt.editReply(errormsg)
-        }
+        await msgnController.replyOrEdit(errormsg, true)
 
         return
       }
@@ -167,15 +152,9 @@ export default {
 
       const apiKey = encryption.decryptString(find.apiKey, context.masterkey)
 
-      if (message) {
-        const msgn = await Promise.all([
-          message.channel.send(makeEmdedOptions({ embed: statusSkeleton() })),
-          botMessage.delete()
-        ])
-        botMessageStatus = msgn[0]
-      } else {
-        await statusInt.editReply(makeEmdedOptions({ embed: statusSkeleton() }))
-      }
+      await msgnController.sendOrEdit(
+        makeEmdedOptions({ embed: statusSkeleton() })
+      )
 
       const request = await serverInfoRequest({
         host: serverSelected.host,
@@ -191,14 +170,8 @@ export default {
           content: instance.messageHandler.get(guild, 'DEFAULT_ERROR')
         })
 
-        if (message) {
-          await Promise.all([
-            message.reply(errormsg),
-            botMessageStatus.delete()
-          ])
-        } else {
-          await statusInt.editReply(errormsg)
-        }
+        await msgnController.replyOrEdit(errormsg, true)
+
         return
       }
 
@@ -216,7 +189,7 @@ export default {
         message,
         interaction: statusInt,
         server: serverInfo,
-        botMessageStatus,
+        botMessageStatus: msgnController.getMessageStatus(),
         embed,
         guildQuery: queryResult
       }
