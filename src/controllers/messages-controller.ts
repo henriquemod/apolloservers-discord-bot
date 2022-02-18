@@ -1,21 +1,49 @@
 import * as DJS from 'discord.js'
 
+interface ArgsSchema {
+  args: string[]
+  labels: string[]
+}
+
 export class MessageController {
   private readonly message: DJS.Message | DJS.CommandInteraction<DJS.CacheType>
   private readonly isMessage: boolean
+  private args: Map<string, string | DJS.GuildTextBasedChannel>
   private botMessage: DJS.Message
   private messageStatus: DJS.Message
 
   constructor(
     message?: DJS.Message,
-    interaction?: DJS.CommandInteraction<DJS.CacheType>
+    interaction?: DJS.CommandInteraction<DJS.CacheType>,
+    args?: ArgsSchema
   ) {
     if (message) {
       this.message = message
       this.isMessage = true
+      if (args) {
+        this.args = new Map()
+        args.args.forEach((arg, index) => {
+          this.args.set(args.labels[index], arg)
+        })
+      }
     } else if (interaction) {
       this.message = interaction
       this.isMessage = false
+      if (args?.labels) {
+        this.args = new Map()
+        args.labels.forEach((label) => {
+          const thisInteraction =
+            label === 'channel'
+              ? interaction.options.getChannel(label)
+              : interaction.options.getString(label)
+          if (
+            thisInteraction instanceof DJS.BaseGuildTextChannel &&
+            thisInteraction.isText()
+          ) {
+            this.args.set(label, thisInteraction.id)
+          }
+        })
+      }
     }
   }
 
@@ -65,11 +93,26 @@ export class MessageController {
     this.botMessage = message
   }
 
+  public getMessage(): DJS.Message | DJS.CommandInteraction<DJS.CacheType> {
+    return this.message
+  }
+
   public getBotMessage(): DJS.Message {
     return this.botMessage
   }
 
   public getMessageStatus(): DJS.Message {
     return this.messageStatus
+  }
+
+  public setArgs(key: string, value: string | DJS.GuildTextBasedChannel): void {
+    if (!this.args) {
+      this.args = new Map()
+    }
+    this.args.set(key, value)
+  }
+
+  public getArg(key: string): string | DJS.GuildTextBasedChannel {
+    return this.args?.get(key) ?? ''
   }
 }

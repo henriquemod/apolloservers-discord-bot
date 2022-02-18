@@ -1,5 +1,6 @@
 import * as DJS from 'discord.js'
 import * as cron from 'node-cron'
+import { MessageController } from '../../../controllers/messages-controller'
 import { ICommand } from 'wokcommands'
 import { appContext } from '../../..'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
@@ -52,27 +53,14 @@ export default {
     if (!guild) {
       return instance.messageHandler.get(guild, 'GUILD_COMMAND_ONLY')
     }
-
+    const msgnController = new MessageController(message, interaction, {
+      args,
+      labels: ['id', 'channel']
+    })
     interaction && (await interaction.reply('Please wait...'))
 
-    // Validation if is a valid text channel
-    let targetChannel: string | DJS.GuildTextBasedChannel | undefined
-    if (message) {
-      targetChannel = args[1]
-    }
-    if (interaction) {
-      const txtChannel = interaction.options.getChannel('channel')
-      if (txtChannel === null) {
-        return instance.messageHandler.get(guild, 'CHANNEL_NEEDED')
-      }
-      if (
-        txtChannel instanceof DJS.BaseGuildTextChannel &&
-        txtChannel.isText()
-      ) {
-        targetChannel = txtChannel
-      }
-    }
-    if (!targetChannel) {
+    const targetChannel = msgnController.getArg('channel')
+    if (targetChannel === '') {
       return instance.messageHandler.get(guild, 'CHANNEL_NEEDED')
     }
 
@@ -138,21 +126,12 @@ export default {
             channelid: validChannel.id
           })
         ])
-        if (message) {
-          await message.reply(
-            instance.messageHandler.get(guild, 'SCHEDULE_CREATED', {
-              SERVER: server.name,
-              CHANNEL: `<#${validChannel.id}>`
-            })
-          )
-        } else {
-          await interaction.editReply({
-            content: instance.messageHandler.get(guild, 'SCHEDULE_CREATED', {
-              SERVER: server.name,
-              CHANNEL: `<#${validChannel.id}>`
-            })
+        await msgnController.replyOrEdit({
+          content: instance.messageHandler.get(guild, 'SCHEDULE_CREATED', {
+            SERVER: server.name,
+            CHANNEL: `<#${validChannel.id}>`
           })
-        }
+        })
       } else {
         return instance.messageHandler.get(guild, 'SERVER_ALREADY_SCHEDULED', {
           CHANNEL: `<#${validChannel.id}>`
