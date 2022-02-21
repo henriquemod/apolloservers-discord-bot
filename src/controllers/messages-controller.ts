@@ -1,12 +1,13 @@
 import * as DJS from 'discord.js'
+import { Messages } from '../interfaces/messages'
 
 interface ArgsSchema {
   args: string[]
   labels: string[]
 }
 
-export class MessageController {
-  private readonly message: DJS.Message | DJS.CommandInteraction<DJS.CacheType>
+export class MessageController implements Messages {
+  public readonly message: DJS.Message | DJS.CommandInteraction<DJS.CacheType>
   private readonly isMessage: boolean
   private args: Map<string, string | DJS.GuildTextBasedChannel>
   private botMessage: DJS.Message
