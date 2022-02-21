@@ -20,7 +20,8 @@ export const appContext = new AppContext()
 
 const main = async (): Promise<void> => {
   if (!__pwencription__) {
-    throw new Error('You must define a master key!!!')
+    if (!process.env.TEST) throw new Error('You must define a master key!!!')
+    return
   }
   appContext.setMasterkey(__pwencription__)
 
