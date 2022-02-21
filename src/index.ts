@@ -59,7 +59,7 @@ const main = async (): Promise<void> => {
 
     appContext.setInstance(wok)
 
-    console.log('Bot is ready')
+    console.log('Bot is readys!')
   })
 
   await client.login(process.env.TOKEN)
