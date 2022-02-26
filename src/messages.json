@@ -191,6 +191,10 @@
     "english": "✅ Timezone updated successfully to {TIMEZONE}",
     "portuguese": "✅ Timezone atualizado com sucesso para {TIMEZONE}"
   },
+  "TIMEZONE_NEEDED": {
+    "english": "Please provide a timezone",
+    "portuguese": "Favor informar um timezone"
+  },
   "LOCALE_UPDATED": {
     "english": "✅ Locale updated successfully to {LOCALE}",
     "portuguese": "✅ Locale atualizado com sucesso para {LOCALE}"

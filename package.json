@@ -13,7 +13,8 @@
     "gen": "graphql-codegen --config codegen.yml",
     "prepare": "husky install",
     "test": "TEST=true jest --passWithNoTests --watch",
-    "test:staged": "TEST=true jest --passWithNoTests"
+    "test:staged": "TEST=true jest --passWithNoTests",
+    "jest:clear": "jest --clearCache"
   },
   "files": [
     "dist/**/*"
