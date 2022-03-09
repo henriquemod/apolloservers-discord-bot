@@ -1,6 +1,6 @@
 import * as DJS from 'discord.js'
 import guildServersSchema from '../../src/models/guild-servers'
-import * as msgns from '../../src/messages.json'
+import { msgn } from '../fixtures'
 // import guildServersSchema from '../../src/models/guild-servers'
 import { ICallbackObject } from 'wokcommands'
 import addScheduleCommand from '../../src/commands/admin/CRUD-Schedule/addSchedule'
@@ -55,7 +55,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'CHANNEL_NEEDED') {
-          return msgns.CHANNEL_NEEDED.english
+          return msgn.CHANNEL_NEEDED.english
         }
       })
 
@@ -92,7 +92,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'CHANNEL_NEEDED') {
-          return msgns.CHANNEL_NEEDED.english
+          return msgn.CHANNEL_NEEDED.english
         }
       })
 
@@ -130,7 +130,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'INVALID_CHANNEL') {
-          return msgns.INVALID_CHANNEL.english
+          return msgn.INVALID_CHANNEL.english
         }
       })
 
@@ -168,7 +168,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'INVALID_CHANNEL') {
-          return msgns.INVALID_CHANNEL.english
+          return msgn.INVALID_CHANNEL.english
         }
       })
 
@@ -207,7 +207,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_SERVER_NOT_CONFIGURED') {
-          return msgns.ERROR_SERVER_NOT_CONFIGURED.english
+          return msgn.ERROR_SERVER_NOT_CONFIGURED.english
         }
       })
 
@@ -246,7 +246,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_SERVER_NOT_CONFIGURED') {
-          return msgns.ERROR_SERVER_NOT_CONFIGURED.english
+          return msgn.ERROR_SERVER_NOT_CONFIGURED.english
         }
       })
 
@@ -285,7 +285,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_NONE_GAMESERVER') {
-          return msgns.ERROR_NONE_GAMESERVER.english
+          return msgn.ERROR_NONE_GAMESERVER.english
         }
       })
 
@@ -327,7 +327,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_NONE_GAMESERVER') {
-          return msgns.ERROR_NONE_GAMESERVER.english
+          return msgn.ERROR_NONE_GAMESERVER.english
         }
       })
 
@@ -370,7 +370,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'PROVIDE_SERVER_ID') {
-          return msgns.PROVIDE_SERVER_ID.english
+          return msgn.PROVIDE_SERVER_ID.english
         }
       })
 
@@ -412,7 +412,7 @@ describe('Add schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'PROVIDE_SERVER_ID') {
-          return msgns.PROVIDE_SERVER_ID.english
+          return msgn.PROVIDE_SERVER_ID.english
         }
       })
 
@@ -471,7 +471,7 @@ describe('Delete schedule related teste', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_SERVER_NOT_CONFIGURED') {
-          return msgns.ERROR_SERVER_NOT_CONFIGURED.english
+          return msgn.ERROR_SERVER_NOT_CONFIGURED.english
         }
       })
 

@@ -7,7 +7,8 @@ import {
   __max_servers_allowed__,
   __prod__,
   domainValidation,
-  portValidation
+  portValidation,
+  hostNameValidation
 } from '../../../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
@@ -92,7 +93,7 @@ export default {
       return instance.messageHandler.get(guild, 'INVALID_VALUES')
     }
 
-    if (!serverName) {
+    if (!serverName || !hostNameValidation(serverName)) {
       return instance.messageHandler.get(guild, 'INVALID_SERVER_NAME')
     }
 

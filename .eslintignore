@@ -9,7 +9,7 @@
 /tests/actual/**
 /tests/templates/**
 /tests/bench/**
-/tests/fixtures/**
+/test/fixtures.ts
 /tests/performance/**
 /tmp/**
 /src/generated/**

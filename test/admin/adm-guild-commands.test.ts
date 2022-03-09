@@ -6,8 +6,7 @@ import setKeyCommand from '../../src/commands/admin/CRUD-Guild/setKey'
 import setLocaleCommand from '../../src/commands/admin/CRUD-Guild/setLocale'
 import setTimezoneCommand from '../../src/commands/admin/CRUD-Guild/setTimezone'
 
-describe('Guild related', () => {
-  // NOTE: Key test
+describe('SetKey related', () => {
   it('should return warning when used outsite of a discord guild server', async () => {
     const message = {
       channel: {
@@ -105,7 +104,9 @@ describe('Guild related', () => {
       expect(callback).toBe('API key added')
     }
   })
-  // NOTE: Locale tests
+})
+
+describe('SetLocale related', () => {
   it('should return warning when setLocale is used outsite of a discord guild server', async () => {
     const message = {
       channel: {
@@ -198,8 +199,9 @@ describe('Guild related', () => {
       expect(callback).toContain('Locale updated successfully to')
     }
   })
+})
 
-  // NOTE: Timezone tests
+describe('SetTimezone related', () => {
   it('should return warning when setTimezone is used outsite of a discord guild server', async () => {
     const message = {
       channel: {
@@ -219,7 +221,7 @@ describe('Guild related', () => {
     }
   })
 
-  test('Should return locale needed if none were provided', async () => {
+  test('Should return timezone needed if none were provided', async () => {
     const interaction = {
       options: {
         getString: jest.fn().mockReturnValue(undefined)
