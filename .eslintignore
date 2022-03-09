@@ -12,6 +12,7 @@
 /test/fixtures.ts
 /tests/performance/**
 /tmp/**
+/jest.config.ts
 /src/generated/**
 {
   "ignorePatterns": ["**/generated/*.ts"],

@@ -5,6 +5,9 @@ const config: Config.InitialOptions = {
   collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/test/**/*.ts'],
   coverageDirectory: 'coverage',
+  coveragePathIgnorePatterns: [
+    "<rootDir>/test/fixtures.ts",
+],
   transform: {
     '.+\\.ts$': 'ts-jest'
   }
