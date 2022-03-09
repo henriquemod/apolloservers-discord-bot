@@ -6,6 +6,12 @@ interface ArgsSchema {
   labels: string[]
 }
 
+interface Props {
+  message?: DJS.Message
+  interaction?: DJS.CommandInteraction<DJS.CacheType>
+  args?: ArgsSchema
+}
+
 export class MessageController implements Messages {
   public readonly message: DJS.Message | DJS.CommandInteraction<DJS.CacheType>
   private readonly isMessage: boolean
@@ -13,16 +19,12 @@ export class MessageController implements Messages {
   private botMessage: DJS.Message
   private messageStatus: DJS.Message
 
-  constructor(
-    message?: DJS.Message,
-    interaction?: DJS.CommandInteraction<DJS.CacheType>,
-    args?: ArgsSchema
-  ) {
+  constructor({ message, interaction, args }: Props) {
     if (message) {
       this.message = message
       this.isMessage = true
       if (args) {
-        this.args = new Map()
+        this.args = new Map<string, string>()
         args.args.forEach((arg, index) => {
           this.args.set(args.labels[index], arg)
         })
@@ -31,7 +33,7 @@ export class MessageController implements Messages {
       this.message = interaction
       this.isMessage = false
       if (args?.labels) {
-        this.args = new Map()
+        this.args = new Map<string, string>()
         args.labels.forEach((label) => {
           const thisInteraction =
             label === 'channel'
@@ -42,6 +44,8 @@ export class MessageController implements Messages {
             thisInteraction.isText()
           ) {
             this.args.set(label, thisInteraction.id)
+          } else if (typeof thisInteraction === 'string') {
+            this.args.set(label, thisInteraction)
           }
         })
       }
@@ -115,5 +119,9 @@ export class MessageController implements Messages {
 
   public getArg(key: string): string | DJS.GuildTextBasedChannel {
     return this.args?.get(key) ?? ''
+  }
+
+  public getArgs(): Map<string, string | DJS.GuildTextBasedChannel> {
+    return this.args
   }
 }

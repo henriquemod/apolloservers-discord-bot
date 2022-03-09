@@ -203,6 +203,10 @@
     "english": "Please provide a locale",
     "portuguese": "Favor informar um locale"
   },
+  "CHANNEL_NEEDED": {
+    "english": "Your need to provide a channel",
+    "portuguese": "Você precisa informar um canal"
+  },
   "UPDATED_AT": {
     "english": "🕒 Updated at: {DATE}",
     "portuguese": "🕐 Atualizado em: {DATE}"

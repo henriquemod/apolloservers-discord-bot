@@ -52,9 +52,14 @@ describe('testing', () => {
     } as unknown as ICallbackObject
 
     guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
+
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.ERROR_SERVER_NOT_CONFIGURED.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'ERROR_SERVER_NOT_CONFIGURED') {
+          return msgns.ERROR_SERVER_NOT_CONFIGURED.english
+        }
+      })
 
     if (serverStatus.callback) {
       const callback = await serverStatus.callback(callbackOnj)
@@ -78,9 +83,14 @@ describe('testing', () => {
     } as unknown as ICallbackObject
 
     guildServersSchema.findById = jest.fn().mockResolvedValueOnce(validGuild)
+
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.ERROR_NONE_GAMESERVER.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'ERROR_NONE_GAMESERVER') {
+          return msgns.ERROR_NONE_GAMESERVER.english
+        }
+      })
 
     if (serverStatus.callback) {
       const callback = await serverStatus.callback(callbackOnj)

@@ -54,7 +54,10 @@ export default {
     if (!guild) {
       return 'Please use this command within a server'
     }
-    const msgnController = new MessageController(message, statusInt)
+    const msgnController = new MessageController({
+      message,
+      interaction: statusInt
+    })
     const context = appContext
 
     const find = await guildServersSchema.findById({ _id: guild.id })

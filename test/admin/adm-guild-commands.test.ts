@@ -49,9 +49,15 @@ describe('Guild related', () => {
     } as unknown as ICallbackObject
 
     guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
+
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.API_NEEDED.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'API_NEEDED') {
+          return msgns.API_NEEDED.english
+        }
+      })
+
     if (setKeyCommand.callback) {
       const callback = await setKeyCommand.callback(callbackOnj)
       expect(callback).toBe('Please add you API key')
@@ -85,9 +91,14 @@ describe('Guild related', () => {
         exec: jest.fn()
       }
     })
+
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.API_ADDED.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'API_ADDED') {
+          return msgns.API_ADDED.english
+        }
+      })
 
     if (setKeyCommand.callback) {
       const callback = await setKeyCommand.callback(callbackOnj)
@@ -136,9 +147,15 @@ describe('Guild related', () => {
     } as unknown as ICallbackObject
 
     guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
+
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.LOCALE_NEEDED.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'LOCALE_NEEDED') {
+          return msgns.LOCALE_NEEDED.english
+        }
+      })
+
     if (setLocaleCommand.callback) {
       const callback = await setLocaleCommand.callback(callbackOnj)
       expect(callback).toBe('Please provide a locale')
@@ -167,9 +184,15 @@ describe('Guild related', () => {
     } as unknown as ICallbackObject
 
     guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
+
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.LOCALE_UPDATED.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'LOCALE_UPDATED') {
+          return msgns.LOCALE_UPDATED.english
+        }
+      })
+
     if (setLocaleCommand.callback) {
       const callback = await setLocaleCommand.callback(callbackOnj)
       expect(callback).toContain('Locale updated successfully to')
@@ -217,10 +240,14 @@ describe('Guild related', () => {
       }
     } as unknown as ICallbackObject
 
-    guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.TIMEZONE_NEEDED.english)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'TIMEZONE_NEEDED') {
+          return msgns.TIMEZONE_NEEDED.english
+        }
+      })
+
     if (setTimezoneCommand.callback) {
       const callback = await setTimezoneCommand.callback(callbackOnj)
       expect(callback).toBe('Please provide a timezone')
@@ -248,12 +275,16 @@ describe('Guild related', () => {
       }
     } as unknown as ICallbackObject
 
-    guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
     jest
       .spyOn(callbackOnj.instance.messageHandler, 'get')
-      .mockReturnValueOnce(msgns.TIMEZONE_UPDATED.english)
-    if (setLocaleCommand.callback) {
-      const callback = await setLocaleCommand.callback(callbackOnj)
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'TIMEZONE_UPDATED') {
+          return msgns.TIMEZONE_UPDATED.english
+        }
+      })
+
+    if (setTimezoneCommand.callback) {
+      const callback = await setTimezoneCommand.callback(callbackOnj)
       expect(callback).toContain('Timezone updated successfully to')
     }
   })
