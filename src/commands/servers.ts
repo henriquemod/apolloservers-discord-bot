@@ -32,7 +32,7 @@ export default {
   },
 
   callback: async ({ message, channel, guild, instance, interaction }) => {
-    const msgnController = new MessageController(message, interaction)
+    const msgnController = new MessageController({ message, interaction })
     interaction && (await interaction.reply('Please wait...'))
     const authorid = interaction ? interaction.user.id : message.author.id
     if (!guild) {

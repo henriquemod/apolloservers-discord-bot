@@ -141,4 +141,3 @@ dist
 .svelte-kit
 
 volumes
-docker-compose.yml

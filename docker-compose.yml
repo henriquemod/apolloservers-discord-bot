@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo
+    #restart: always # if you want container running on every restart
+    ports:
+      - 27017:27017
+    # If running in production, you should mount your volume
+    # volumes:
+    #   - <localpath>:/data/db
+    # If production, consider using strong credentials
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123123123
