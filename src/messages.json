@@ -191,6 +191,10 @@
     "english": "✅ Timezone updated successfully to {TIMEZONE}",
     "portuguese": "✅ Timezone atualizado com sucesso para {TIMEZONE}"
   },
+  "TIMEZONE_NEEDED": {
+    "english": "Please provide a timezone",
+    "portuguese": "Favor informar um timezone"
+  },
   "LOCALE_UPDATED": {
     "english": "✅ Locale updated successfully to {LOCALE}",
     "portuguese": "✅ Locale atualizado com sucesso para {LOCALE}"
@@ -198,6 +202,10 @@
   "LOCALE_NEEDED": {
     "english": "Please provide a locale",
     "portuguese": "Favor informar um locale"
+  },
+  "CHANNEL_NEEDED": {
+    "english": "Your need to provide a channel",
+    "portuguese": "Você precisa informar um canal"
   },
   "UPDATED_AT": {
     "english": "🕒 Updated at: {DATE}",

@@ -19,10 +19,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "types": []
+    "types": ["jest"]
   },
-  "include": [ "src", "index.ts"],
+  "include": [ "src", "index.ts","test","jest.config.ts" ],
   "exclude": [
-    "node_modules"
+    "node_modules","test","jest.config.ts"
   ]
 }

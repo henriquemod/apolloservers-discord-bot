@@ -11,3 +11,7 @@ export const domainValidation = (input: string): boolean => {
 export const portValidation = (port: string): boolean => {
   return port.length < 6 && parseInt(port) > 0 && parseInt(port) < 65535
 }
+
+export const hostNameValidation = (name: string): boolean => {
+  return name.length > 3 && name.length < 20
+}

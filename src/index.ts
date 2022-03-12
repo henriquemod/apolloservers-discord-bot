@@ -20,7 +20,8 @@ export const appContext = new AppContext()
 
 const main = async (): Promise<void> => {
   if (!__pwencription__) {
-    throw new Error('You must define a master key!!!')
+    if (!process.env.TEST) throw new Error('You must define a master key!!!')
+    return
   }
   appContext.setMasterkey(__pwencription__)
 
@@ -58,7 +59,7 @@ const main = async (): Promise<void> => {
 
     appContext.setInstance(wok)
 
-    console.log('Bot is ready')
+    console.log('Bot is readys!')
   })
 
   await client.login(process.env.TOKEN)

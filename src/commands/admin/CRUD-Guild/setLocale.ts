@@ -35,7 +35,7 @@ export default {
 
   callback: async ({ guild, interaction, instance }) => {
     if (!guild) {
-      return interaction.options.getString('GUILD_COMMAND_ONLY')
+      return 'Please use this command within a server'
     }
     const locale = interaction.options.getString('locale')
 

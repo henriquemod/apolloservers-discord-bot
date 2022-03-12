@@ -5,7 +5,6 @@ import { ICommand } from 'wokcommands'
 import { appContext } from '../../..'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
 import {
-  isValidTextChannel,
   __prod__,
   addSchedule,
   findScheduleServerId,
@@ -13,7 +12,10 @@ import {
   EncryptorDecryptor,
   UpdateServerProps,
   updateServerStatus
+  // isValidTextChannel
 } from '../../../utils'
+import { ChannelController } from '../../../controllers/channel-controller'
+// import log4jConfig from '../../../config/log4jConfig'
 
 // const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
@@ -51,11 +53,16 @@ export default {
   callback: async ({ guild, interaction, message, args, instance }) => {
     // SECTION - Check if command is executed in a guild and collects server ID
     if (!guild) {
-      return instance.messageHandler.get(guild, 'GUILD_COMMAND_ONLY')
+      return 'Please use this command within a server'
     }
-    const msgnController = new MessageController(message, interaction, {
-      args,
-      labels: ['id', 'channel']
+
+    const msgnController = new MessageController({
+      message,
+      interaction,
+      args: {
+        args,
+        labels: ['id', 'channel']
+      }
     })
     interaction && (await interaction.reply('Please wait...'))
 
@@ -64,10 +71,13 @@ export default {
       return instance.messageHandler.get(guild, 'CHANNEL_NEEDED')
     }
 
-    const validChannel = await isValidTextChannel({
+    const chnlController = new ChannelController({
       guild,
       channel: targetChannel
     })
+
+    const validChannel = chnlController.isValidTextChannel()
+
     if (!validChannel) {
       return instance.messageHandler.get(guild, 'INVALID_CHANNEL')
     }
