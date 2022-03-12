@@ -51,7 +51,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project was first idealized from my personal need in a bot that could query gameservers, in special CSGO servers and all available solutions at the moment were either uneficient or couldnt offer all the features i wanted.
+This project was first idealized from my personal need in a bot that could query game servers, in special CSGO servers and all available solutions at the moment were either insufficient or couldn't offer all the features I wanted.
 
 Here a few things Apollo can do:
 
@@ -60,7 +60,7 @@ Here a few things Apollo can do:
 * Suports legacy and slash commands
 * Help menu
 
-The idea is to keep simple while giving discord admins the possibility of add their prefered gameserver (for now limited to valve protocols) and make easy to users to check server status (players count, tags, map, game, servername and more)
+The idea is to keep simple while giving discord admins the possibility of adding their preferred game server (for now limited to valve protocols) and make easy for users to check server status (players count, tags, map, game, server name and more)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -77,7 +77,7 @@ The idea is to keep simple while giving discord admins the possibility of add th
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This project is in development state as well the API the bot consumes, if you intent to host this bot to query gameservers in your discord server fell free to contact me and ask for an api key, futher more i'll be creating a webpage to allow people to create their own account's
+This project is in development state as well the API the bot consumes, if you intend to host this bot to query gameservers in your discord server fell free to contact me and ask for an api key, futher more i'll be creating a webpage to allow people to create their own account's
 
 ### Prerequisites
 
@@ -89,8 +89,6 @@ This is an example of how to list things you need to use the software and how to
   ```
 
 ### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
 
 1. Get a free API Key at [Website under development](https://apolloapi.top/) contact me for a key
 2. Clone the repo
