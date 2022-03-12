@@ -82,8 +82,9 @@ This project is in development state as well the API the bot consumes, if you in
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-* nodejs v16.14+
-* yarn
+* NodeJS v16.14+
+* MongoDB
+* Yarn
   ```sh
   npm install yarn -g
   ```
@@ -99,15 +100,22 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    yarn
    ```
-4. Rename .env.example to .env and fill variables with your relevant data
-_If in production i strongly reccomend using local environment variables instead putting in an .env file for security porpuses_
+4. Configure docker-compose.yml with desired credentials and then run
+   ```sh
+   docker-compose up -d
+   ```
+   _If you already have a mongodb server you can skip this step_
 ####
-5. Build project
+
+5. Rename .env.example to .env and fill variables with your relevant data
+_If in production I strongly recommend using local environment variables instead putting in an. env file for security purposes_
+####
+6. Build project
    ```sh
    yarn build
    ```
 
-6. Start the bot
+7. Start the bot
    ```sh
    yarn dev
    ```
@@ -176,7 +184,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
