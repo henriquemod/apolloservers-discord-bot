@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/henriquemod/apolloservers-discord-bot">
-    <img src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/37/37dab5eefd2f3b313f4015cbd1851d9ecb6867b9_full.jpg" alt="Logo" width="80" height="80">
+    <img src="https://github.com/henriquemod/apolloservers-discord-bot/blob/main/src/assets/logo2.png?raw=true" alt="Logo" width="160" height="160">
   </a>
 
   <h3 align="center">Apollo Servers</h3>
