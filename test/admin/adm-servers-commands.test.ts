@@ -3,7 +3,12 @@ import guildServersSchema from '../../src/models/guild-servers'
 import { ICallbackObject } from 'wokcommands'
 import addServerCommand from '../../src/commands/admin/CRUD-Servers/addServer'
 import deleteServerCommand from '../../src/commands/admin/CRUD-Servers/deleteServer'
-import { msgn, validGuild, validGuildWithMaxServers } from '../fixtures'
+import {
+  msgn,
+  validGuild,
+  validGuildWithMaxServers
+  // validGuildWithOneServer
+} from '../fixtures'
 import { _testContext_ } from '../../src/utils'
 
 describe('AddServer related tests', () => {
@@ -34,7 +39,7 @@ describe('AddServer related tests', () => {
     }
   })
 
-  it('should return when no server configured if client has none added using slash command', async () => {
+  it('should return no server configured if client hasnt configured the discord server', async () => {
     const interaction = {
       options: {
         getString: jest.fn().mockImplementation((command) => {
@@ -422,4 +427,146 @@ describe('DeleteServer related tests', () => {
       expect(callback).toBe('Please use this command within a server')
     }
   })
+
+  it('should return no server configured if client hasnt configured the discord server', async () => {
+    const interaction = {
+      options: {
+        getString: jest.fn().mockImplementation((command) => {
+          if (command === 'name') return 'valid_server_name'
+          if (command === 'host') return 'valid_host'
+          if (command === 'port') return 'valid_port'
+          if (command === 'type') return 'valid_type'
+        })
+      },
+      reply: jest.fn()
+    } as unknown as CommandInteraction
+
+    const callbackOnj = {
+      prefix: '/',
+      interaction,
+      instance: {
+        messageHandler: {
+          get: jest.fn()
+        }
+      },
+      guild: {
+        id: 'fake_guild_id'
+      }
+    } as unknown as ICallbackObject
+
+    _testContext_?.setIsValidTextChannel(true)
+    guildServersSchema.findById = jest.fn().mockResolvedValueOnce(undefined)
+
+    jest
+      .spyOn(callbackOnj.instance.messageHandler, 'get')
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'ERROR_SERVER_NOT_CONFIGURED') {
+          return msgn.ERROR_SERVER_NOT_CONFIGURED.english
+        }
+      })
+
+    if (deleteServerCommand.callback) {
+      const callback = await deleteServerCommand.callback(callbackOnj)
+      expect(callback).toBe('This discord server is not configured')
+    }
+  })
+
+  it('should return no gameserver if client hasnt configured any server', async () => {
+    const interaction = {
+      options: {
+        getString: jest.fn().mockImplementation((command) => {
+          if (command === 'name') return 'valid_server_name'
+          if (command === 'host') return 'valid_host'
+          if (command === 'port') return 'valid_port'
+          if (command === 'type') return 'valid_type'
+        })
+      },
+      reply: jest
+        .fn()
+        .mockImplementationOnce((content, components, ephemeral) => {
+          console.log(content, components, ephemeral)
+        })
+    } as unknown as CommandInteraction
+
+    const callbackOnj = {
+      prefix: '/',
+      interaction,
+      instance: {
+        messageHandler: {
+          get: jest.fn()
+        }
+      },
+      guild: {
+        id: 'fake_guild_id'
+      }
+    } as unknown as ICallbackObject
+
+    _testContext_?.setIsValidTextChannel(true)
+    guildServersSchema.findById = jest.fn().mockResolvedValueOnce(validGuild)
+
+    jest
+      .spyOn(callbackOnj.instance.messageHandler, 'get')
+      .mockImplementation((_, MESSAGE_TAG) => {
+        if (MESSAGE_TAG === 'ERROR_NONE_GAMESERVER') {
+          return msgn.ERROR_NONE_GAMESERVER.english
+        }
+      })
+
+    if (deleteServerCommand.callback) {
+      const callback = await deleteServerCommand.callback(callbackOnj)
+      expect(callback).toContain(
+        'There is no server added in this discord server'
+      )
+    }
+  })
+
+  // it('should return select server message if has any server added', async () => {
+  //   const interaction = {
+  //     options: {
+  //       getString: jest.fn().mockImplementation((command) => {
+  //         if (command === 'name') return 'valid_server_name'
+  //         if (command === 'host') return 'valid_host'
+  //         if (command === 'port') return 'valid_port'
+  //         if (command === 'type') return 'valid_type'
+  //       })
+  //     },
+  //     reply: jest.fn()
+  //   } as unknown as CommandInteraction
+
+  //   const callbackOnj = {
+  //     prefix: '/',
+  //     interaction,
+  //     instance: {
+  //       messageHandler: {
+  //         get: jest.fn()
+  //       }
+  //     },
+  //     channel: {
+  //       createMessageComponentCollector: jest.fn()
+  //     },
+  //     guild: {
+  //       id: 'fake_guild_id'
+  //     }
+  //   } as unknown as ICallbackObject
+
+  //   _testContext_?.setIsValidTextChannel(true)
+  //   guildServersSchema.findById = jest
+  //     .fn()
+  //     .mockResolvedValueOnce(validGuildWithOneServer)
+
+  //   jest
+  //     .spyOn(callbackOnj.instance.messageHandler, 'get')
+  //     .mockImplementation((_, MESSAGE_TAG) => {
+  //       if (MESSAGE_TAG === 'SELECT_SERVER') {
+  //         return msgn.SELECT_SERVER.english
+  //       }
+  //     })
+
+  //   if (deleteServerCommand.callback) {
+  //     const callback = await deleteServerCommand.callback(callbackOnj)
+  //     expect(callback).toContain(
+  //       'There is no server added in this discord server'
+  //     )
+  //   }
+  // })
 })

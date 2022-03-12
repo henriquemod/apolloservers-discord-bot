@@ -2,8 +2,7 @@ import * as DJS from 'discord.js'
 import { ICallbackObject, ICommand } from 'wokcommands'
 import status from '../src/commands/status'
 import guildServersSchema from '../src/models/guild-servers'
-import * as msgns from '../src/messages.json'
-import { validGuild } from './fixtures'
+import { validGuild, msgn } from './fixtures'
 
 describe('testing', () => {
   let serverStatus: ICommand
@@ -57,7 +56,7 @@ describe('testing', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_SERVER_NOT_CONFIGURED') {
-          return msgns.ERROR_SERVER_NOT_CONFIGURED.english
+          return msgn.ERROR_SERVER_NOT_CONFIGURED.english
         }
       })
 
@@ -88,7 +87,7 @@ describe('testing', () => {
       .spyOn(callbackOnj.instance.messageHandler, 'get')
       .mockImplementation((_, MESSAGE_TAG) => {
         if (MESSAGE_TAG === 'ERROR_NONE_GAMESERVER') {
-          return msgns.ERROR_NONE_GAMESERVER.english
+          return msgn.ERROR_NONE_GAMESERVER.english
         }
       })
 
