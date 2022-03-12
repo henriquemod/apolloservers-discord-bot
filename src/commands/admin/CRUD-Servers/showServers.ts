@@ -10,10 +10,12 @@ import { ICommand } from 'wokcommands'
 import { C_WARNING } from '../../../config/colors'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
-import { __prod__ } from '../../../utils/constants'
-import embedPaginated from '../../../utils/discord/embedPaginated'
-import { emberdDivider } from '../../../utils/discord/embedUtils'
-import { createEmbedsGroups } from '../../../utils/splitGroups'
+import {
+  __prod__,
+  embedPaginated,
+  emberdDivider,
+  createEmbedsGroups
+} from '../../../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 const LIMITER = 3

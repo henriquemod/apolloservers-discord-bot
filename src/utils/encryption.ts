@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 import * as sjcl from 'sjcl'
 
-export default class EncryptorDecryptor {
+export class EncryptorDecryptor {
   private readonly BITS_PER_WORD: number = 32
   private readonly ALGORITHM_NONCE_SIZE: number = 3 // 32-bit words.
   private readonly ALGORITHM_KEY_SIZE: number = 4 // 32-bit words.

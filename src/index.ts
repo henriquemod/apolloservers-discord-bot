@@ -1,11 +1,9 @@
 import * as DJS from 'discord.js'
-import { initializeWOK } from './utils/wokCommandsInit'
+import { initializeWOK, __pwencription__, loadSchedules } from './utils'
 import * as path from 'path'
-import { __pwencription__ } from './utils/constants'
 import log4jConfig from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
 import * as msgns from './messages.json'
-import { loadSchedules } from './utils/loadScheduels'
 import { AppContext } from './lib/appContext'
 
 if (msgns) {
@@ -22,7 +20,8 @@ export const appContext = new AppContext()
 
 const main = async (): Promise<void> => {
   if (!__pwencription__) {
-    throw new Error('You must define a master key!!!')
+    if (!process.env.TEST) throw new Error('You must define a master key!!!')
+    return
   }
   appContext.setMasterkey(__pwencription__)
 
@@ -60,7 +59,7 @@ const main = async (): Promise<void> => {
 
     appContext.setInstance(wok)
 
-    console.log('Bot is ready')
+    console.log('Bot is readys!')
   })
 
   await client.login(process.env.TOKEN)

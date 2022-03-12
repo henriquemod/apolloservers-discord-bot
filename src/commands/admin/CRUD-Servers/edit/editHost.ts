@@ -3,8 +3,7 @@ import * as DJS from 'discord.js'
 import { ICommand } from 'wokcommands'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../../models/guild-servers'
-import { __prod__ } from '../../../../utils/constants'
-import { domainValidation } from '../../../../utils/validations'
+import { __prod__, domainValidation } from '../../../../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 

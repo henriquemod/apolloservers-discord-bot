@@ -7,8 +7,7 @@ import {
 import { ICommand } from 'wokcommands'
 import log4jConfig, { APP_COMMAND_ERROR } from '../../../config/log4jConfig'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
-import { __prod__ } from '../../../utils/constants'
-import { createGroups } from '../../../utils/splitGroups'
+import { __prod__, createGroups } from '../../../utils'
 
 const log = log4jConfig(['app', 'out']).getLogger('APP')
 

@@ -1,7 +1,7 @@
 import * as DJS from 'discord.js'
 import { ServerProps } from '../../types/server'
 import { C_DANGER } from '../../config/colors'
-import { successEmbed } from '../discord/embedStatus'
+import { singleSuccessEmbed } from '../discord/embedStatus'
 import {
   makeEmdedOptions,
   fullEmberdDivider,
@@ -57,7 +57,7 @@ export const serverStatus = async ({
   )
 
   if (serverInfo?.serverData) {
-    successEmbed({ data: serverInfo?.serverData, embed, date, guild })
+    singleSuccessEmbed({ data: serverInfo?.serverData, embed, date, guild })
   } else if (serverInfo?.errors) {
     /**
      * NOTE - If serverData is not present, it means that the server is possibly offline
