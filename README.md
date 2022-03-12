@@ -77,11 +77,10 @@ The idea is to keep simple while giving discord admins the possibility of adding
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This project is in development state as well the API the bot consumes, if you intend to host this bot to query gameservers in your discord server fell free to contact me and ask for an api key, futher more i'll be creating a webpage to allow people to create their own account's
+This project is in development state as well the API the bot consumes, if you intend to host this bot to query gameservers in your discord server feel free to contact me and ask for an api key, futher more i'll be creating a webpage to allow people to create their own account's
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
 * NodeJS v16.14+
 * MongoDB
 * Yarn
@@ -107,7 +106,7 @@ This is an example of how to list things you need to use the software and how to
    _If you already have a mongodb server you can skip this step_
 ####
 
-5. Rename .env.example to .env and fill variables with your relevant data
+5. Rename .env.example to .env and fill variables with your relevant data</br>
 _If in production I strongly recommend using local environment variables instead putting in an. env file for security purposes_
 ####
 6. Build project
@@ -184,7 +183,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
