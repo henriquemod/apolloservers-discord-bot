@@ -1,24 +1,10 @@
 import * as mongoose from 'mongoose'
+import { Schedules } from '../types/schedule'
 const { Schema } = mongoose
 
 const reqString = {
   type: String,
   required: true
-}
-
-type frequency = 'EVERYMINUTE' | 'EVERY15MIN' | 'EVERY30MIN'
-
-export interface Schedule {
-  serverid: string
-  messageid: string
-  channelid: string
-  freq: frequency
-}
-
-export interface Schedules {
-  _id: string
-  guildid: string
-  schedules: mongoose.Types.DocumentArray<Schedule>
 }
 
 const scheduleGuildSchema = new Schema<Schedules>({

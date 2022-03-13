@@ -1,4 +1,5 @@
-import scheduleGuildSchema, { Schedules } from '../../models/schedule-guilds'
+import { Schedules } from '../../types/schedule'
+import scheduleGuildSchema from '../../models/schedule-guilds'
 
 export default async (): Promise<Schedules[] | undefined> => {
   const query = await scheduleGuildSchema.find({})

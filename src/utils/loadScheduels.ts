@@ -1,34 +1,25 @@
 import * as DJS from 'discord.js'
-import * as cron from 'node-cron'
 import WOKCommands from 'wokcommands'
 import guildServersSchema from '../models/guild-servers'
 import { deleteScheduleByMessageId } from './queries/deleteScheduleByMessageId'
 import { findServerById } from './queries/findServerById'
 import getAllSchedules from './queries/getAllSchedules'
-import {
-  UpdateServerProps,
-  updateServerStatus
-} from './status/updateServerStatus'
+import { UpdateServerProps } from './status/updateServerStatus'
 import { deleteScheduleByChannelId } from './queries/deleteScheduleByChannelId'
 import { EncryptorDecryptor, __pwencription__ } from '.'
 
 const INCREMENTAL = 3000
 
-const createCron = (options: UpdateServerProps): void => {
-  cron.schedule('*/30 * * * *', () => {
-    updateServerStatus(options).catch((err) => {
-      console.log(err)
-    })
-  })
-}
 interface Props {
   client: DJS.Client<boolean>
   instance: WOKCommands
+  cron: (options: UpdateServerProps) => void
 }
 
 export const loadSchedules = async ({
   client,
-  instance
+  instance,
+  cron
 }: Props): Promise<void> => {
   const schedules = await getAllSchedules()
   if (schedules) {
@@ -67,7 +58,7 @@ export const loadSchedules = async ({
                 })
               } else {
                 setTimeout(() => {
-                  createCron({
+                  cron({
                     guild,
                     server,
                     apikey: apiKey,

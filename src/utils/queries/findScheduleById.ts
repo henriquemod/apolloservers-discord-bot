@@ -1,4 +1,5 @@
-import scheduleGuildSchema, { Schedule } from '../../models/schedule-guilds'
+import { Schedule } from '../../types/schedule'
+import scheduleGuildSchema from '../../models/schedule-guilds'
 
 interface Props {
   guildid: string

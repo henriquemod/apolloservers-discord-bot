@@ -1,4 +1,3 @@
-export * from './addSchedule'
 export * from './deleteScheduleByChannelId'
 export * from './deleteScheduleByMessageId'
 export * from './deleteScheduleByServerId'

@@ -31,6 +31,7 @@
   "ignorePatterns": [
     "src/**/*.graphql",
     "src/**/*.jpg",
+    "src/**/*.png",
     "src/**/*.json",
     "test/**/*.test.ts",
     "test/**/*.json"

@@ -1,10 +1,11 @@
 import * as DJS from 'discord.js'
-import { initializeWOK, __pwencription__, loadSchedules } from './utils'
+import { initializeWOK, __pwencription__ } from './utils'
 import * as path from 'path'
 import log4jConfig from './config/log4jConfig'
 import { C_PRIMARY } from './config/colors'
 import * as msgns from './messages.json'
 import { AppContext } from './lib/appContext'
+import { ScheduleController } from './controllers/schedule-controller'
 
 if (msgns) {
   console.log('Messages loaded')
@@ -55,7 +56,11 @@ const main = async (): Promise<void> => {
       }
     )
 
-    await loadSchedules({ client, instance: wok })
+    const scheduleController = new ScheduleController(client, wok)
+    await scheduleController.loadSchedule()
+    appContext.setScheduleController(scheduleController)
+
+    // await loadSchedules({ client, instance: wok })
 
     appContext.setInstance(wok)
 

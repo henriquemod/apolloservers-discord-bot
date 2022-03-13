@@ -1,30 +1,19 @@
 import * as DJS from 'discord.js'
-import * as cron from 'node-cron'
 import { MessageController } from '../../../controllers/messages-controller'
 import { ICommand } from 'wokcommands'
 import { appContext } from '../../..'
 import guildServersSchema, { Server } from '../../../models/guild-servers'
 import {
   __prod__,
-  addSchedule,
   findScheduleServerId,
   findServerByKey,
   EncryptorDecryptor,
   UpdateServerProps,
   updateServerStatus
-  // isValidTextChannel
 } from '../../../utils'
 import { ChannelController } from '../../../controllers/channel-controller'
-// import log4jConfig from '../../../config/log4jConfig'
 
-// const log = log4jConfig(['app', 'out']).getLogger('APP')
 const encryption = new EncryptorDecryptor()
-const createCron = async (server: UpdateServerProps): Promise<void> => {
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  cron.schedule('*/20 * * * * *', async () => {
-    await updateServerStatus(server)
-  })
-}
 export default {
   category: 'Admin Panel',
   description: 'Add a schedule on a server to it be refreshed periodically',
@@ -128,8 +117,8 @@ export default {
 
         await Promise.all([
           await updateServerStatus(statusObj),
-          await createCron(statusObj),
-          await addSchedule({
+          await appContext.schedule.createCron(statusObj),
+          await appContext.schedule.addSchedule({
             guildid: guild.id,
             serverid: server.id,
             messageid: fixedMessage.id,
