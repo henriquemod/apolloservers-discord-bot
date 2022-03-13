@@ -13,7 +13,9 @@ import {
 } from '../../../utils'
 import { ChannelController } from '../../../controllers/channel-controller'
 
+const { schedule } = appContext
 const encryption = new EncryptorDecryptor()
+
 export default {
   category: 'Admin Panel',
   description: 'Add a schedule on a server to it be refreshed periodically',
@@ -45,6 +47,8 @@ export default {
       return 'Please use this command within a server'
     }
 
+    const { messageHandler } = instance
+
     const msgnController = new MessageController({
       message,
       interaction,
@@ -53,11 +57,12 @@ export default {
         labels: ['id', 'channel']
       }
     })
+
     interaction && (await interaction.reply('Please wait...'))
 
     const targetChannel = msgnController.getArg('channel')
     if (targetChannel === '') {
-      return instance.messageHandler.get(guild, 'CHANNEL_NEEDED')
+      return messageHandler.get(guild, 'CHANNEL_NEEDED')
     }
 
     const chnlController = new ChannelController({
@@ -66,37 +71,37 @@ export default {
     })
 
     const validChannel = chnlController.isValidTextChannel()
-
     if (!validChannel) {
-      return instance.messageHandler.get(guild, 'INVALID_CHANNEL')
+      return messageHandler.get(guild, 'INVALID_CHANNEL')
     }
 
     const find = await guildServersSchema.findById({ _id: guild.id })
     if (!find) {
-      return instance.messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
+      return messageHandler.get(guild, 'ERROR_SERVER_NOT_CONFIGURED')
     }
+
     const servers = find.servers as Server[]
     if (servers.length === 0) {
-      return instance.messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
+      return messageHandler.get(guild, 'ERROR_NONE_GAMESERVER')
     }
+
     const serverId = message ? args[0] : interaction.options.getString('id')
     if (!serverId) {
-      return instance.messageHandler.get(guild, 'PROVIDE_SERVER_ID')
+      return messageHandler.get(guild, 'PROVIDE_SERVER_ID')
     }
     // SECTION - end
 
     const server = await findServerByKey({ guild, serverKey: serverId })
-
-    // Servers has to exist in order to add a schedule
     if (server) {
       const apikey = encryption.decryptString(find.apiKey, appContext.masterkey)
-      const schedule = await findScheduleServerId({
+
+      const findSchedule = await findScheduleServerId({
         guildid: guild.id,
         serverid: server.id
       })
 
       // If schedule is not found, add it and load it
-      if (!schedule && validChannel) {
+      if (!findSchedule && validChannel) {
         const testMessage = new DJS.MessageEmbed()
           .setTitle('loading...')
           .setDescription('loading...')
@@ -117,8 +122,8 @@ export default {
 
         await Promise.all([
           await updateServerStatus(statusObj),
-          await appContext.schedule.createCron(statusObj),
-          await appContext.schedule.addSchedule({
+          await schedule.createCron(statusObj),
+          await schedule.addSchedule({
             guildid: guild.id,
             serverid: server.id,
             messageid: fixedMessage.id,
@@ -126,18 +131,18 @@ export default {
           })
         ])
         await msgnController.replyOrEdit({
-          content: instance.messageHandler.get(guild, 'SCHEDULE_CREATED', {
+          content: messageHandler.get(guild, 'SCHEDULE_CREATED', {
             SERVER: server.name,
             CHANNEL: `<#${validChannel.id}>`
           })
         })
       } else {
-        return instance.messageHandler.get(guild, 'SERVER_ALREADY_SCHEDULED', {
+        return messageHandler.get(guild, 'SERVER_ALREADY_SCHEDULED', {
           CHANNEL: `<#${validChannel.id}>`
         })
       }
     } else {
-      return instance.messageHandler.get(guild, 'SERVER_NOT_FOUND')
+      return messageHandler.get(guild, 'SERVER_NOT_FOUND')
     }
   }
 } as ICommand
